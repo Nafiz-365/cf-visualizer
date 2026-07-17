@@ -43,7 +43,7 @@ export function ContestHistory({ ratingHistory }: ContestHistoryProps) {
                             >
                                 <td className="py-2.5 md:py-4 pl-3 md:pl-4">
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] md:text-[11px] font-bold text-text-app group-hover:text-brand-primary transition-colors line-clamp-1 max-w-37.5 sm:max-w-75 md:max-w-none">
+                                        <span className="text-[10px] md:text-[11px] font-bold text-text-app group-hover:text-brand-primary transition-colors break-words whitespace-normal max-w-37.5 sm:max-w-75 md:max-w-none">
                                             {contest.contestName}
                                         </span>
                                         <span className="text-[8px] md:text-[9px] font-mono text-muted-app uppercase mt-0.5 md:mt-1">

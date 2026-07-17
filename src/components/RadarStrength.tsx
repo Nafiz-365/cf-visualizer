@@ -31,8 +31,7 @@ export function RadarStrength({ submissions }: RadarStrengthProps) {
         .sort((a, b) => b[1] - a[1])
         .slice(0, 6)
         .map(([subject, count]) => ({
-            subject:
-                subject.length > 10 ? subject.substring(0, 8) + '..' : subject,
+            subject,
             count,
             fullMark: Math.max(...Object.values(tagStats)),
         }));

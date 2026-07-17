@@ -68,7 +68,7 @@ export function Recommendations({
                                     className="text-muted-app opacity-0 group-hover:opacity-100 transition-opacity"
                                 />
                             </div>
-                            <h4 className="text-xs font-bold text-text-app group-hover:text-brand-secondary transition-colors line-clamp-1">
+                            <h4 className="text-xs font-bold text-text-app group-hover:text-brand-secondary transition-colors break-words whitespace-normal">
                                 {p.name}
                             </h4>
                             <div className="flex flex-wrap gap-1 mt-2">

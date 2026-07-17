@@ -705,7 +705,7 @@ export function Dashboard() {
                             <div className="min-w-0">
                                 <div className="flex items-center gap-1.5 md:gap-2 mb-0.5 min-w-0">
                                     <h1
-                                        className="text-sm md:text-lg font-display font-black text-text-app tracking-tight group cursor-pointer hover:text-brand-primary transition-colors truncate"
+                                        className="text-sm md:text-lg font-display font-black text-text-app tracking-tight group cursor-pointer hover:text-brand-primary transition-colors break-words whitespace-normal"
                                         onClick={() =>
                                             setIsProfileModalOpen(true)
                                         }
@@ -729,7 +729,7 @@ export function Dashboard() {
                                         {user.rating} RL
                                     </div>
                                     <div className="w-px h-3 bg-white/10 shrink-0" />
-                                    <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter truncate">
+                                    <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter break-words whitespace-normal">
                                         {user.maxRank || 'New Recruit'}
                                     </div>
                                 </div>
@@ -1767,7 +1767,7 @@ export function Dashboard() {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors line-clamp-1 mb-2">
+                                                            <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors break-words whitespace-normal mb-2">
                                                                 {blog.title.replace(
                                                                     /<\/?[^>]+(>|$)/g,
                                                                     '',

@@ -82,7 +82,7 @@ export function UpcomingContests() {
                                     className="text-muted-app opacity-0 group-hover:opacity-100 transition-opacity"
                                 />
                             </div>
-                            <h4 className="text-xs font-bold text-text-app mb-2 line-clamp-2 leading-tight group-hover:text-brand-primary transition-colors">
+                            <h4 className="text-xs font-bold text-text-app mb-2 leading-tight group-hover:text-brand-primary transition-colors break-words whitespace-normal">
                                 {contest.name}
                             </h4>
                             <div className="flex items-center gap-3 text-[10px] text-muted-app font-medium">

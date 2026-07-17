@@ -25,7 +25,7 @@ export function Card({
             className={cn(
                 glow ? 'glass-glow' : 'glass-premium',
                 'rounded-[1.75rem] p-5 md:p-8',
-                className
+                className,
             )}
             {...(props as any)}
         >
@@ -53,10 +53,16 @@ export function StatCard({
 }) {
     /** Map a `text-*` color class to the equivalent `bg-*` + `shadow-*`. */
     const resolveColor = () => {
-        if (!color) return { bg: 'bg-brand-primary/10', text: 'text-brand-primary', fill: 'bg-[#4f8ef7]' };
-        const textCls = color.split(' ').find((c) => c.startsWith('text-')) ?? '';
+        if (!color)
+            return {
+                bg: 'bg-brand-primary/10',
+                text: 'text-brand-primary',
+                fill: 'bg-[#4f8ef7]',
+            };
+        const textCls =
+            color.split(' ').find((c) => c.startsWith('text-')) ?? '';
         return {
-            bg:   textCls.replace('text-', 'bg-') + '/10',
+            bg: textCls.replace('text-', 'bg-') + '/10',
             text: textCls,
             fill: textCls.replace('text-', 'bg-'),
         };
@@ -65,8 +71,8 @@ export function StatCard({
     const { bg, text, fill } = resolveColor();
 
     const trendColors: Record<string, string> = {
-        up:      'text-emerald-400',
-        down:    'text-rose-400',
+        up: 'text-emerald-400',
+        down: 'text-rose-400',
         neutral: 'text-[var(--text-muted)]',
     };
 
@@ -78,7 +84,7 @@ export function StatCard({
             <div className="relative z-10 w-full">
                 {/* Header row */}
                 <div className="flex items-start justify-between mb-2 md:mb-3">
-                    <span className="text-[7.5px] md:text-[10px] font-black uppercase tracking-[0.22em] text-[var(--text-muted)] truncate pr-2 opacity-80">
+                    <span className="text-[7.5px] md:text-[10px] font-black uppercase tracking-[0.22em] text-[var(--text-muted)] break-words whitespace-normal pr-2 opacity-80">
                         {label}
                     </span>
                     {Icon && (
@@ -87,7 +93,8 @@ export function StatCard({
                                 'p-1.5 md:p-2 rounded-lg md:rounded-xl transition-all duration-400',
                                 'group-hover:scale-110 group-hover:rotate-3',
                                 'shadow-lg shrink-0',
-                                bg, text
+                                bg,
+                                text,
                             )}
                         >
                             <Icon size={12} className="md:w-4 md:h-4" />
@@ -102,21 +109,30 @@ export function StatCard({
                             className={cn(
                                 'font-display font-bold text-[var(--text-main)] tracking-tight',
                                 'group-hover:gradient-text transition-all duration-400',
-                                value?.toString().length ?? 0 > 12
+                                (value?.toString().length ?? 0 > 12)
                                     ? 'text-sm md:text-xl'
-                                    : 'text-lg sm:text-xl md:text-3xl'
+                                    : 'text-lg sm:text-xl md:text-3xl',
                             )}
                         >
                             {value ?? '---'}
                         </span>
                         {trend && (
-                            <span className={cn('text-[9px] font-black uppercase tracking-widest', trendColors[trend])}>
-                                {trend === 'up' ? '▲' : trend === 'down' ? '▼' : '—'}
+                            <span
+                                className={cn(
+                                    'text-[9px] font-black uppercase tracking-widest',
+                                    trendColors[trend],
+                                )}
+                            >
+                                {trend === 'up'
+                                    ? '▲'
+                                    : trend === 'down'
+                                      ? '▼'
+                                      : '—'}
                             </span>
                         )}
                     </div>
                     {subValue && (
-                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] opacity-70 truncate">
+                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] opacity-70 break-words whitespace-normal">
                             {subValue}
                         </span>
                     )}
@@ -130,7 +146,11 @@ export function StatCard({
                         initial={{ width: 0 }}
                         whileInView={{ width: '70%' }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1.4, ease: 'easeOut', delay: 0.15 }}
+                        transition={{
+                            duration: 1.4,
+                            ease: 'easeOut',
+                            delay: 0.15,
+                        }}
                         className={cn('progress-fill', fill)}
                         style={{ background: undefined }}
                     />
@@ -139,8 +159,10 @@ export function StatCard({
 
             {/* Ghost icon */}
             {Icon && (
-                <div className="absolute -right-4 -bottom-4 opacity-[0.025] group-hover:opacity-[0.07]
-                                group-hover:scale-125 transition-all duration-700 pointer-events-none rotate-[-15deg]">
+                <div
+                    className="absolute -right-4 -bottom-4 opacity-[0.025] group-hover:opacity-[0.07]
+                                group-hover:scale-125 transition-all duration-700 pointer-events-none rotate-[-15deg]"
+                >
                     <Icon size={80} className="md:w-[100px] md:h-[100px]" />
                 </div>
             )}

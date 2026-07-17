@@ -64,7 +64,7 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
                                     <span className="text-[10px] font-black text-brand-secondary uppercase">
                                         {problem.index}
                                     </span>
-                                    <h4 className="text-[11px] font-bold text-text-app truncate group-hover:text-brand-secondary transition-colors">
+                                    <h4 className="text-[11px] font-bold text-text-app break-words whitespace-normal group-hover:text-brand-secondary transition-colors">
                                         {problem.name}
                                     </h4>
                                 </div>
