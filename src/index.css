@@ -40,6 +40,7 @@
     --glass-highlight: rgba(255, 255, 255, 0.07);
     --nav-bg: rgba(8, 10, 28, 0.75);
     --nav-border: rgba(79, 142, 247, 0.14);
+    --overlay-bg: rgba(0, 0, 0, 0.8);
 
     /* Glow shadows */
     --glow-primary: 0 0 32px rgba(79, 142, 247, 0.22);
@@ -69,6 +70,7 @@
     --glass-highlight: rgba(255, 255, 255, 0.95);
     --nav-bg: rgba(255, 255, 255, 0.8);
     --nav-border: rgba(79, 142, 247, 0.18);
+    --overlay-bg: rgba(255, 255, 255, 0.65);
 
     --shadow-card:
         0 1px 0 0 rgba(79, 142, 247, 0.1), 0 4px 20px -4px rgba(0, 0, 0, 0.08),

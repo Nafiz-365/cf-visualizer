@@ -669,7 +669,13 @@ export function Dashboard() {
             <main className="flex-1 ml-0 mt-0 md:mt-0 md:ml-20 lg:ml-64 overflow-y-auto custom-scrollbar relative">
                 <header className="sticky top-0 z-40 bg-bg-app/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-8 py-3 md:py-4">
                     <div className="flex flex-row items-center justify-between gap-2 md:gap-4 max-w-7xl mx-auto">
-                        <div className="flex flex-wrap items-center gap-3 md:gap-4 min-w-0 bg-white/5 border border-white/10 rounded-[2rem] px-3 py-3 md:px-4 md:py-4 shadow-[0_24px_60px_rgba(0,0,0,0.12)]">
+                        <div
+                            className="flex flex-wrap items-center gap-3 md:gap-4 min-w-0 rounded-[2rem] px-3 py-3 md:px-4 md:py-4 shadow-[0_24px_60px_rgba(0,0,0,0.12)]"
+                            style={{
+                                background: 'var(--bg-card)',
+                                border: '1px solid var(--glass-border)',
+                            }}
+                        >
                             {/* Mobile hamburger menu */}
                             <button
                                 onClick={() =>
@@ -1895,14 +1901,19 @@ export function Dashboard() {
             <AnimatePresence>
                 {isProfileModalOpen && (
                     <div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-xl"
+                        style={{ background: 'var(--overlay-bg)' }}
                         onClick={() => setIsProfileModalOpen(false)}
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-bg-app w-full max-w-2xl rounded-[40px] overflow-hidden border border-white/10 shadow-3xl flex flex-col max-h-[90vh]"
+                            className="w-full max-w-2xl rounded-[40px] overflow-hidden shadow-3xl flex flex-col max-h-[90vh]"
+                            style={{
+                                background: 'var(--bg-app)',
+                                border: '1px solid var(--glass-border)',
+                            }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Modal Header/Hero */}
@@ -1917,7 +1928,8 @@ export function Dashboard() {
 
                                 <button
                                     onClick={() => setIsProfileModalOpen(false)}
-                                    className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10 backdrop-blur-md"
+                                    className="absolute top-6 right-6 p-2 rounded-full transition-colors z-10 backdrop-blur-md"
+                                    style={{ background: 'var(--glass-bg)' }}
                                 >
                                     <XCircle
                                         size={20}
@@ -1970,40 +1982,48 @@ export function Dashboard() {
                                             `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
                                             'Classified'
                                         }
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Current Rating"
                                         value={user.rating || 'N/A'}
                                         isMono
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Peak Rating"
                                         value={user.maxRating || 'N/A'}
                                         isMono
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Origin (Country)"
                                         value={user.country || 'Global'}
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Field Base (City)"
                                         value={user.city || 'Undisclosed'}
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Organization"
                                         value={
                                             user.organization || 'Independent'
                                         }
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Social Footprint"
                                         value={`${(user as any).friendOfCount || 0} Followers`}
                                         isMono
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Contribution"
                                         value={user.contribution || 0}
                                         isMono
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                     <DetailItem
                                         label="Member Capacity"
@@ -2014,6 +2034,7 @@ export function Dashboard() {
                                             ),
                                             'MMM dd, yyyy',
                                         )}
+                                        outerClassName="bg-[var(--bg-card)] border border-[var(--glass-border)]"
                                     />
                                 </div>
 
@@ -2022,7 +2043,13 @@ export function Dashboard() {
                                         Intelligence Overview
                                     </h4>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="p-6 rounded-3xl bg-white/5 border border-white/5">
+                                        <div
+                                            className="p-6 rounded-3xl"
+                                            style={{
+                                                background: 'var(--bg-card)',
+                                                border: '1px solid var(--glass-border)',
+                                            }}
+                                        >
                                             <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest mb-2">
                                                 Primary Domain
                                             </p>
@@ -2030,7 +2057,13 @@ export function Dashboard() {
                                                 {analytics?.bestTag}
                                             </p>
                                         </div>
-                                        <div className="p-6 rounded-3xl bg-white/5 border border-white/5">
+                                        <div
+                                            className="p-6 rounded-3xl"
+                                            style={{
+                                                background: 'var(--bg-card)',
+                                                border: '1px solid var(--glass-border)',
+                                            }}
+                                        >
                                             <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-2">
                                                 Success Velocity
                                             </p>
@@ -2064,7 +2097,8 @@ export function Dashboard() {
             <AnimatePresence>
                 {selectedSubmission && (
                     <div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-md"
+                        style={{ background: 'var(--overlay-bg)' }}
                         onClick={() => setSelectedSubmission(null)}
                     >
                         <motion.div
@@ -2242,9 +2276,9 @@ function InsightCard({ title, desc, icon: Icon, color }: any) {
     );
 }
 
-function DetailItem({ label, value, isVerdict, isMono }: any) {
+function DetailItem({ label, value, isVerdict, isMono, outerClassName }: any) {
     return (
-        <div className="space-y-1.5">
+        <div className={cn('space-y-1.5 p-4 rounded-3xl', outerClassName)}>
             <p className="text-[10px] text-muted-app uppercase font-black tracking-[0.2em]">
                 {label}
             </p>
