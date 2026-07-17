@@ -59,13 +59,16 @@ export function VerdictPieChart({ submissions }: VerdictPieChartProps) {
                         data={data}
                         cx="50%"
                         cy="50%"
-                        innerRadius="55%"
-                        outerRadius="75%"
-                        paddingAngle={0}
+                        innerRadius="52%"
+                        outerRadius="78%"
+                        paddingAngle={4}
+                        minAngle={12}
+                        startAngle={90}
+                        endAngle={-270}
                         dataKey="value"
                         animationBegin={0}
                         animationDuration={1500}
-                        stroke="rgba(0,0,0,0.1)"
+                        stroke="rgba(255,255,255,0.08)"
                         strokeWidth={1}
                     >
                         {data.map((entry, index) => (
@@ -152,8 +155,8 @@ export function VerdictPieChart({ submissions }: VerdictPieChartProps) {
                         verticalAlign="bottom"
                         align="center"
                         iconType="circle"
-                        iconSize={6}
-                        wrapperStyle={{ paddingTop: '20px' }}
+                        iconSize={8}
+                        wrapperStyle={{ paddingTop: '18px', fontSize: 10 }}
                         formatter={(value) => (
                             <span className="text-[9px] font-bold text-muted-app uppercase tracking-widest ml-1">
                                 {value}

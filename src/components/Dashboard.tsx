@@ -1141,12 +1141,17 @@ export function Dashboard() {
                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                                         <Card className="p-4 md:p-8 overflow-visible!">
                                             <div className="mb-6 md:mb-8">
-                                                <h3 className="text-lg md:text-xl font-display font-bold text-text-app">
+                                                <div className="inline-flex items-center gap-2 rounded-full bg-brand-secondary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-brand-secondary">
+                                                    <CheckCircle2 size={14} />
+                                                    Result Breakdown
+                                                </div>
+                                                <h3 className="mt-4 text-lg md:text-xl font-display font-bold text-text-app">
                                                     Solution Verdicts
                                                 </h3>
-                                                <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
-                                                    Accepted vs retries and
-                                                    failures
+                                                <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-2 opacity-70">
+                                                    Accepted, retry and failure
+                                                    outcomes shown in a clean
+                                                    verdict donut.
                                                 </p>
                                             </div>
                                             <VerdictPieChart
@@ -1221,7 +1226,7 @@ export function Dashboard() {
                                                 />
                                             </div>
                                             <select
-                                                className="px-2.5 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-bold text-text-app focus:outline-hidden shrink-0"
+                                                className="px-2.5 py-2 bg-card-app/20 border border-white/10 rounded-xl text-[10px] font-bold text-text-app appearance-none focus:outline-none focus:border-brand-primary shrink-0"
                                                 value={verdictFilter}
                                                 onChange={(e) =>
                                                     setVerdictFilter(

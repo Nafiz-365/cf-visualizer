@@ -562,7 +562,8 @@
    INPUT FIELDS
    ================================================================ */
 
-.input-glass {
+.input-glass,
+select {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--glass-border);
     color: var(--text-main);
@@ -570,6 +571,19 @@
         border-color 250ms ease,
         box-shadow 250ms ease,
         background 250ms ease;
+}
+
+select {
+    appearance: none;
+}
+
+select option {
+    color: var(--text-main);
+    background: var(--bg-app);
+}
+
+.input-glass::placeholder {
+    color: var(--text-subtle);
 }
 .input-glass::placeholder {
     color: var(--text-subtle);
