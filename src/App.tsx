@@ -82,7 +82,7 @@ function NavLink({ to, active, icon: Icon, label }: any) {
                 'text-[10px] md:text-xs font-black transition-all duration-300 uppercase tracking-widest',
                 active
                     ? 'nav-link-active'
-                    : 'text-(--text-muted) hover:text-(--text-main) hover:bg-[rgba(255,255,255,0.08)]',
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[rgba(255,255,255,0.08)]',
             )}
         >
             <Icon size={14} className="shrink-0" />
