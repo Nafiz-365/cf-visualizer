@@ -79,7 +79,7 @@ export function StatCard({
     return (
         <Card
             className="group hover:-translate-y-1 transition-all duration-400 flex flex-col justify-between h-full
-                       p-3.5 md:p-6 min-h-[110px] md:min-h-[150px]"
+                    p-3.5 md:p-6 min-h-[110px] md:min-h-[150px]"
         >
             <div className="relative z-10 w-full">
                 {/* Header row */}
@@ -107,7 +107,7 @@ export function StatCard({
                     <div className="flex items-baseline gap-2 flex-wrap">
                         <span
                             className={cn(
-                                'font-display font-bold text-[var(--text-main)] tracking-tight',
+                                'font-display font-bold text-(--text-main) tracking-tight',
                                 'group-hover:gradient-text transition-all duration-400',
                                 (value?.toString().length ?? 0 > 12)
                                     ? 'text-sm md:text-xl'
@@ -132,7 +132,7 @@ export function StatCard({
                         )}
                     </div>
                     {subValue && (
-                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] opacity-70 break-words whitespace-normal">
+                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-(--text-muted) opacity-70 wrap-break-word whitespace-normal">
                             {subValue}
                         </span>
                     )}

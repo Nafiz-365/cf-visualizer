@@ -2,7 +2,13 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger' | 'gradient';
+    variant?:
+        | 'primary'
+        | 'secondary'
+        | 'ghost'
+        | 'outline'
+        | 'danger'
+        | 'gradient';
     size?: 'sm' | 'md' | 'lg';
     isLoading?: boolean;
 }
@@ -16,12 +22,12 @@ export function Button({
     ...props
 }: ButtonProps) {
     const variantClass = {
-        primary:   'btn-primary',
+        primary: 'btn-primary',
         secondary: 'btn-secondary',
-        ghost:     'btn-ghost',
-        outline:   'btn-outline',
-        danger:    'btn-danger',
-        gradient:  'btn-gradient',
+        ghost: 'btn-ghost',
+        outline: 'btn-outline',
+        danger: 'btn-danger',
+        gradient: 'btn-gradient',
     }[variant];
 
     const sizeClass = {

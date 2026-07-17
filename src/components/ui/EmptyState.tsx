@@ -11,7 +11,12 @@ interface EmptyStateProps {
     };
 }
 
-export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
+export function EmptyState({
+    icon: Icon,
+    title,
+    description,
+    action,
+}: EmptyStateProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -24,12 +29,16 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
                 <div
                     className="w-20 h-20 rounded-2xl flex items-center justify-center"
                     style={{
-                        background: 'linear-gradient(135deg, rgba(79,142,247,0.10) 0%, rgba(157,110,245,0.08) 100%)',
+                        background:
+                            'linear-gradient(135deg, rgba(79,142,247,0.10) 0%, rgba(157,110,245,0.08) 100%)',
                         border: '1px solid rgba(79,142,247,0.15)',
                         boxShadow: '0 0 32px rgba(79,142,247,0.08)',
                     }}
                 >
-                    <Icon size={32} style={{ color: 'var(--text-muted)', opacity: 0.5 }} />
+                    <Icon
+                        size={32}
+                        style={{ color: 'var(--text-muted)', opacity: 0.5 }}
+                    />
                 </div>
                 {/* Subtle outer ring */}
                 <div
