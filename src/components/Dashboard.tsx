@@ -669,13 +669,13 @@ export function Dashboard() {
             <main className="flex-1 ml-0 mt-0 md:mt-0 md:ml-20 lg:ml-64 overflow-y-auto custom-scrollbar relative">
                 <header className="sticky top-0 z-40 bg-bg-app/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-8 py-3 md:py-4">
                     <div className="flex flex-row items-center justify-between gap-2 md:gap-4 max-w-7xl mx-auto">
-                        <div className="flex items-center gap-2 md:gap-4 min-w-0">
+                        <div className="flex flex-wrap items-center gap-3 md:gap-4 min-w-0 bg-white/5 border border-white/10 rounded-[2rem] px-3 py-3 md:px-4 md:py-4 shadow-[0_24px_60px_rgba(0,0,0,0.12)]">
                             {/* Mobile hamburger menu */}
                             <button
                                 onClick={() =>
                                     setIsMobileMenuOpen(!isMobileMenuOpen)
                                 }
-                                className="md:hidden p-2 -ml-2 rounded-xl text-muted-app hover:text-text-app hover:bg-white/5 transition-colors shrink-0"
+                                className="md:hidden p-2 -ml-2 rounded-xl text-muted-app hover:text-text-app hover:bg-white/10 transition-colors shrink-0"
                                 aria-label="Open menu"
                             >
                                 <Menu size={20} />
@@ -693,7 +693,7 @@ export function Dashboard() {
                                 />
                                 <img
                                     src={user.avatar}
-                                    className="relative w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl border border-white/10 object-cover shadow-lg group-hover:scale-105 transition-transform"
+                                    className="relative w-11 h-11 md:w-14 md:h-14 rounded-2xl border border-white/10 object-cover shadow-lg group-hover:scale-105 transition-transform"
                                 />
                                 <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg-app border-2 border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                     <Target
@@ -702,10 +702,11 @@ export function Dashboard() {
                                     />
                                 </div>
                             </button>
-                            <div className="min-w-0">
-                                <div className="flex items-center gap-1.5 md:gap-2 mb-0.5 min-w-0">
+
+                            <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-1 min-w-0">
                                     <h1
-                                        className="text-sm md:text-lg font-display font-black text-text-app tracking-tight group cursor-pointer hover:text-brand-primary transition-colors break-words whitespace-normal"
+                                        className="text-sm md:text-xl lg:text-2xl font-display font-black text-text-app tracking-tight group cursor-pointer hover:text-brand-primary transition-colors break-words whitespace-normal"
                                         onClick={() =>
                                             setIsProfileModalOpen(true)
                                         }
@@ -714,7 +715,7 @@ export function Dashboard() {
                                     </h1>
                                     <span
                                         className={cn(
-                                            'text-[6px] md:text-[7px] font-black uppercase tracking-widest px-1 py-0.5 md:px-1.5 md:py-0.5 rounded border leading-none shrink-0',
+                                            'text-[7px] md:text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full border leading-none shrink-0',
                                             getRankBg(user.rank || '').split(
                                                 ' ',
                                             )[1],
@@ -723,13 +724,13 @@ export function Dashboard() {
                                         {user.rank || 'Unranked'}
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-2 md:gap-4 text-muted-app">
+                                <div className="flex flex-wrap items-center gap-3 text-muted-app">
                                     <div className="flex items-center gap-1 text-[9px] md:text-[10px] font-bold text-brand-primary shrink-0">
                                         <Zap size={10} />
                                         {user.rating} RL
                                     </div>
-                                    <div className="w-px h-3 bg-white/10 shrink-0" />
-                                    <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter break-words whitespace-normal">
+                                    <div className="w-px h-4 bg-white/10 shrink-0" />
+                                    <div className="text-[9px] md:text-[10px] font-semibold uppercase tracking-wider">
                                         {user.maxRank || 'New Recruit'}
                                     </div>
                                 </div>
