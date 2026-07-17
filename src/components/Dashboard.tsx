@@ -538,27 +538,32 @@ export function Dashboard() {
                                 damping: 25,
                                 stiffness: 200,
                             }}
-                            className="md:hidden fixed left-0 top-0 w-72 h-screen bg-bg-app border-r border-white/10 z-100 flex flex-col p-6 shadow-2xl"
+                            className="md:hidden fixed left-0 top-0 w-72 h-screen bg-bg-app/95 border-r border-white/10 z-100 flex flex-col p-6 shadow-2xl backdrop-blur-xl"
                         >
-                            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-lg bg-brand-primary/10 flex items-center justify-center text-brand-primary">
+                            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-3xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-sm shadow-brand-primary/10">
                                         <Trophy size={16} />
                                     </div>
-                                    <span className="text-xs font-display font-black text-text-app uppercase tracking-wider">
-                                        Scout Menu
-                                    </span>
+                                    <div>
+                                        <p className="text-[10px] uppercase tracking-[0.3em] text-muted-app font-black">
+                                            Fury Hub
+                                        </p>
+                                        <p className="text-xs text-text-app font-semibold leading-tight">
+                                            Quick actions
+                                        </p>
+                                    </div>
                                 </div>
                                 <button
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="p-2 rounded-xl text-muted-app hover:text-text-app hover:bg-white/5 transition-colors"
+                                    className="p-2 rounded-2xl text-muted-app hover:text-text-app hover:bg-white/10 transition-colors"
                                     aria-label="Close menu"
                                 >
                                     <X size={20} />
                                 </button>
                             </div>
 
-                            <nav className="flex-1 space-y-1">
+                            <nav className="flex-1 space-y-2">
                                 {TABS.map((tab) => {
                                     const Icon = tab.icon;
                                     const isActive = activeTab === tab.id;
@@ -572,8 +577,8 @@ export function Dashboard() {
                                             className={cn(
                                                 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative text-sm',
                                                 isActive
-                                                    ? 'bg-brand-primary/10 text-brand-primary'
-                                                    : 'text-muted-app hover:bg-white/5 hover:text-text-app',
+                                                    ? 'bg-brand-primary/10 text-brand-primary shadow-sm shadow-brand-primary/20 ring-1 ring-brand-primary/15'
+                                                    : 'text-muted-app hover:bg-white/10 hover:text-text-app',
                                             )}
                                         >
                                             <Icon
@@ -616,8 +621,23 @@ export function Dashboard() {
             </AnimatePresence>
 
             {/* Modern Sidebar Navigation (Desktop) */}
-            <aside className="hidden md:flex w-20 lg:w-64 border-r border-white/5 glass fixed left-0 top-0 h-screen flex-col z-50 transition-all duration-500 pt-8">
-                <nav className="flex-1 px-3 space-y-1">
+            <aside className="hidden md:flex w-20 lg:w-64 border-r border-white/10 glass fixed left-0 top-0 h-screen flex-col z-50 transition-all duration-500 pt-8 backdrop-blur-3xl">
+                <div className="px-4 pb-5 border-b border-white/10 mb-5">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-3xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-sm shadow-brand-primary/10">
+                            <Trophy size={18} />
+                        </div>
+                        <div>
+                            <p className="text-xs uppercase tracking-[0.25em] text-muted-app font-black">
+                                Fury Hub
+                            </p>
+                            <p className="text-sm font-semibold text-text-app leading-tight">
+                                Mission control
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <nav className="flex-1 px-3 space-y-2">
                     {TABS.map((tab) => {
                         const Icon = tab.icon;
                         const isActive = activeTab === tab.id;
@@ -626,10 +646,10 @@ export function Dashboard() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={cn(
-                                    'w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative',
+                                    'w-full flex items-center gap-3 px-4 py-3 rounded-3xl transition-all duration-300 group relative text-sm',
                                     isActive
-                                        ? 'bg-brand-primary/10 text-brand-primary'
-                                        : 'text-muted-app hover:bg-white/5 hover:text-text-app',
+                                        ? 'bg-brand-primary/10 text-brand-primary shadow-sm shadow-brand-primary/20 ring-1 ring-brand-primary/15'
+                                        : 'text-muted-app hover:bg-white/10 hover:text-text-app',
                                 )}
                             >
                                 <Icon
@@ -655,7 +675,7 @@ export function Dashboard() {
 
                 <div className="p-4 mt-auto">
                     <Link to="/">
-                        <button className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl bg-white/5 border border-white/5 text-muted-app hover:bg-white/10 hover:text-text-app transition-all text-left">
+                        <button className="w-full flex items-center gap-3 px-4 py-4 rounded-3xl bg-brand-primary/5 border border-brand-primary/10 text-brand-primary hover:bg-brand-primary/10 transition-all text-left">
                             <Search size={18} />
                             <span className="text-[10px] font-black uppercase tracking-widest hidden lg:block">
                                 New Scout
