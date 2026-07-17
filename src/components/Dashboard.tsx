@@ -811,7 +811,7 @@ export function Dashboard() {
                                                 <Trophy size={120} />
                                             </div>
                                             <div className="flex items-center gap-2 mb-4 md:mb-6">
-                                                <div className="px-2 py-0.5 rounded bg-brand-primary text-[8px] font-black text-white uppercase tracking-widest shadow-lg shadow-brand-primary/20">
+                                                <div className="px-2 py-0.5 rounded bg-brand-primary text-[8px] font-black text-text-app uppercase tracking-widest shadow-lg shadow-brand-primary/20">
                                                     Operational Profile
                                                 </div>
                                             </div>
