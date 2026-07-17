@@ -688,20 +688,13 @@ export function Dashboard() {
             {/* Main Content Area */}
             <main className="flex-1 ml-0 mt-0 md:mt-0 md:ml-20 lg:ml-64 overflow-y-auto custom-scrollbar relative">
                 <header className="sticky top-0 z-40 bg-bg-app/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-8 py-3 md:py-4">
-                    <div className="flex flex-row items-center justify-between gap-2 md:gap-4 max-w-7xl mx-auto">
-                        <div
-                            className="flex flex-wrap items-center gap-3 md:gap-4 min-w-0 rounded-[2rem] px-3 py-3 md:px-4 md:py-4 shadow-[0_24px_60px_rgba(0,0,0,0.12)]"
-                            style={{
-                                background: 'var(--bg-card)',
-                                border: '1px solid var(--glass-border)',
-                            }}
-                        >
-                            {/* Mobile hamburger menu */}
+                    <div className="flex items-center justify-between gap-3 max-w-7xl mx-auto">
+                        <div className="flex items-center gap-3">
                             <button
                                 onClick={() =>
                                     setIsMobileMenuOpen(!isMobileMenuOpen)
                                 }
-                                className="md:hidden p-2 -ml-2 rounded-xl text-muted-app hover:text-text-app hover:bg-white/10 transition-colors shrink-0"
+                                className="md:hidden p-2 rounded-2xl text-muted-app hover:text-text-app hover:bg-white/10 transition-colors"
                                 aria-label="Open menu"
                             >
                                 <Menu size={20} />
@@ -709,103 +702,57 @@ export function Dashboard() {
 
                             <button
                                 onClick={() => setIsProfileModalOpen(true)}
-                                className="relative group shrink-0"
+                                className="group flex items-center gap-3 rounded-[2rem] bg-brand-primary/10 border border-white/10 px-3 py-2 transition-all duration-300 hover:border-brand-primary/20"
                             >
-                                <div
-                                    className={cn(
-                                        'absolute -inset-1 rounded-2xl blur opacity-20 transition-all group-hover:opacity-40 group-hover:blur-md',
-                                        getRankBg(user.rank || ''),
-                                    )}
-                                />
-                                <img
-                                    src={user.avatar}
-                                    className="relative w-11 h-11 md:w-14 md:h-14 rounded-2xl border border-white/10 object-cover shadow-lg group-hover:scale-105 transition-transform"
-                                />
-                                <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg-app border-2 border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Target
-                                        size={8}
-                                        className="text-brand-primary"
+                                <div className="relative">
+                                    <img
+                                        src={user.avatar}
+                                        className="w-12 h-12 rounded-2xl border border-white/10 object-cover shadow-lg transition-transform duration-300 group-hover:scale-105"
                                     />
+                                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg-app border-2 border-white/10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                        <Target
+                                            size={8}
+                                            className="text-brand-primary"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="min-w-0 text-left">
+                                    <p className="text-sm font-black text-text-app leading-tight truncate">
+                                        {user.handle}
+                                    </p>
+                                    <p className="text-[10px] uppercase tracking-[0.25em] text-muted-app">
+                                        {user.rank || 'Unranked'}
+                                    </p>
                                 </div>
                             </button>
-
-                            <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-1 min-w-0">
-                                    <h1
-                                        className="text-sm md:text-xl lg:text-2xl font-display font-black text-text-app tracking-tight group cursor-pointer hover:text-brand-primary transition-colors break-words whitespace-normal"
-                                        onClick={() =>
-                                            setIsProfileModalOpen(true)
-                                        }
-                                    >
-                                        {user.handle}
-                                    </h1>
-                                    <span
-                                        className={cn(
-                                            'text-[7px] md:text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full border leading-none shrink-0',
-                                            getRankBg(user.rank || '').split(
-                                                ' ',
-                                            )[1],
-                                        )}
-                                    >
-                                        {user.rank || 'Unranked'}
-                                    </span>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-3 text-muted-app">
-                                    <div className="flex items-center gap-1 text-[9px] md:text-[10px] font-bold text-brand-primary shrink-0">
-                                        <Zap size={10} />
-                                        {user.rating} RL
-                                    </div>
-                                    <div className="w-px h-4 bg-white/10 shrink-0" />
-                                    <div className="text-[9px] md:text-[10px] font-semibold uppercase tracking-wider">
-                                        {user.maxRank || 'New Recruit'}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
-                        <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
-                            <div className="hidden sm:flex items-center gap-2 mr-2 md:mr-4 text-muted-app">
-                                <div className="flex flex-col items-end">
-                                    <span className="text-[8px] font-black uppercase tracking-widest opacity-40">
-                                        Operational Success
-                                    </span>
-                                    <span className="text-xs font-mono font-bold text-emerald-500">
-                                        {analytics?.accuracy}%
-                                    </span>
-                                </div>
-                            </div>
+                        <div className="flex items-center gap-2">
                             <Button
-                                variant="secondary"
+                                variant="ghost"
                                 size="sm"
-                                className="text-[7px] md:text-[8px] font-black uppercase tracking-widest px-2 md:px-4 h-7 md:h-9 rounded-lg md:rounded-xl border-white/5 shrink-0"
+                                className="rounded-2xl p-2 text-text-app border border-white/10 hover:bg-white/10"
                                 onClick={handleShare}
                             >
                                 {copied ? (
-                                    'Copied'
+                                    <span className="text-[10px] font-black uppercase tracking-[0.22em]">
+                                        Copied
+                                    </span>
                                 ) : (
                                     <Share2
-                                        size={10}
-                                        className="md:w-3 md:h-3"
+                                        size={14}
+                                        className="text-text-app"
                                     />
                                 )}
                             </Button>
                             <Button
-                                variant="primary"
+                                variant="ghost"
                                 size="sm"
-                                className="text-[7px] md:text-[8px] font-black uppercase tracking-widest px-2 md:px-4 h-7 md:h-9 rounded-lg md:rounded-xl bg-brand-primary shadow-lg shadow-brand-primary/20 shrink-0"
+                                className="rounded-2xl p-2 text-text-app border border-white/10 hover:bg-white/10"
                                 onClick={exportSubmissionsToCSV}
                             >
-                                <Download size={10} className="md:w-3 md:h-3" />
+                                <Download size={14} className="text-text-app" />
                             </Button>
-                            <Link to="/">
-                                <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    className="md:hidden text-[7px] font-black uppercase tracking-widest px-2.5 h-7 rounded-lg border-white/5 shrink-0 flex items-center justify-center"
-                                >
-                                    <Search size={10} />
-                                </Button>
-                            </Link>
                         </div>
                     </div>
                 </header>
@@ -1055,15 +1002,120 @@ export function Dashboard() {
 
                             {activeTab === 'analytics' && (
                                 <div className="space-y-6 md:space-y-8">
+                                    <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_0.6fr] gap-6 md:gap-8">
+                                        <Card className="p-4 md:p-8 overflow-visible!">
+                                            <div className="mb-6 md:mb-8">
+                                                <div className="inline-flex items-center gap-2 rounded-full bg-brand-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-brand-primary">
+                                                    <BarChart3 size={14} />
+                                                    Snapshot
+                                                </div>
+                                                <h3 className="mt-4 text-lg md:text-2xl font-display font-bold text-text-app">
+                                                    Analytics at a glance
+                                                </h3>
+                                                <p className="text-[10px] md:text-sm text-muted-app uppercase tracking-[0.2em] mt-2 opacity-60">
+                                                    Key performance signals from
+                                                    solved problems, contests,
+                                                    and language trends.
+                                                </p>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:grid-cols-3">
+                                                <div className="rounded-3xl border border-white/10 bg-card-app/70 p-4">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-app mb-2">
+                                                        Best Tag
+                                                    </p>
+                                                    <p className="text-lg md:text-xl font-display font-bold text-text-app">
+                                                        {analytics?.bestTag ||
+                                                            'N/A'}
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-3xl border border-white/10 bg-card-app/70 p-4">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-app mb-2">
+                                                        Peak Hour
+                                                    </p>
+                                                    <p className="text-lg md:text-xl font-display font-bold text-text-app">
+                                                        {analytics?.peakHour ||
+                                                            'N/A'}
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-3xl border border-white/10 bg-card-app/70 p-4">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-app mb-2">
+                                                        Success Rate
+                                                    </p>
+                                                    <p className="text-lg md:text-xl font-display font-bold text-text-app">
+                                                        {analytics?.deltaSuccessRate !=
+                                                        null
+                                                            ? `${analytics.deltaSuccessRate}%`
+                                                            : '0%'}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="rounded-3xl border border-white/10 bg-card-app/70 p-4">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-app mb-2">
+                                                        Total Solved
+                                                    </p>
+                                                    <p className="text-2xl font-display font-bold text-text-app">
+                                                        {analytics?.totalSolved ??
+                                                            0}
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-3xl border border-white/10 bg-card-app/70 p-4">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-muted-app mb-2">
+                                                        Average Rating
+                                                    </p>
+                                                    <p className="text-2xl font-display font-bold text-text-app">
+                                                        {analytics?.avgDifficulty ??
+                                                            0}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </Card>
+
+                                        <div className="grid grid-cols-1 gap-6">
+                                            <StatCard
+                                                label="Accuracy"
+                                                value={`${analytics?.accuracy ?? 0}%`}
+                                                subValue="Submission precision"
+                                                icon={Zap}
+                                                color="bg-orange-500/10 text-orange-500"
+                                            />
+                                            <StatCard
+                                                label="Contests"
+                                                value={analytics?.contestCount}
+                                                subValue="Official appearances"
+                                                icon={Users}
+                                                color="bg-blue-500/10 text-blue-500"
+                                            />
+                                            <StatCard
+                                                label="Rank Movements"
+                                                value={
+                                                    analytics?.maxDelta != null
+                                                        ? `+${analytics.maxDelta}`
+                                                        : '-'
+                                                }
+                                                subValue="Peak rating gain"
+                                                icon={TrendingUp}
+                                                color="bg-emerald-500/10 text-emerald-500"
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                                         <Card className="p-4 md:p-8 overflow-visible!">
                                             <div className="mb-6 md:mb-8">
-                                                <h3 className="text-lg md:text-xl font-display font-bold text-text-app">
+                                                <div className="inline-flex items-center gap-2 rounded-full bg-brand-secondary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-brand-secondary">
+                                                    <Binary size={14} />
+                                                    Rating Spread
+                                                </div>
+                                                <h3 className="mt-4 text-lg md:text-xl font-display font-bold text-text-app">
                                                     Problem Versatility
                                                 </h3>
-                                                <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
-                                                    Solution distribution by
-                                                    complexity
+                                                <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-2 opacity-70">
+                                                    How solved problems are
+                                                    distributed across
+                                                    difficulty bands.
                                                 </p>
                                             </div>
                                             <ProblemDistribution
@@ -1076,8 +1128,8 @@ export function Dashboard() {
                                                     Skill Signature
                                                 </h3>
                                                 <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
-                                                    Top 6 cognitive domains
-                                                    visualized
+                                                    Top problem tags and
+                                                    cognitive strengths
                                                 </p>
                                             </div>
                                             <RadarStrength
@@ -1093,7 +1145,8 @@ export function Dashboard() {
                                                     Solution Verdicts
                                                 </h3>
                                                 <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
-                                                    Outcome distribution
+                                                    Accepted vs retries and
+                                                    failures
                                                 </p>
                                             </div>
                                             <VerdictPieChart
@@ -1101,6 +1154,15 @@ export function Dashboard() {
                                             />
                                         </Card>
                                         <Card className="p-4 md:p-8 lg:col-span-2 overflow-visible!">
+                                            <div className="mb-6 md:mb-8">
+                                                <h3 className="text-lg md:text-xl font-display font-bold text-text-app">
+                                                    Language Reach
+                                                </h3>
+                                                <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
+                                                    Codeforces language usage
+                                                    breakdown
+                                                </p>
+                                            </div>
                                             <LanguageStats
                                                 submissions={submissions}
                                             />
@@ -1117,8 +1179,8 @@ export function Dashboard() {
                                                     Battle History
                                                 </h3>
                                                 <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
-                                                    A comprehensive record of
-                                                    official contests
+                                                    Official contest performance
+                                                    over time
                                                 </p>
                                             </div>
                                         </div>
