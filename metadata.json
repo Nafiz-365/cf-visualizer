@@ -1,0 +1,6 @@
+{
+    "name": "Remix: Codeforces Profile Visualizer",
+    "description": "Premium analytics and visualization dashboard for Codeforces profiles, featuring rating trends, problem-solving statistics, and AI-powered performance insights.",
+    "requestFramePermissions": [],
+    "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
