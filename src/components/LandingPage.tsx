@@ -10,6 +10,7 @@ import {
     Shield,
     Globe,
     History,
+    X,
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
@@ -31,6 +32,17 @@ export function LandingPage() {
         if (handle.trim()) {
             navigate(`/dashboard/${handle.trim()}`);
         }
+    };
+
+    const removeRecent = (handleToRemove: string) => {
+        const stored = JSON.parse(
+            localStorage.getItem('recent_handles') || '[]',
+        );
+        const updated = stored.filter(
+            (item: string) => item !== handleToRemove,
+        );
+        localStorage.setItem('recent_handles', JSON.stringify(updated));
+        setRecent(updated);
     };
 
     return (
@@ -197,13 +209,27 @@ export function LandingPage() {
                                 Recent
                             </div>
                             {recent.map((h) => (
-                                <button
+                                <div
                                     key={h}
-                                    onClick={() => navigate(`/dashboard/${h}`)}
-                                    className="btn btn-secondary btn-sm uppercase tracking-widest"
+                                    className="inline-flex items-center rounded-full bg-white/10 px-3 py-2 shadow-sm shadow-black/10 transition-all duration-200 hover:shadow-md hover:shadow-black/15"
                                 >
-                                    {h}
-                                </button>
+                                    <button
+                                        onClick={() =>
+                                            navigate(`/dashboard/${h}`)
+                                        }
+                                        className="text-[10px] font-bold uppercase tracking-widest text-text-app transition-colors hover:text-brand-primary"
+                                    >
+                                        {h}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeRecent(h)}
+                                        className="ml-2 w-6 h-6 rounded-full bg-white/10 text-muted-app hover:bg-white/20 hover:text-text-app transition-colors flex items-center justify-center"
+                                        aria-label={`Remove ${h} from recent searches`}
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                </div>
                             ))}
                         </motion.div>
                     )}
