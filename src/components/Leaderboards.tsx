@@ -224,12 +224,12 @@ export function Leaderboards() {
                                                                       .toUpperCase()}
                                                               </div>
                                                               <div className="min-w-0">
-                                                                  <p className="text-xs md:text-sm font-bold text-text-app group-hover:text-brand-primary transition-colors break-words whitespace-normal max-w-20 sm:max-w-37.5 md:max-w-none">
+                                                                  <p className="text-xs md:text-sm font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal max-w-20 sm:max-w-37.5 md:max-w-none">
                                                                       {
                                                                           user.handle
                                                                       }
                                                                   </p>
-                                                                  <p className="text-[8px] md:text-[10px] font-mono text-muted-app uppercase tracking-widest break-words whitespace-normal">
+                                                                  <p className="text-[8px] md:text-[10px] font-mono text-muted-app uppercase tracking-widest wrap-break-word whitespace-normal">
                                                                       {(
                                                                           user.rank ||
                                                                           'Newbie'
@@ -250,7 +250,7 @@ export function Leaderboards() {
                                                                   size={10}
                                                                   className="opacity-40"
                                                               />
-                                                              <span className="break-words whitespace-normal max-w-15 sm:max-w-none">
+                                                              <span className="wrap-break-word whitespace-normal max-w-15 sm:max-w-none">
                                                                   {user.country ||
                                                                       'Global'}
                                                               </span>
@@ -366,7 +366,7 @@ export function Leaderboards() {
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex-1 min-w-0 pr-4">
-                                                <h4 className="text-xs font-bold text-text-app break-words whitespace-normal group-hover:text-brand-primary transition-colors">
+                                                <h4 className="text-xs font-bold text-text-app wrap-break-word whitespace-normal group-hover:text-brand-primary transition-colors">
                                                     {contest.name}
                                                 </h4>
                                                 <p className="text-[9px] font-mono text-muted-app uppercase tracking-widest mt-1.5 font-bold">
