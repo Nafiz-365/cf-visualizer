@@ -182,7 +182,7 @@ export function ActivityHeatmap({
             {/* Stable Scrollable Container */}
             <div className="relative w-full min-h-37.5 overflow-visible mt-2">
                 {/* Inner container with horizontal scroll (with thin custom-scrollbar) */}
-                <div className="flex gap-1.5 overflow-x-auto pb-2 pt-1 px-1 w-full min-h-[150px] custom-scrollbar">
+                <div className="flex gap-1.5 overflow-x-auto pb-2 pt-1 px-1 w-full min-h-37.5 custom-scrollbar">
                     {weeks.map((week, weekIdx) => {
                         const monthLabel = monthLabels.find(
                             (lbl) => lbl.index === weekIdx,
@@ -210,7 +210,7 @@ export function ActivityHeatmap({
                                         }
                                         onMouseLeave={() => setHovered(null)}
                                         className={cn(
-                                            'w-3 h-3 rounded-[4px] cursor-pointer relative transition-all duration-75 hover:brightness-125 hover:ring-1 hover:ring-brand-primary/80 hover:z-10',
+                                            'w-3 h-3 rounded-sm cursor-pointer relative transition-all duration-75 hover:brightness-125 hover:ring-1 hover:ring-brand-primary/80 hover:z-10',
                                             getColor(day.count),
                                         )}
                                     />
