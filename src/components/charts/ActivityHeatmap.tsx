@@ -12,9 +12,15 @@ import { cn } from '../../lib/utils';
 
 interface HeatmapProps {
     submissions: Submission[];
+    rangeDays?: number;
+    anchorDate?: string;
 }
 
-export function ActivityHeatmap({ submissions }: HeatmapProps) {
+export function ActivityHeatmap({
+    submissions,
+    rangeDays = 365,
+    anchorDate,
+}: HeatmapProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [hovered, setHovered] = useState<{
         date: Date;
@@ -33,8 +39,10 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
             counts[date] = (counts[date] || 0) + 1;
         });
 
-        const end = startOfToday();
-        const start = subDays(end, 364);
+        const end = anchorDate
+            ? new Date(`${anchorDate}T00:00:00`)
+            : startOfToday();
+        const start = subDays(end, Math.max(rangeDays - 1, 30));
         const startOfGraph = startOfWeek(start);
 
         const days = eachDayOfInterval({
@@ -72,17 +80,19 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
         });
 
         return { weeks: weeksArray, monthLabels: labels };
-    }, [submissions]);
+    }, [submissions, rangeDays, anchorDate]);
+
+    const hasActivity = submissions.length > 0;
 
     const getColor = (count: number) => {
-        if (count === 0) return 'bg-white/5';
+        if (count === 0) return 'bg-white/8 border border-white/10';
         if (count < 3)
-            return 'bg-brand-primary/20 shadow-sm shadow-brand-primary/5';
+            return 'bg-brand-primary/30 border border-brand-primary/20 shadow-sm shadow-brand-primary/10';
         if (count < 6)
-            return 'bg-brand-primary/40 shadow-md shadow-brand-primary/10';
+            return 'bg-brand-primary/55 border border-brand-primary/30 shadow-md shadow-brand-primary/15';
         if (count < 10)
-            return 'bg-brand-primary/70 shadow-lg shadow-brand-primary/20';
-        return 'bg-brand-primary shadow-xl shadow-brand-primary/40 brightness-110';
+            return 'bg-brand-primary/80 border border-brand-primary/40 shadow-lg shadow-brand-primary/20';
+        return 'bg-brand-primary border border-brand-primary/60 shadow-xl shadow-brand-primary/35 brightness-110';
     };
 
     const handleMouseEnter = (
@@ -134,7 +144,7 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
     return (
         <div
             ref={containerRef}
-            className="w-full relative select-none h-45 flex flex-col justify-between"
+            className="w-full relative select-none min-h-55 flex flex-col justify-between"
         >
             {/* Velocity Header */}
             <div className="flex items-center justify-between pb-2">
@@ -143,10 +153,16 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
                         Velocity Map
                     </p>
                     <p className="text-[9px] text-muted-app opacity-40 mt-1 uppercase font-bold">
-                        Annual activity distribution
+                        {rangeDays === 30
+                            ? 'Recent pulse'
+                            : rangeDays === 90
+                              ? 'Rolling quarter'
+                              : rangeDays === 180
+                                ? 'Half-year rhythm'
+                                : 'Annual activity distribution'}
                     </p>
                 </div>
-                <div className="flex items-center gap-3 bg-white/2 p-2 rounded-xl border border-white/5">
+                <div className="flex items-center gap-3 bg-white/5 p-2 rounded-xl border border-white/10">
                     <span className="text-[8px] font-black text-muted-app uppercase opacity-40">
                         Rare
                     </span>
@@ -164,9 +180,9 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
             </div>
 
             {/* Stable Scrollable Container */}
-            <div className="relative w-full h-30 overflow-visible mt-2">
+            <div className="relative w-full min-h-37.5 overflow-visible mt-2">
                 {/* Inner container with horizontal scroll (with thin custom-scrollbar) */}
-                <div className="flex gap-1 overflow-x-auto pb-2 pt-1 px-1 w-full h-full custom-scrollbar">
+                <div className="flex gap-1.5 overflow-x-auto pb-2 pt-1 px-1 w-full min-h-[150px] custom-scrollbar">
                     {weeks.map((week, weekIdx) => {
                         const monthLabel = monthLabels.find(
                             (lbl) => lbl.index === weekIdx,
@@ -174,7 +190,7 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
                         return (
                             <div
                                 key={weekIdx}
-                                className="flex flex-col gap-0.75 shrink-0 relative w-2.5"
+                                className="flex flex-col gap-1 shrink-0 relative w-3.5"
                             >
                                 {/* Month Label Header */}
                                 <div className="h-4 text-[8px] font-mono text-muted-app uppercase font-black opacity-50 relative pointer-events-none select-none">
@@ -194,7 +210,7 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
                                         }
                                         onMouseLeave={() => setHovered(null)}
                                         className={cn(
-                                            'w-2.5 h-2.5 rounded-xs cursor-pointer relative transition-all duration-75 hover:brightness-125 hover:ring-1 hover:ring-brand-primary/80 hover:z-10',
+                                            'w-3 h-3 rounded-[4px] cursor-pointer relative transition-all duration-75 hover:brightness-125 hover:ring-1 hover:ring-brand-primary/80 hover:z-10',
                                             getColor(day.count),
                                         )}
                                     />
@@ -204,6 +220,14 @@ export function ActivityHeatmap({ submissions }: HeatmapProps) {
                     })}
                 </div>
             </div>
+
+            {!hasActivity && (
+                <div className="absolute inset-x-0 bottom-2 flex justify-center">
+                    <div className="rounded-full border border-dashed border-white/10 bg-white/5 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/70">
+                        No submissions in this window
+                    </div>
+                </div>
+            )}
 
             {/* Floating Dynamic Tooltip: outside of clipping wrapper to prevent cutting off */}
             {hovered && (

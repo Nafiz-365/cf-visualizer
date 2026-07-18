@@ -283,7 +283,7 @@ export function LandingPage() {
                             CF
                         </div>
                         <span className="text-xs font-display font-bold text-text-app tracking-tight">
-                            Visualizer Pro
+                            Visualizer
                         </span>
                     </div>
                     <p className="text-[10px] text-muted-app font-mono uppercase tracking-[0.2em]">

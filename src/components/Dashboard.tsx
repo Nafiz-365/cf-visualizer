@@ -461,6 +461,18 @@ export function Dashboard() {
     >('overview');
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [heatmapRange, setHeatmapRange] = useState<
+        '30' | '90' | '180' | '365'
+    >('365');
+    const [heatmapAnchor, setHeatmapAnchor] = useState(() =>
+        format(new Date(), 'yyyy-MM-dd'),
+    );
+
+    const focusTopic = analytics?.bestTag || 'DP';
+    const nextMilestone = Math.max(
+        100 * Math.ceil(((user?.rating ?? 800) + 150) / 100),
+        1000,
+    );
 
     const TABS = [
         { id: 'overview', label: 'Overview', icon: LayoutList },
@@ -526,7 +538,7 @@ export function Dashboard() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-100"
+                            className="md:hidden fixed inset-0 bg-black/70 backdrop-blur-[6px] z-100"
                         />
                         {/* Drawer */}
                         <motion.aside
@@ -538,11 +550,11 @@ export function Dashboard() {
                                 damping: 25,
                                 stiffness: 200,
                             }}
-                            className="md:hidden fixed left-0 top-0 w-72 h-screen bg-bg-app/95 border-r border-white/10 z-100 flex flex-col p-6 shadow-2xl backdrop-blur-xl"
+                            className="md:hidden fixed left-0 top-0 w-[84vw] max-w-[20rem] h-screen bg-bg-app/95 border-r border-white/10 z-100 flex flex-col p-5 shadow-[0_24px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
                         >
-                            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-3xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-sm shadow-brand-primary/10">
+                                    <div className="w-10 h-10 rounded-3xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-[0_8px_24px_rgba(79,142,247,0.16)]">
                                         <Trophy size={16} />
                                     </div>
                                     <div>
@@ -556,7 +568,7 @@ export function Dashboard() {
                                 </div>
                                 <button
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="p-2 rounded-2xl text-muted-app hover:text-text-app hover:bg-white/10 transition-colors"
+                                    className="p-2 rounded-2xl text-muted-app hover:text-text-app hover:bg-white/10 transition-all"
                                     aria-label="Close menu"
                                 >
                                     <X size={20} />
@@ -575,7 +587,7 @@ export function Dashboard() {
                                                 setIsMobileMenuOpen(false);
                                             }}
                                             className={cn(
-                                                'w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative text-sm',
+                                                'w-full flex items-center gap-3 px-4 py-3 rounded-[1.15rem] transition-all duration-300 group relative text-sm',
                                                 isActive
                                                     ? 'bg-brand-primary/10 text-brand-primary shadow-sm shadow-brand-primary/20 ring-1 ring-brand-primary/15'
                                                     : 'text-muted-app hover:bg-white/10 hover:text-text-app',
@@ -607,7 +619,7 @@ export function Dashboard() {
                                     to="/"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    <button className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl bg-white/5 border border-white/5 text-muted-app hover:bg-white/10 hover:text-text-app transition-all text-left">
+                                    <button className="w-full flex items-center gap-3 px-4 py-4 rounded-[1.15rem] bg-white/5 border border-white/10 text-muted-app hover:bg-white/10 hover:text-text-app transition-all text-left shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
                                         <Search size={18} />
                                         <span className="text-[10px] font-black uppercase tracking-widest">
                                             New Scout
@@ -687,14 +699,14 @@ export function Dashboard() {
 
             {/* Main Content Area */}
             <main className="flex-1 ml-0 mt-0 md:mt-0 md:ml-20 lg:ml-64 overflow-y-auto custom-scrollbar relative">
-                <header className="sticky top-0 z-40 bg-bg-app/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-8 py-3 md:py-4">
-                    <div className="flex items-center justify-between gap-3 max-w-7xl mx-auto">
+                <header className="sticky top-0 z-40 bg-bg-app/80 backdrop-blur-xl border-b border-white/5 px-3 sm:px-4 md:px-8 py-3 md:py-4">
+                    <div className="flex items-center justify-between gap-2 sm:gap-3 max-w-7xl mx-auto">
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() =>
                                     setIsMobileMenuOpen(!isMobileMenuOpen)
                                 }
-                                className="md:hidden p-2 rounded-2xl text-muted-app hover:text-text-app hover:bg-white/10 transition-colors"
+                                className="md:hidden p-2 rounded-2xl text-muted-app hover:text-text-app hover:bg-white/10 transition-all"
                                 aria-label="Open menu"
                             >
                                 <Menu size={20} />
@@ -702,12 +714,12 @@ export function Dashboard() {
 
                             <button
                                 onClick={() => setIsProfileModalOpen(true)}
-                                className="group flex items-center gap-3 rounded-[2rem] bg-brand-primary/10 border border-white/10 px-3 py-2 transition-all duration-300 hover:border-brand-primary/20"
+                                className="group flex items-center gap-2 sm:gap-3 rounded-[2rem] bg-brand-primary/10 border border-white/10 px-2.5 sm:px-3 py-2 transition-all duration-300 hover:border-brand-primary/20"
                             >
                                 <div className="relative">
                                     <img
                                         src={user.avatar}
-                                        className="w-12 h-12 rounded-2xl border border-white/10 object-cover shadow-lg transition-transform duration-300 group-hover:scale-105"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl border border-white/10 object-cover shadow-lg transition-transform duration-300 group-hover:scale-105"
                                     />
                                     <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg-app border-2 border-white/10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                         <Target
@@ -872,8 +884,141 @@ export function Dashboard() {
                                         </div>
                                     </div>
 
+                                    <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-4 md:gap-6">
+                                        <Card className="p-4 md:p-5 border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent shadow-[0_14px_34px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-[0.24em] text-muted-app/70">
+                                                        Performance Pulse
+                                                    </p>
+                                                    <h4 className="text-base md:text-lg font-display font-bold text-text-app mt-1 leading-snug">
+                                                        A sharper read on your
+                                                        current momentum
+                                                    </h4>
+                                                </div>
+                                                <div className="rounded-full bg-brand-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary">
+                                                    Live
+                                                </div>
+                                            </div>
+                                            <div className="grid gap-3 sm:grid-cols-2">
+                                                <div className="rounded-[1.15rem] border border-white/10 bg-white/5 p-3">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                        Momentum
+                                                    </p>
+                                                    <p className="mt-1 text-sm font-bold text-text-app">
+                                                        {Number(
+                                                            analytics?.maxDelta ??
+                                                                0,
+                                                        ) > 0
+                                                            ? 'Rising'
+                                                            : 'Steady'}
+                                                    </p>
+                                                    <p className="mt-1 text-[10px] text-muted-app/70">
+                                                        {analytics?.maxDelta
+                                                            ? `Best gain +${analytics.maxDelta}`
+                                                            : 'No sharp swings yet'}
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-[1.15rem] border border-white/10 bg-white/5 p-3">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                        Accuracy
+                                                    </p>
+                                                    <p className="mt-1 text-sm font-bold text-text-app">
+                                                        {analytics?.accuracy ??
+                                                            0}
+                                                        %
+                                                    </p>
+                                                    <p className="mt-1 text-[10px] text-muted-app/70">
+                                                        Precision in your recent
+                                                        solving rhythm
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-[1.15rem] border border-white/10 bg-white/5 p-3">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                        Focus Topic
+                                                    </p>
+                                                    <p className="mt-1 text-sm font-bold text-text-app">
+                                                        {focusTopic}
+                                                    </p>
+                                                    <p className="mt-1 text-[10px] text-muted-app/70">
+                                                        Your strongest recurring
+                                                        domain
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-[1.15rem] border border-white/10 bg-white/5 p-3">
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                        Peak Window
+                                                    </p>
+                                                    <p className="mt-1 text-sm font-bold text-text-app">
+                                                        {analytics?.peakHour ||
+                                                            '—'}
+                                                    </p>
+                                                    <p className="mt-1 text-[10px] text-muted-app/70">
+                                                        Best hour for serious
+                                                        practice
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </Card>
+
+                                        <Card className="p-4 md:p-5 border border-white/10 bg-linear-to-br from-brand-primary/8 via-white/5 to-transparent shadow-[0_14px_34px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-[0.24em] text-muted-app/70">
+                                                        AI Signal
+                                                    </p>
+                                                    <h4 className="text-base font-display font-bold text-text-app mt-1">
+                                                        Next move
+                                                    </h4>
+                                                </div>
+                                                <div className="rounded-full bg-brand-secondary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-brand-secondary">
+                                                    Smart
+                                                </div>
+                                            </div>
+                                            <div className="rounded-[1.15rem] border border-white/10 bg-white/5 p-3">
+                                                {loadingInsights ? (
+                                                    <p className="text-sm font-medium text-muted-app">
+                                                        Synthesizing your
+                                                        profile...
+                                                    </p>
+                                                ) : (
+                                                    <>
+                                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                            {(
+                                                                aiInsights[0]
+                                                                    ?.title ||
+                                                                'Strategic Edge'
+                                                            ).toUpperCase()}
+                                                        </p>
+                                                        <p className="mt-2 text-sm font-semibold text-text-app leading-relaxed">
+                                                            {aiInsights[0]
+                                                                ?.desc ||
+                                                                `Your next best move is to practice ${focusTopic} problems around ${nextMilestone} RP.`}
+                                                        </p>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <div className="mt-3 flex items-center justify-between rounded-[1.15rem] border border-brand-primary/10 bg-brand-primary/5 px-3 py-3">
+                                                <div>
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                        Suggested focus
+                                                    </p>
+                                                    <p className="mt-0.5 text-sm font-bold text-text-app">
+                                                        {focusTopic} •{' '}
+                                                        {analytics?.accuracy ??
+                                                            0}
+                                                        % accuracy
+                                                    </p>
+                                                </div>
+                                                <div className="rounded-full bg-white/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-brand-primary">
+                                                    Ready
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    </div>
+
                                     {/* Grid Stats */}
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
+                                    <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
                                         <StatCard
                                             label="Total Solved"
                                             value={analytics?.totalSolved}
@@ -1672,23 +1817,66 @@ export function Dashboard() {
                                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
                                         <div className="lg:col-span-8 space-y-6 md:space-y-8">
                                             {/* Activity Matrix with Context */}
-                                            <Card className="p-4 md:p-8 relative overflow-visible!">
-                                                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6 md:mb-8 relative z-10">
+                                            <Card className="p-4 md:p-8 relative overflow-visible! rounded-[1.75rem] border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-xl">
+                                                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6 md:mb-8 relative z-10">
                                                     <div>
                                                         <h3 className="text-xl md:text-2xl font-display font-bold text-text-app">
                                                             Cognitive
                                                             Consistency
                                                         </h3>
                                                         <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1.5 opacity-40">
-                                                            Execution heatmap of
-                                                            the last year
+                                                            Pick a date and
+                                                            inspect the activity
+                                                            window
                                                         </p>
                                                     </div>
-                                                    <div className="p-2 md:p-3 bg-brand-primary/10 rounded-xl md:rounded-2xl text-brand-primary shrink-0">
-                                                        <Calendar
-                                                            size={20}
-                                                            className="md:w-6 md:h-6"
-                                                        />
+                                                    <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                                                        <label className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/70">
+                                                            <Calendar
+                                                                size={12}
+                                                                className="text-brand-primary"
+                                                            />
+                                                            <input
+                                                                type="date"
+                                                                value={
+                                                                    heatmapAnchor
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setHeatmapAnchor(
+                                                                        e.target
+                                                                            .value,
+                                                                    )
+                                                                }
+                                                                className="min-w-[110px] bg-transparent text-[10px] font-black text-text-app outline-none"
+                                                            />
+                                                        </label>
+                                                        <select
+                                                            value={heatmapRange}
+                                                            onChange={(e) =>
+                                                                setHeatmapRange(
+                                                                    e.target
+                                                                        .value as
+                                                                        | '30'
+                                                                        | '90'
+                                                                        | '180'
+                                                                        | '365',
+                                                                )
+                                                            }
+                                                            className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-app outline-none"
+                                                        >
+                                                            <option value="30">
+                                                                30D
+                                                            </option>
+                                                            <option value="90">
+                                                                90D
+                                                            </option>
+                                                            <option value="180">
+                                                                180D
+                                                            </option>
+                                                            <option value="365">
+                                                                365D
+                                                            </option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div className="relative z-10">
@@ -1696,11 +1884,60 @@ export function Dashboard() {
                                                         submissions={
                                                             submissions
                                                         }
+                                                        rangeDays={Number(
+                                                            heatmapRange,
+                                                        )}
+                                                        anchorDate={
+                                                            heatmapAnchor
+                                                        }
                                                     />
                                                 </div>
                                             </Card>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                                            <div className="rounded-[1.5rem] border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 sm:p-5 mb-6 md:mb-8 shadow-[0_12px_36px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+                                                    <div>
+                                                        <p className="text-[10px] font-black uppercase tracking-[0.24em] text-muted-app/70">
+                                                            Next Focus
+                                                        </p>
+                                                        <h4 className="text-base md:text-lg font-display font-bold text-text-app mt-1 leading-snug">
+                                                            Stay sharp for the
+                                                            next milestone
+                                                        </h4>
+                                                    </div>
+                                                    <div className="self-start rounded-full bg-brand-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary sm:self-auto">
+                                                        {nextMilestone} RP
+                                                    </div>
+                                                </div>
+                                                <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
+                                                    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                            Priority Topic
+                                                        </p>
+                                                        <p className="mt-1 text-sm font-bold text-text-app">
+                                                            {focusTopic}
+                                                        </p>
+                                                    </div>
+                                                    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                            Best Window
+                                                        </p>
+                                                        <p className="mt-1 text-sm font-bold text-text-app">
+                                                            2–3 focused sessions
+                                                        </p>
+                                                    </div>
+                                                    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/60">
+                                                            Mode
+                                                        </p>
+                                                        <p className="mt-1 text-sm font-bold text-text-app">
+                                                            Accuracy + speed
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
                                                 <Card className="p-4 md:p-8 bg-card-app/30 border-white/5">
                                                     <div className="flex items-center gap-3 mb-6 md:mb-8">
                                                         <div className="w-1.5 h-6 bg-brand-secondary rounded-full" />
@@ -1736,7 +1973,7 @@ export function Dashboard() {
                                         </div>
 
                                         <div className="lg:col-span-4 space-y-6 md:space-y-8">
-                                            <Card className="p-4 md:p-8 bg-linear-to-b from-brand-primary/5 to-transparent border-brand-primary/10 relative overflow-hidden">
+                                            <Card className="p-4 md:p-8 bg-linear-to-b from-brand-primary/5 to-transparent border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md rounded-[1.5rem] relative overflow-hidden">
                                                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl" />
                                                 <div className="relative z-10">
                                                     <div className="flex items-center justify-between mb-6 md:mb-8">
@@ -1752,12 +1989,12 @@ export function Dashboard() {
                                                 </div>
                                             </Card>
 
-                                            <Card className="p-4 md:p-8 relative overflow-hidden">
+                                            <Card className="p-4 md:p-8 relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-linear-to-br from-white/8 via-transparent to-transparent shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md">
                                                 <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-6 md:mb-8">
                                                     Advancement Vector
                                                 </h3>
                                                 <div className="space-y-6 relative z-10">
-                                                    <div className="p-4 md:p-6 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all duration-500">
+                                                    <div className="p-4 md:p-6 rounded-[1.35rem] bg-linear-to-br from-white/10 to-white/5 border border-white/10 group hover:bg-white/10 hover:-translate-y-0.5 transition-all duration-500 shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
                                                         <p className="text-[10px] font-black text-muted-app uppercase tracking-widest mb-3 opacity-40 group-hover:opacity-100 transition-opacity">
                                                             Current Breakthrough
                                                             Phase
@@ -1770,7 +2007,7 @@ export function Dashboard() {
                                                                 1600 RP
                                                             </span>
                                                         </div>
-                                                        <div className="h-2.5 w-full bg-white/5 rounded-full overflow-hidden mb-2 shadow-inner">
+                                                        <div className="h-2.5 w-full bg-white/6 rounded-full overflow-hidden mb-2 shadow-[inset_0_2px_8px_rgba(0,0,0,0.16)]">
                                                             <motion.div
                                                                 initial={{
                                                                     width: 0,

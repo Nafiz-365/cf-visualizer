@@ -29,7 +29,11 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
         });
 
         return Array.from(attempts.values())
-            .sort((a, b) => (b.problem.rating || 0) - (a.problem.rating || 0)) // Hardest first
+            .sort((a, b) => {
+                const scoreA = (a.problem.rating || 0) + a.count * 40;
+                const scoreB = (b.problem.rating || 0) + b.count * 40;
+                return scoreB - scoreA;
+            })
             .slice(0, 10);
     }, [submissions]);
 
@@ -37,19 +41,19 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <AlertCircle size={16} className="text-red-500" />
                     <h3 className="text-[10px] font-mono font-bold text-muted-app uppercase tracking-[0.2em]">
                         Unsolved Challenges
                     </h3>
                 </div>
-                <span className="text-[9px] font-bold text-red-500/50 uppercase">
+                <span className="self-start text-[9px] font-bold text-red-500/50 uppercase sm:self-auto">
                     {unsolved.length} Pending
                 </span>
             </div>
 
-            <div className="space-y-2 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-2 max-h-[16rem] sm:max-h-100 overflow-y-auto pr-2 custom-scrollbar">
                 {unsolved.map(({ problem, count }) => (
                     <a
                         key={`${problem.contestId}-${problem.index}`}
@@ -58,9 +62,9 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
                         rel="noopener noreferrer"
                         className="block group"
                     >
-                        <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all group-hover:translate-x-1">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-3 rounded-[1rem] hover:bg-white/8 border border-transparent hover:border-white/10 transition-all duration-500 group-hover:translate-x-1 group-hover:shadow-[0_8px_18px_rgba(0,0,0,0.10)]">
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-0.5">
+                                <div className="flex flex-wrap items-center gap-2 mb-0.5">
                                     <span className="text-[10px] font-black text-brand-secondary uppercase">
                                         {problem.index}
                                     </span>
@@ -68,13 +72,14 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
                                         {problem.name}
                                     </h4>
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex flex-wrap items-center gap-3">
                                     <span className="text-[9px] font-medium text-muted-app/60">
                                         {problem.rating || 'Unrated'} RATED
                                     </span>
                                     <span className="text-[9px] font-medium text-red-500/60 uppercase">
-                                        {count}{' '}
-                                        {count === 1 ? 'Attempt' : 'Attempts'}
+                                        {count > 1
+                                            ? 'Repeated miss'
+                                            : 'Single miss'}
                                     </span>
                                 </div>
                             </div>

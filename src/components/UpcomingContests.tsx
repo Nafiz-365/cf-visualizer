@@ -63,7 +63,7 @@ export function UpcomingContests() {
                         rel="noopener noreferrer"
                         className="block group"
                     >
-                        <div className="glass p-4 rounded-2xl border border-white/5 group-hover:border-brand-primary/30 transition-all">
+                        <div className="glass p-4 rounded-[1.2rem] border border-white/10 bg-linear-to-br from-white/8 via-transparent to-transparent transition-all duration-500 group-hover:-translate-y-0.5 group-hover:border-brand-primary/30 group-hover:shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
                             <div className="flex items-start justify-between mb-2">
                                 <span
                                     className={cn(
@@ -85,7 +85,7 @@ export function UpcomingContests() {
                             <h4 className="text-xs font-bold text-text-app mb-2 leading-tight group-hover:text-brand-primary transition-colors break-words whitespace-normal">
                                 {contest.name}
                             </h4>
-                            <div className="flex items-center gap-3 text-[10px] text-muted-app font-medium">
+                            <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted-app font-medium">
                                 <div className="flex items-center gap-1">
                                     <Clock size={10} />
                                     {contest.startTimeSeconds &&
@@ -101,6 +101,18 @@ export function UpcomingContests() {
                                     )}
                                     h
                                 </div>
+                            </div>
+                            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[9px] text-muted-app/70">
+                                <span>
+                                    {contest.phase === 'CODING'
+                                        ? 'Live now — jump in'
+                                        : 'Good prep window'}
+                                </span>
+                                <span className="font-semibold text-brand-primary">
+                                    {contest.phase === 'CODING'
+                                        ? 'Ready'
+                                        : 'Schedule'}
+                                </span>
                             </div>
                         </div>
                     </a>
