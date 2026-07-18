@@ -91,7 +91,7 @@ export function DashboardSkeleton({ handle }: { handle?: string }) {
                         {Array.from({ length: 5 }).map((_, i) => (
                             <div
                                 key={i}
-                                className="rounded-[1.75rem] p-5 space-y-3 min-h-[120px]"
+                                className="rounded-[1.75rem] p-5 space-y-3 min-h-30"
                                 style={{
                                     background: 'var(--bg-card)',
                                     border: '1px solid var(--glass-border)',
