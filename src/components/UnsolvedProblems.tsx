@@ -53,7 +53,7 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
                 </span>
             </div>
 
-            <div className="space-y-2 max-h-[16rem] sm:max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-2 max-h-64 sm:max-h-100 overflow-y-auto pr-2 custom-scrollbar">
                 {unsolved.map(({ problem, count }) => (
                     <a
                         key={`${problem.contestId}-${problem.index}`}
@@ -62,13 +62,13 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
                         rel="noopener noreferrer"
                         className="block group"
                     >
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-3 rounded-[1rem] hover:bg-white/8 border border-transparent hover:border-white/10 transition-all duration-500 group-hover:translate-x-1 group-hover:shadow-[0_8px_18px_rgba(0,0,0,0.10)]">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-3 rounded-2xl hover:bg-white/8 border border-transparent hover:border-white/10 transition-all duration-500 group-hover:translate-x-1 group-hover:shadow-[0_8px_18px_rgba(0,0,0,0.10)]">
                             <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2 mb-0.5">
                                     <span className="text-[10px] font-black text-brand-secondary uppercase">
                                         {problem.index}
                                     </span>
-                                    <h4 className="text-[11px] font-bold text-text-app break-words whitespace-normal group-hover:text-brand-secondary transition-colors">
+                                    <h4 className="text-[11px] font-bold text-text-app wrap-break-word whitespace-normal group-hover:text-brand-secondary transition-colors">
                                         {problem.name}
                                     </h4>
                                 </div>
