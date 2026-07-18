@@ -194,7 +194,7 @@ export function RatingChart({ data }: RatingChartProps) {
                                                 {item.change}
                                             </div>
                                         </div>
-                                        <p className="text-[9px] font-bold text-text-app mb-1 leading-snug break-words whitespace-normal max-w-30">
+                                        <p className="text-[9px] font-bold text-text-app mb-1 leading-snug wrap-break-word whitespace-normal max-w-30">
                                             {item.contest}
                                         </p>
                                         <div className="flex items-end gap-1.5">
