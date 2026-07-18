@@ -79,12 +79,12 @@ export function StatCard({
     return (
         <Card
             className="group hover:-translate-y-1 transition-all duration-400 flex flex-col justify-between h-full
-                    p-3.5 md:p-6 min-h-[110px] md:min-h-[150px]"
+                    p-3.5 md:p-6 min-h-27.5 md:min-h-37.5"
         >
             <div className="relative z-10 w-full">
                 {/* Header row */}
                 <div className="flex items-start justify-between mb-2 md:mb-3">
-                    <span className="text-[7.5px] md:text-[10px] font-black uppercase tracking-[0.22em] text-[var(--text-muted)] break-words whitespace-normal pr-2 opacity-80">
+                    <span className="text-[7.5px] md:text-[10px] font-black uppercase tracking-[0.22em] text-(--text-muted) wrap-break-word whitespace-normal pr-2 opacity-80">
                         {label}
                     </span>
                     {Icon && (
@@ -126,8 +126,8 @@ export function StatCard({
                                 {trend === 'up'
                                     ? '▲'
                                     : trend === 'down'
-                                      ? '▼'
-                                      : '—'}
+                                    ? '▼'
+                                    : '—'}
                             </span>
                         )}
                     </div>
@@ -163,7 +163,7 @@ export function StatCard({
                     className="absolute -right-4 -bottom-4 opacity-[0.025] group-hover:opacity-[0.07]
                                 group-hover:scale-125 transition-all duration-700 pointer-events-none rotate-[-15deg]"
                 >
-                    <Icon size={80} className="md:w-[100px] md:h-[100px]" />
+                    <Icon size={80} className="md:w-25 md:h-25" />
                 </div>
             )}
         </Card>
