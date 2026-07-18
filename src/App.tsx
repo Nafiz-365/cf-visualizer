@@ -59,7 +59,7 @@ function Navbar() {
 
                 <button
                     onClick={toggleTheme}
-                    className="p-2 md:p-2.5 rounded-full transition-all duration-300 shrink-0 text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[rgba(255,255,255,0.08)] hover:shadow-[0_0_12px_rgba(79,142,247,0.15)]"
+                    className="p-2 md:p-2.5 rounded-full transition-all duration-300 shrink-0 text-(--text-muted) hover:text-(--text-main) hover:bg-[rgba(255,255,255,0.08)] hover:shadow-[0_0_12px_rgba(79,142,247,0.15)]"
                     aria-label="Toggle theme"
                 >
                     {theme === 'light' ? (
@@ -82,7 +82,7 @@ function NavLink({ to, active, icon: Icon, label }: any) {
                 'text-[10px] md:text-xs font-black transition-all duration-300 uppercase tracking-widest',
                 active
                     ? 'nav-link-active'
-                    : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[rgba(255,255,255,0.08)]',
+                    : 'text-(--text-muted) hover:text-(--text-main) hover:bg-[rgba(255,255,255,0.08)]',
             )}
         >
             <Icon size={14} className="shrink-0" />
