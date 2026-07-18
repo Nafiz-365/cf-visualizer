@@ -4,6 +4,10 @@ A lightweight Codeforces analytics dashboard I built from scratch to explore con
 
 This project is a simple React + Vite app with a small Express proxy server for Codeforces API calls and Gemini AI support. It is hand assembled to keep the experience fast and easy to run.
 
+## Live demo
+
+[Open Codeforces Visualizer](https://cf-visualizer-by-talha.netlify.app/)
+
 ## What this repo includes
 
 - `src/` – React components for dashboard, charts, leaderboards, contest history, and AI insights
