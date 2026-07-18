@@ -714,7 +714,7 @@ export function Dashboard() {
 
                             <button
                                 onClick={() => setIsProfileModalOpen(true)}
-                                className="group flex items-center gap-2 sm:gap-3 rounded-[2rem] bg-brand-primary/10 border border-white/10 px-2.5 sm:px-3 py-2 transition-all duration-300 hover:border-brand-primary/20"
+                                className="group flex items-center gap-2 sm:gap-3 rounded-4xl bg-brand-primary/10 border border-white/10 px-2.5 sm:px-3 py-2 transition-all duration-300 hover:border-brand-primary/20"
                             >
                                 <div className="relative">
                                     <img
@@ -1847,7 +1847,7 @@ export function Dashboard() {
                                                                             .value,
                                                                     )
                                                                 }
-                                                                className="min-w-[110px] bg-transparent text-[10px] font-black text-text-app outline-none"
+                                                                className="min-w-27.5 bg-transparent text-[10px] font-black text-text-app outline-none"
                                                             />
                                                         </label>
                                                         <select
@@ -1894,7 +1894,7 @@ export function Dashboard() {
                                                 </div>
                                             </Card>
 
-                                            <div className="rounded-[1.5rem] border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 sm:p-5 mb-6 md:mb-8 shadow-[0_12px_36px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                                            <div className="rounded-3xl border border-white/10 bg-linear-to-br from-white/10 via-white/5 to-transparent p-4 sm:p-5 mb-6 md:mb-8 shadow-[0_12px_36px_rgba(0,0,0,0.12)] backdrop-blur-md">
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
                                                     <div>
                                                         <p className="text-[10px] font-black uppercase tracking-[0.24em] text-muted-app/70">
@@ -1973,7 +1973,7 @@ export function Dashboard() {
                                         </div>
 
                                         <div className="lg:col-span-4 space-y-6 md:space-y-8">
-                                            <Card className="p-4 md:p-8 bg-linear-to-b from-brand-primary/5 to-transparent border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md rounded-[1.5rem] relative overflow-hidden">
+                                            <Card className="p-4 md:p-8 bg-linear-to-b from-brand-primary/5 to-transparent border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md rounded-3xl relative overflow-hidden">
                                                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl" />
                                                 <div className="relative z-10">
                                                     <div className="flex items-center justify-between mb-6 md:mb-8">
@@ -1989,7 +1989,7 @@ export function Dashboard() {
                                                 </div>
                                             </Card>
 
-                                            <Card className="p-4 md:p-8 relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-linear-to-br from-white/8 via-transparent to-transparent shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md">
+                                            <Card className="p-4 md:p-8 relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-white/8 via-transparent to-transparent shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md">
                                                 <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-6 md:mb-8">
                                                     Advancement Vector
                                                 </h3>
@@ -2098,7 +2098,7 @@ export function Dashboard() {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors break-words whitespace-normal mb-2">
+                                                            <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-2">
                                                                 {blog.title.replace(
                                                                     /<\/?[^>]+(>|$)/g,
                                                                     '',
