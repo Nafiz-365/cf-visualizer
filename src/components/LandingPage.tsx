@@ -287,7 +287,7 @@ export function LandingPage() {
                         </span>
                     </div>
                     <p className="text-[10px] text-muted-app font-mono uppercase tracking-[0.2em]">
-                        Powered by Codeforces Official API
+                        Created by Nafiz Kamal Talha
                     </p>
                     <div className="flex items-center gap-6">
                         <a
