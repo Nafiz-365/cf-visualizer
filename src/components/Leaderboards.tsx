@@ -296,7 +296,7 @@ export function Leaderboards() {
                                                 className={cn(
                                                     'px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border transition-all',
                                                     contestFilter === type
-                                                        ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
+                                                        ? 'bg-brand-primary text-white text-text-app border-brand-primary shadow-lg shadow-brand-primary/20'
                                                         : 'bg-white/5 text-muted-app border-white/10 hover:bg-white/10',
                                                 )}
                                             >
@@ -327,7 +327,7 @@ export function Leaderboards() {
                                             className={cn(
                                                 'px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border transition-all',
                                                 timeFilter === range.id
-                                                    ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
+                                                    ? 'bg-brand-primary text-white text-text-app border-brand-primary shadow-lg shadow-brand-primary/20'
                                                     : 'bg-white/5 text-muted-app border-white/10 hover:bg-white/10',
                                             )}
                                         >
