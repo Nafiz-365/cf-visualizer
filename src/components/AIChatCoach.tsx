@@ -309,7 +309,7 @@ export function AIChatCoach({
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto space-y-3 pr-1 mb-3 max-h-85 min-h-50">
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1 mb-3">
                 <AnimatePresence initial={false}>
                     {messages.map((msg) => (
                         <motion.div
