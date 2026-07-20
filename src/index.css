@@ -58,26 +58,24 @@
 }
 
 .light {
-    --bg-app: #f0f3ff;
-    --bg-card: rgba(255, 255, 255, 0.8);
-    --bg-card-hover: rgba(255, 255, 255, 0.95);
-    --text-main: #0b0f2e;
-    --text-muted: #5a6490;
-    --text-subtle: #8b96c2;
-    --border-app: rgba(79, 142, 247, 0.08);
-    --glass-bg: rgba(255, 255, 255, 0.5);
-    --glass-border: rgba(79, 142, 247, 0.12);
+    --bg-app: #f5f7fc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fbff;
+    --text-main: #111827;
+    --text-muted: #475569;
+    --text-subtle: #64748b;
+    --border-app: rgba(15, 23, 42, 0.06);
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(15, 23, 42, 0.06);
     --glass-highlight: rgba(255, 255, 255, 0.95);
-    --nav-bg: rgba(255, 255, 255, 0.8);
-    --nav-border: rgba(79, 142, 247, 0.18);
-    --overlay-bg: rgba(255, 255, 255, 0.65);
+    --nav-bg: rgba(255, 255, 255, 0.86);
+    --nav-border: rgba(15, 23, 42, 0.06);
+    --overlay-bg: rgba(248, 250, 252, 0.95);
 
     --shadow-card:
-        0 1px 0 0 rgba(79, 142, 247, 0.1), 0 4px 20px -4px rgba(0, 0, 0, 0.08),
-        0 12px 40px -12px rgba(0, 0, 0, 0.06);
+        0 1px 2px rgba(15, 23, 42, 0.03), 0 8px 24px rgba(15, 23, 42, 0.06);
     --shadow-card-hover:
-        0 1px 0 0 rgba(79, 142, 247, 0.18), 0 8px 32px -4px rgba(0, 0, 0, 0.12),
-        0 20px 56px -12px rgba(79, 142, 247, 0.1);
+        0 10px 30px rgba(15, 23, 42, 0.09), 0 18px 50px rgba(15, 23, 42, 0.08);
 }
 
 /* ── Tailwind alias bridge ── */
@@ -113,6 +111,11 @@
         position: relative;
         overflow-x: hidden;
     }
+}
+
+.light body {
+    background: linear-gradient(180deg, #f5f7fc 0%, #f8fbff 100%);
+    background-attachment: fixed;
 }
 
 /* ================================================================
@@ -237,14 +240,44 @@
     position: relative;
     overflow: hidden;
     background: var(--bg-card);
-    backdrop-filter: blur(40px) saturate(200%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    backdrop-filter: blur(34px) saturate(180%);
+    -webkit-backdrop-filter: blur(34px) saturate(180%);
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow-card);
     transition:
         box-shadow 400ms ease,
         border-color 400ms ease,
         transform 400ms ease;
+}
+
+.light .glass,
+.light .glass-premium,
+.light .glass-glow {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(248, 250, 252, 0.96) 100%
+    );
+    border-color: rgba(15, 23, 42, 0.06);
+    box-shadow: var(--shadow-card);
+}
+
+.light .glass-premium::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(79, 142, 247, 0.16),
+        transparent
+    );
+}
+
+.light .glass-premium::after {
+    opacity: 0.02;
+}
+
+.light .glass-premium:hover {
+    border-color: rgba(79, 142, 247, 0.16);
+    box-shadow: var(--shadow-card-hover);
 }
 
 /* Top-edge shimmer line */
@@ -425,6 +458,34 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.12),
         0 4px 16px rgba(0, 0, 0, 0.25),
         0 0 0 1px rgba(79, 142, 247, 0.12);
+}
+
+.light .btn-primary {
+    box-shadow:
+        0 8px 20px rgba(79, 142, 247, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.light .btn-secondary {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.light .btn-secondary:hover {
+    background: #f8fbff;
+    border-color: rgba(79, 142, 247, 0.2);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.light .btn-ghost:hover {
+    background: rgba(79, 142, 247, 0.06);
+    border-color: rgba(79, 142, 247, 0.12);
+}
+
+.light .btn-outline {
+    background: rgba(79, 142, 247, 0.04);
+    border-color: rgba(79, 142, 247, 0.2);
 }
 
 /* ── Ghost ── */
@@ -731,6 +792,41 @@
     }
 }
 
+.light .nav-pill {
+    background: linear-gradient(135deg, #f7f9fe 0%, #eef4ff 100%);
+    border-color: rgba(15, 23, 42, 0.06);
+    box-shadow:
+        0 12px 32px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.light .nav-pill > a,
+.light .nav-pill > button {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.06);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.light .nav-pill > a:hover,
+.light .nav-pill > button:hover {
+    background: #f8fbff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+}
+
+.light .nav-pill > a:not(.nav-link-active),
+.light .nav-pill > button {
+    color: var(--text-muted);
+}
+
+.light .nav-link-active {
+    background: linear-gradient(
+        135deg,
+        rgba(79, 142, 247, 0.96) 0%,
+        rgba(93, 88, 245, 0.94) 100%
+    );
+    box-shadow: 0 10px 24px rgba(79, 142, 247, 0.2);
+}
+
 /* ================================================================
    INPUT FIELDS
    ================================================================ */
@@ -938,19 +1034,73 @@ select option {
 
 /* Fix nearly-invisible input in light mode */
 .light .input-glass {
-    background: rgba(0, 0, 0, 0.04);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.08);
     color: var(--text-main);
 }
 .light .input-glass:focus {
-    background: rgba(0, 0, 0, 0.06);
-    border-color: rgba(79, 142, 247, 0.45);
+    background: #f8fbff;
+    border-color: rgba(79, 142, 247, 0.35);
     box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
 }
 
-/* Reduce blob brightness in light mode */
+.light .bg-grid {
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(79, 142, 247, 0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(79, 142, 247, 0.035) 1px,
+            transparent 1px
+        );
+}
+
+.light .bg-mesh {
+    background-image:
+        radial-gradient(
+            at 0% 0%,
+            rgba(79, 142, 247, 0.08) 0px,
+            transparent 55%
+        ),
+        radial-gradient(
+            at 100% 0%,
+            rgba(157, 110, 245, 0.07) 0px,
+            transparent 55%
+        ),
+        radial-gradient(
+            at 50% 100%,
+            rgba(14, 207, 207, 0.06) 0px,
+            transparent 55%
+        );
+}
+
 .light .mesh-background div {
-    opacity: 0.1;
+    opacity: 0.12;
+}
+
+.light .bg-white\/3,
+.light .bg-white\/5,
+.light .bg-white\/8,
+.light .bg-white\/10 {
+    background-color: rgba(15, 23, 42, 0.04) !important;
+}
+
+.light .border-white\/5,
+.light .border-white\/8,
+.light .border-white\/10 {
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+.light .hover\:bg-white\/5:hover,
+.light .hover\:bg-white\/10:hover {
+    background-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+.light .text-white {
+    color: var(--text-main) !important;
 }
 
 /* ================================================================

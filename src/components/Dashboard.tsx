@@ -371,78 +371,81 @@ export function Dashboard() {
         setLoading(true);
         setError(null);
         setIsOfflineMode(false);
-        try {
-            // Define a safe fetch helper to prevent non-critical failures from breaking the app
-            const safeFetch = async <T,>(
-                promise: Promise<T>,
-                defaultValue: T,
-            ): Promise<T> => {
-                try {
-                    return await promise;
-                } catch (e) {
-                    console.warn('Non-critical fetch failed:', e);
-                    return defaultValue;
-                }
-            };
+        setAiInsights([]);
 
-            let u: User;
-            let r: RatingChange[];
-            let s: Submission[];
+        const seedUser = generateFallbackUser(h);
+        const seedRating = generateFallbackRatingHistory(h);
+        const seedSubmissions = generateFallbackSubmissions(h);
 
+        setUser(seedUser);
+        setRatingHistory(seedRating);
+        setSubmissions(seedSubmissions);
+        setLoading(false);
+
+        const safeFetch = async <T,>(
+            promise: Promise<T>,
+            defaultValue: T,
+        ): Promise<T> => {
             try {
-                const [fetchedUser, fetchedRating, fetchedStatus] =
-                    await Promise.all([
-                        CodeforcesService.getUserInfo(h),
-                        CodeforcesService.getUserRating(h),
-                        CodeforcesService.getUserStatus(h),
-                    ]);
-                u = fetchedUser;
-                r = fetchedRating;
-                s = fetchedStatus;
-            } catch (err: any) {
-                // If it is a 404 User Not Found, propagate it
-                const is404 =
-                    err.response?.status === 404 ||
-                    err.message?.toLowerCase().includes('not found') ||
-                    err.response?.data?.comment
-                        ?.toLowerCase()
-                        .includes('not found');
+                return await promise;
+            } catch (e) {
+                console.warn('Non-critical fetch failed:', e);
+                return defaultValue;
+            }
+        };
 
-                if (is404) {
-                    throw err;
-                }
+        try {
+            const [fetchedUser, fetchedRating] = await Promise.all([
+                CodeforcesService.getUserInfo(h),
+                CodeforcesService.getUserRating(h),
+            ]);
 
-                // Otherwise fall back to simulated profile
+            setUser(fetchedUser);
+            setRatingHistory(fetchedRating);
+
+            const fetchedStatus = await safeFetch(
+                CodeforcesService.getUserStatus(h),
+                seedSubmissions,
+            );
+            setSubmissions(fetchedStatus);
+
+            const stats = calculateAnalytics(fetchedStatus, fetchedRating);
+            void generateAIInsights(fetchedUser, fetchedRating, stats);
+        } catch (err: any) {
+            const is404 =
+                err.response?.status === 404 ||
+                err.message?.toLowerCase().includes('not found') ||
+                err.response?.data?.comment
+                    ?.toLowerCase()
+                    .includes('not found');
+
+            if (is404) {
+                setError(err.message || 'Failed to fetch user data');
+            } else {
                 console.warn(
                     'Critical fetch failed, falling back to simulated trace data:',
                     err,
                 );
                 setIsOfflineMode(true);
-                u = generateFallbackUser(h);
-                r = generateFallbackRatingHistory(h);
-                s = generateFallbackSubmissions(h);
+                setUser(seedUser);
+                setRatingHistory(seedRating);
+                setSubmissions(seedSubmissions);
             }
-
-            const [p, c, b] = await Promise.all([
-                safeFetch(CodeforcesService.getProblemSet(), []),
-                safeFetch(CodeforcesService.getContests(), []),
-                safeFetch(CodeforcesService.getUserBlogEntries(h), []),
-            ]);
-            setUser(u);
-            setRatingHistory(r);
-            setSubmissions(s);
-            setProblemset(p);
-            setContests(c);
-            setBlogs(b);
-
-            // Trigger AI Analysis
-            const stats = calculateAnalytics(s);
-            generateAIInsights(u, r, stats);
-        } catch (err: any) {
-            setError(err.message || 'Failed to fetch user data');
-        } finally {
-            setLoading(false);
         }
+
+        void Promise.all([
+            safeFetch(CodeforcesService.getProblemSet(), []),
+            safeFetch(CodeforcesService.getContests(), []),
+            safeFetch(CodeforcesService.getUserBlogEntries(h), []),
+        ])
+            .then(([p, c, b]) => {
+                setProblemset(p);
+                setContests(c);
+                setBlogs(b);
+            })
+            .catch(() => {
+                // Optional extras failed, but core UI should remain usable.
+            });
     };
 
     const refreshSubmissions = async () => {
@@ -489,7 +492,10 @@ export function Dashboard() {
         }
     };
 
-    const calculateAnalytics = (subs: Submission[]) => {
+    const calculateAnalytics = (
+        subs: Submission[],
+        history: RatingChange[] = [],
+    ) => {
         const solved = subs.filter((s) => s.verdict === 'OK');
         const uniqueSolved = new Set(
             solved.map((s) => `${s.problem.contestId}-${s.problem.index}`),
@@ -551,8 +557,8 @@ export function Dashboard() {
 
     const analytics = useMemo(() => {
         if (!submissions.length) return null;
-        return calculateAnalytics(submissions);
-    }, [submissions]);
+        return calculateAnalytics(submissions, ratingHistory);
+    }, [submissions, ratingHistory]);
 
     // Compute live session stats for the AI tab
     const liveSessionStats = useMemo(() => {

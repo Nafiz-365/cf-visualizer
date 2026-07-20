@@ -14,7 +14,7 @@ export class CodeforcesService {
         }
 
         try {
-            const response = await axios.get(url, { timeout: 65000 }); // Slightly longer than backend
+            const response = await axios.get(url, { timeout: 12000 });
             if (response.data.status !== 'OK') {
                 throw new Error(
                     response.data.comment || 'Codeforces API Error',
