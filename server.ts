@@ -3,13 +3,10 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
-const genAI = process.env.GEMINI_API_KEY
-    ? new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
-    : null;
+const openRouterKey = process.env.OPENROUTER_API_KEY;
 
 // Helper for robust JSON parsing
 function safeParseJSON(text: string) {
@@ -89,7 +86,7 @@ async function startServer() {
             res.json(response.data);
         } catch (error: any) {
             if (error.response?.status === 429) {
-                console.warn(`Codeforces 429 Limited - ${method}`);
+                console.log(`Codeforces 429 Limited - ${method}`);
                 // If we have stale cache, serve it during 429
                 if (cached) {
                     return res.json(cached.data);
@@ -101,7 +98,17 @@ async function startServer() {
                 });
             }
 
-            console.error(`Codeforces API error (${method}):`, error.message);
+            if (error.response?.status && error.response.status < 500) {
+                console.log(
+                    `Codeforces API client status info (${method}, Status ${error.response.status}):`,
+                    error.message,
+                );
+            } else {
+                console.log(
+                    `Codeforces API status info (${method}):`,
+                    error.message,
+                );
+            }
 
             // Handle Gateway Timeout specifically with a more helpful message
             if (
@@ -127,18 +134,19 @@ async function startServer() {
     const CACHE_TTL = 1000 * 60 * 60; // 1 hour cache
 
     app.post('/api/ai/generate', async (req, res) => {
-        if (!genAI) {
-            return res
-                .status(500)
-                .json({
-                    error: 'GEMINI_API_KEY is not configured on the server.',
-                });
+        if (!openRouterKey) {
+            return res.status(500).json({
+                error: 'OPENROUTER_API_KEY is not configured on the server.',
+            });
         }
 
         const { prompt, model = 'gemini-2.0-flash', raw = false } = req.body;
 
+        // Use a reliable model from OpenRouter
+        const orModel = 'google/gemini-2.5-flash';
+
         // For raw (chat) mode, skip cache to keep conversation fresh
-        const cacheKey = `${model}:${raw}:${prompt}`;
+        const cacheKey = `${orModel}:${raw}:${prompt}`;
         if (!raw) {
             const cached = aiCache.get(cacheKey);
             if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
@@ -147,38 +155,41 @@ async function startServer() {
         }
 
         try {
+            const requestBody: any = {
+                model: orModel,
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: 1000,
+            };
+
+            // Although some free models might ignore response_format, we instruct it here.
+            // (And relying on safeParseJSON to extract JSON if it outputs markdown)
+            if (!raw) {
+                // Ensure the model returns JSON
+                requestBody.response_format = { type: 'json_object' };
+            }
+
+            const response = await axios.post(
+                'https://openrouter.ai/api/v1/chat/completions',
+                requestBody,
+                {
+                    headers: {
+                        Authorization: `Bearer ${openRouterKey}`,
+                        'HTTP-Referer': 'http://localhost:3000',
+                        'X-Title': 'CF Visualizer',
+                        'Content-Type': 'application/json',
+                    },
+                },
+            );
+
+            const text = response.data?.choices?.[0]?.message?.content;
+
+            if (!text) {
+                throw new Error('Empty response from AI');
+            }
+
             if (raw) {
-                // --- CHAT / PLAIN TEXT MODE ---
-                // No JSON constraint — let the model respond naturally
-                const response = await genAI.models.generateContent({
-                    model,
-                    contents: [{ parts: [{ text: prompt }] }],
-                });
-
-                const text = response.text ?? '';
-
-                if (!text) {
-                    throw new Error('Empty response from AI');
-                }
-
-                // Return plain text wrapped in a simple JSON object
                 return res.json({ text: text.trim() });
             } else {
-                // --- STRUCTURED JSON MODE (original behaviour) ---
-                const response = await genAI.models.generateContent({
-                    model,
-                    contents: [{ parts: [{ text: prompt }] }],
-                    config: {
-                        responseMimeType: 'application/json',
-                    },
-                });
-
-                const text = response.text;
-
-                if (!text) {
-                    throw new Error('Empty response from AI');
-                }
-
                 try {
                     const data = safeParseJSON(text);
                     aiCache.set(cacheKey, { data, timestamp: Date.now() });
@@ -198,12 +209,7 @@ async function startServer() {
                 }
             }
         } catch (error: any) {
-            // Only log internal errors, treat quota as "expected"
-            if (
-                error.status === 429 ||
-                error.response?.status === 429 ||
-                error.message?.includes('429')
-            ) {
+            if (error.response?.status === 429 || error.status === 429) {
                 return res.status(429).json({
                     error: 'AI Quota Exceeded',
                     message:
@@ -212,7 +218,10 @@ async function startServer() {
                 });
             }
 
-            console.error('Gemini AI API unusual error:', error);
+            console.error(
+                'OpenRouter API unusual error:',
+                error.response?.data || error.message,
+            );
             res.status(500).json({
                 error:
                     error.message ||
@@ -220,7 +229,6 @@ async function startServer() {
             });
         }
     });
-
 
     // Vite middleware for development
     if (process.env.NODE_ENV !== 'production') {
