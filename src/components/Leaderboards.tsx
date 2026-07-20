@@ -148,7 +148,7 @@ export function Leaderboards() {
                             </div>
                         </div>
 
-                        <div className="overflow-y-auto max-h-[19rem] sm:max-h-[23rem] md:max-h-[27rem] custom-scrollbar overflow-x-auto">
+                        <div className="overflow-y-auto max-h-76 sm:max-h-92 md:max-h-108 custom-scrollbar overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead className="sticky top-0 z-10 bg-bg-app shadow-sm shadow-white/5">
                                     <tr className="border-b border-white/5">
@@ -174,10 +174,11 @@ export function Leaderboards() {
                                                       key={i}
                                                       className="animate-pulse"
                                                   >
+                                                      {' '}
                                                       <td
                                                           colSpan={4}
                                                           className="px-4 md:px-8 py-3 md:py-4 h-16 bg-white/1"
-                                                      />
+                                                      />{' '}
                                                   </tr>
                                               ),
                                           )
@@ -250,7 +251,7 @@ export function Leaderboards() {
                                                                   size={10}
                                                                   className="opacity-40"
                                                               />
-                                                              <span className="wrap-break-word whitespace-normal max-w-[3.5rem] sm:max-w-[5rem] md:max-w-none">
+                                                              <span className="wrap-break-word whitespace-normal max-w-14 sm:max-w-20 md:max-w-none">
                                                                   {user.country ||
                                                                       'Global'}
                                                               </span>
@@ -340,66 +341,76 @@ export function Leaderboards() {
                     </Card>
 
                     <div className="space-y-3">
-                        <div className="flex items-center gap-2 px-1">
-                            <Calendar
-                                size={14}
-                                className="text-brand-secondary"
-                            />
-                            <h3 className="text-[10px] font-mono font-bold text-muted-app uppercase tracking-[0.2em]">
-                                Recent Contests
-                            </h3>
+                        <div className="flex items-center justify-between gap-2 px-1">
+                            <div className="flex items-center gap-2">
+                                <Calendar
+                                    size={14}
+                                    className="text-brand-secondary"
+                                />
+                                <h3 className="text-[10px] font-mono font-bold text-muted-app uppercase tracking-[0.2em]">
+                                    Recent Contests
+                                </h3>
+                            </div>
+                            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-muted-app/70">
+                                {filteredContests.length} items
+                            </span>
                         </div>
 
-                        <div className="max-h-[18rem] sm:max-h-[21rem] md:max-h-[24rem] overflow-y-auto custom-scrollbar pr-2">
-                            <div className="space-y-2">
-                                <AnimatePresence mode="popLayout">
-                                    {filteredContests.map((contest) => (
-                                        <motion.div
-                                            layout
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            key={contest.id}
-                                            className="glass-premium group p-5 bg-white/1 hover:bg-white/3 transition-all cursor-pointer rounded-3xl"
-                                            onClick={() =>
-                                                navigate(
-                                                    `/contest/${contest.id}`,
-                                                )
-                                            }
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex-1 min-w-0 pr-4">
-                                                    <h4 className="text-xs font-bold text-text-app wrap-break-word whitespace-normal group-hover:text-brand-primary transition-colors">
-                                                        {contest.name}
-                                                    </h4>
-                                                    <p className="text-[9px] font-mono text-muted-app uppercase tracking-widest mt-1.5 font-bold">
-                                                        {contest.startTimeSeconds &&
-                                                            format(
-                                                                new Date(
-                                                                    contest.startTimeSeconds *
-                                                                        1000,
-                                                                ),
-                                                                'MMM dd, yyyy',
-                                                            )}
-                                                    </p>
+                        <div className="rounded-2xl border border-white/8 bg-white/3 p-2 shadow-inner shadow-black/10">
+                            <div className="max-h-64 sm:max-h-72 md:max-h-80 lg:max-h-88 overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 pl-1 py-1 scroll-smooth overscroll-contain">
+                                <div className="space-y-2">
+                                    <AnimatePresence mode="popLayout">
+                                        {filteredContests.map((contest) => (
+                                            <motion.div
+                                                layout
+                                                initial={{ opacity: 0, x: 20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{
+                                                    opacity: 0,
+                                                    scale: 0.95,
+                                                }}
+                                                key={contest.id}
+                                                className="glass-premium group p-3.5 sm:p-4 bg-white/1 hover:bg-white/3 transition-all cursor-pointer rounded-2xl border border-white/5 shadow-sm hover:shadow-md snap-start"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/contest/${contest.id}`,
+                                                    )
+                                                }
+                                            >
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <div className="flex-1 min-w-0 pr-2">
+                                                        <h4 className="text-[11px] sm:text-xs font-bold text-text-app wrap-break-word whitespace-normal group-hover:text-brand-primary transition-colors leading-snug">
+                                                            {contest.name}
+                                                        </h4>
+                                                        <p className="text-[8px] sm:text-[9px] font-mono text-muted-app uppercase tracking-widest mt-1.5 font-bold">
+                                                            {contest.startTimeSeconds &&
+                                                                format(
+                                                                    new Date(
+                                                                        contest.startTimeSeconds *
+                                                                            1000,
+                                                                    ),
+                                                                    'MMM dd, yyyy',
+                                                                )}
+                                                        </p>
+                                                    </div>
+                                                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-primary/10 transition-colors shrink-0">
+                                                        <ChevronRight
+                                                            size={13}
+                                                            className="text-muted-app group-hover:text-brand-primary transition-all group-hover:translate-x-0.5"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-primary/10 transition-colors">
-                                                    <ChevronRight
-                                                        size={14}
-                                                        className="text-muted-app group-hover:text-brand-primary transition-all group-hover:translate-x-0.5"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </AnimatePresence>
-                                {filteredContests.length === 0 && (
-                                    <div className="py-12 bg-white/1 rounded-2xl border border-dashed border-white/5 text-center">
-                                        <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em]">
-                                            No Matches Found
-                                        </p>
-                                    </div>
-                                )}
+                                            </motion.div>
+                                        ))}
+                                    </AnimatePresence>
+                                    {filteredContests.length === 0 && (
+                                        <div className="py-10 bg-white/1 rounded-2xl border border-dashed border-white/5 text-center">
+                                            <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em]">
+                                                No Matches Found
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
