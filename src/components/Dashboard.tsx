@@ -31,6 +31,7 @@ import {
     Shield,
     Menu,
     X,
+    AlertTriangle,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { CodeforcesService } from '../services/codeforces';
@@ -51,6 +52,10 @@ import { AIRoadmap } from './AIRoadmap';
 import { AIChatCoach } from './AIChatCoach';
 import { AIWeaknessAnalyzer } from './AIWeaknessAnalyzer';
 import { AIContestDebrief } from './AIContestDebrief';
+import { RatingPredictor } from './RatingPredictor';
+import { ContestAnalyzer } from './ContestAnalyzer';
+import { SocialCards } from './SocialCards';
+import { PracticeCoach } from './PracticeCoach';
 import { GeminiService, AIInsight } from '../services/geminiService';
 import { cn } from '../lib/utils';
 import { VerdictPieChart } from './charts/VerdictPieChart';
@@ -59,7 +64,14 @@ import { ErrorState } from './ErrorState';
 import { Timeline } from './Timeline';
 import { RadarStrength } from './RadarStrength';
 import { ProblemDistribution } from './ProblemDistribution';
-import { Milestone, Ghost, Globe, History as HistoryIcon } from 'lucide-react';
+import {
+    Milestone,
+    Ghost,
+    Globe,
+    History as HistoryIcon,
+    Brain,
+    MessageSquare,
+} from 'lucide-react';
 
 const getRankColor = (rank: string) => {
     const r = rank?.toLowerCase() || '';
@@ -89,6 +101,176 @@ const getRankBg = (rank: string) => {
 };
 import { User, RatingChange, Submission, Problem, Contest } from '../types';
 
+const generateFallbackUser = (handle: string): User => ({
+    handle,
+    contribution: 42,
+    rank: 'expert',
+    rating: 1650,
+    maxRank: 'candidate master',
+    maxRating: 1910,
+    lastOnlineTimeSeconds: Math.floor(Date.now() / 1000) - 3600,
+    registrationTimeSeconds: Math.floor(Date.now() / 1000) - 31536000 * 2,
+    friendOfCount: 153,
+    avatar: 'https://userpic.codeforces.org/no-avatar.jpg',
+    titlePhoto: 'https://userpic.codeforces.org/no-avatar.jpg',
+});
+
+const generateFallbackRatingHistory = (handle: string): RatingChange[] => [
+    {
+        contestId: 1800,
+        contestName: 'Codeforces Round 850 (Div. 2)',
+        handle,
+        rank: 450,
+        ratingUpdateTimeSeconds:
+            Math.floor(Date.now() / 1000) - 100 * 24 * 3600,
+        oldRating: 1400,
+        newRating: 1480,
+    },
+    {
+        contestId: 1810,
+        contestName: 'Codeforces Round 860 (Div. 2)',
+        handle,
+        rank: 250,
+        ratingUpdateTimeSeconds: Math.floor(Date.now() / 1000) - 80 * 24 * 3600,
+        oldRating: 1480,
+        newRating: 1550,
+    },
+    {
+        contestId: 1820,
+        contestName: 'Codeforces Round 870 (Div. 2)',
+        handle,
+        rank: 180,
+        ratingUpdateTimeSeconds: Math.floor(Date.now() / 1000) - 60 * 24 * 3600,
+        oldRating: 1550,
+        newRating: 1680,
+    },
+    {
+        contestId: 1830,
+        contestName: 'Codeforces Round 880 (Div. 2)',
+        handle,
+        rank: 710,
+        ratingUpdateTimeSeconds: Math.floor(Date.now() / 1000) - 40 * 24 * 3600,
+        oldRating: 1680,
+        newRating: 1630,
+    },
+    {
+        contestId: 1840,
+        contestName: 'Codeforces Round 890 (Div. 2)',
+        handle,
+        rank: 310,
+        ratingUpdateTimeSeconds: Math.floor(Date.now() / 1000) - 20 * 24 * 3600,
+        oldRating: 1630,
+        newRating: 1650,
+    },
+];
+
+const generateFallbackSubmissions = (handle: string): Submission[] => [
+    {
+        id: 200001,
+        contestId: 1840,
+        creationTimeSeconds: Math.floor(Date.now() / 1000) - 2 * 3600,
+        relativeTimeSeconds: 5000,
+        problem: {
+            contestId: 1840,
+            index: 'A',
+            name: 'Sasha and Array Coloring',
+            type: 'PROGRAMMING',
+            rating: 800,
+            tags: ['greedy', 'sortings'],
+        },
+        author: {
+            contestId: 1840,
+            members: [{ handle }],
+            participantType: 'PRACTICE',
+            ghost: false,
+        },
+        programmingLanguage: 'GNU C++20',
+        verdict: 'OK',
+        testset: 'TESTS',
+        passedTestCount: 35,
+        timeConsumedMillis: 45,
+        memoryConsumedBytes: 1024 * 1024,
+    },
+    {
+        id: 200002,
+        contestId: 1840,
+        creationTimeSeconds: Math.floor(Date.now() / 1000) - 3 * 3600,
+        relativeTimeSeconds: 6500,
+        problem: {
+            contestId: 1840,
+            index: 'B',
+            name: 'Binary Cafe',
+            type: 'PROGRAMMING',
+            rating: 1100,
+            tags: ['bitmasks', 'math'],
+        },
+        author: {
+            contestId: 1840,
+            members: [{ handle }],
+            participantType: 'PRACTICE',
+            ghost: false,
+        },
+        programmingLanguage: 'GNU C++20',
+        verdict: 'OK',
+        testset: 'TESTS',
+        passedTestCount: 42,
+        timeConsumedMillis: 60,
+        memoryConsumedBytes: 1512 * 1024,
+    },
+    {
+        id: 200003,
+        contestId: 1840,
+        creationTimeSeconds: Math.floor(Date.now() / 1000) - 4 * 3600,
+        relativeTimeSeconds: 8000,
+        problem: {
+            contestId: 1840,
+            index: 'C',
+            name: 'Ski Resort',
+            type: 'PROGRAMMING',
+            rating: 1200,
+            tags: ['combinatorics', 'greedy', 'math', 'two pointers'],
+        },
+        author: {
+            contestId: 1840,
+            members: [{ handle }],
+            participantType: 'PRACTICE',
+            ghost: false,
+        },
+        programmingLanguage: 'GNU C++20',
+        verdict: 'OK',
+        testset: 'TESTS',
+        passedTestCount: 51,
+        timeConsumedMillis: 110,
+        memoryConsumedBytes: 2048 * 1024,
+    },
+    {
+        id: 200004,
+        contestId: 1840,
+        creationTimeSeconds: Math.floor(Date.now() / 1000) - 24 * 3600,
+        relativeTimeSeconds: 12000,
+        problem: {
+            contestId: 1840,
+            index: 'D',
+            name: 'Wooden Toy Festival',
+            type: 'PROGRAMMING',
+            rating: 1400,
+            tags: ['binary search', 'greedy', 'sortings'],
+        },
+        author: {
+            contestId: 1840,
+            members: [{ handle }],
+            participantType: 'PRACTICE',
+            ghost: false,
+        },
+        programmingLanguage: 'GNU C++20',
+        verdict: 'WRONG_ANSWER',
+        testset: 'TESTS',
+        passedTestCount: 12,
+        timeConsumedMillis: 30,
+        memoryConsumedBytes: 512 * 1024,
+    },
+];
+
 export function Dashboard() {
     const { handle } = useParams<{ handle: string }>();
     const navigate = useNavigate();
@@ -106,6 +288,7 @@ export function Dashboard() {
     const [copied, setCopied] = useState(false);
     const [aiInsights, setAiInsights] = useState<AIInsight[]>([]);
     const [loadingInsights, setLoadingInsights] = useState(false);
+    const [isOfflineMode, setIsOfflineMode] = useState(false);
 
     // Tablet/Desktop specific state
     const [sortKey, setSortKey] = useState<string>('creationTimeSeconds');
@@ -187,6 +370,7 @@ export function Dashboard() {
     const loadData = async (h: string) => {
         setLoading(true);
         setError(null);
+        setIsOfflineMode(false);
         try {
             // Define a safe fetch helper to prevent non-critical failures from breaking the app
             const safeFetch = async <T,>(
@@ -201,10 +385,45 @@ export function Dashboard() {
                 }
             };
 
-            const [u, r, s, p, c, b] = await Promise.all([
-                CodeforcesService.getUserInfo(h),
-                CodeforcesService.getUserRating(h),
-                CodeforcesService.getUserStatus(h),
+            let u: User;
+            let r: RatingChange[];
+            let s: Submission[];
+
+            try {
+                const [fetchedUser, fetchedRating, fetchedStatus] =
+                    await Promise.all([
+                        CodeforcesService.getUserInfo(h),
+                        CodeforcesService.getUserRating(h),
+                        CodeforcesService.getUserStatus(h),
+                    ]);
+                u = fetchedUser;
+                r = fetchedRating;
+                s = fetchedStatus;
+            } catch (err: any) {
+                // If it is a 404 User Not Found, propagate it
+                const is404 =
+                    err.response?.status === 404 ||
+                    err.message?.toLowerCase().includes('not found') ||
+                    err.response?.data?.comment
+                        ?.toLowerCase()
+                        .includes('not found');
+
+                if (is404) {
+                    throw err;
+                }
+
+                // Otherwise fall back to simulated profile
+                console.warn(
+                    'Critical fetch failed, falling back to simulated trace data:',
+                    err,
+                );
+                setIsOfflineMode(true);
+                u = generateFallbackUser(h);
+                r = generateFallbackRatingHistory(h);
+                s = generateFallbackSubmissions(h);
+            }
+
+            const [p, c, b] = await Promise.all([
                 safeFetch(CodeforcesService.getProblemSet(), []),
                 safeFetch(CodeforcesService.getContests(), []),
                 safeFetch(CodeforcesService.getUserBlogEntries(h), []),
@@ -458,7 +677,15 @@ export function Dashboard() {
         | 'prep'
         | 'social'
         | 'journey'
+        | 'predictor'
+        | 'contest-analyzer'
     >('overview');
+    const [socialSubTab, setSocialSubTab] = useState<'cards' | 'stream'>(
+        'cards',
+    );
+    const [activeAiTool, setActiveAiTool] = useState<
+        'roadmap' | 'chat' | 'weakness'
+    >('chat');
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [heatmapRange, setHeatmapRange] = useState<
@@ -476,12 +703,14 @@ export function Dashboard() {
 
     const TABS = [
         { id: 'overview', label: 'Overview', icon: LayoutList },
-        { id: 'journey', label: 'Journey', icon: Milestone },
-        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-        { id: 'submissions', label: 'History', icon: Code2 },
-        { id: 'ai', label: 'AI Coach', icon: Zap },
+        { id: 'contest-analyzer', label: 'Contest Analyzer', icon: Trophy },
+        { id: 'predictor', label: 'Predictor', icon: TrendingUp },
+        { id: 'ai', label: 'AI Command Center', icon: Zap },
         { id: 'prep', label: 'Preparation', icon: Target },
-        { id: 'social', label: 'Social', icon: Users },
+        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+        { id: 'journey', label: 'Journey', icon: Milestone },
+        { id: 'submissions', label: 'History', icon: Code2 },
+        { id: 'social', label: 'Social & Share', icon: Users },
     ] as const;
 
     if (loading) {
@@ -634,12 +863,12 @@ export function Dashboard() {
 
             {/* Modern Sidebar Navigation (Desktop) */}
             <aside className="hidden md:flex w-20 lg:w-64 border-r border-white/10 glass fixed left-0 top-0 h-screen flex-col z-50 transition-all duration-500 pt-8 backdrop-blur-3xl">
-                <div className="px-4 pb-5 border-b border-white/10 mb-5">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-3xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-sm shadow-brand-primary/10">
+                <div className="px-4 pb-5 border-b border-white/10 mb-5 flex justify-center lg:justify-start">
+                    <div className="flex items-center gap-0 lg:gap-3">
+                        <div className="w-10 h-10 rounded-3xl bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-sm shadow-brand-primary/10 shrink-0">
                             <Trophy size={18} />
                         </div>
-                        <div>
+                        <div className="hidden lg:block ml-1">
                             <p className="text-xs uppercase tracking-[0.25em] text-muted-app font-black">
                                 Fury Hub
                             </p>
@@ -658,7 +887,7 @@ export function Dashboard() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={cn(
-                                    'w-full flex items-center gap-3 px-4 py-3 rounded-3xl transition-all duration-300 group relative text-sm',
+                                    'w-full flex items-center justify-center lg:justify-start gap-0 lg:gap-3 px-2 lg:px-4 py-3 rounded-3xl transition-all duration-300 group relative text-sm',
                                     isActive
                                         ? 'bg-brand-primary/10 text-brand-primary shadow-sm shadow-brand-primary/20 ring-1 ring-brand-primary/15'
                                         : 'text-muted-app hover:bg-white/10 hover:text-text-app',
@@ -687,8 +916,8 @@ export function Dashboard() {
 
                 <div className="p-4 mt-auto">
                     <Link to="/">
-                        <button className="w-full flex items-center gap-3 px-4 py-4 rounded-3xl bg-brand-primary/5 border border-brand-primary/10 text-brand-primary hover:bg-brand-primary/10 transition-all text-left">
-                            <Search size={18} />
+                        <button className="w-full flex items-center justify-center lg:justify-start gap-0 lg:gap-3 px-2 lg:px-4 py-4 rounded-3xl bg-brand-primary/5 border border-brand-primary/10 text-brand-primary hover:bg-brand-primary/10 transition-all text-left">
+                            <Search size={18} className="shrink-0" />
                             <span className="text-[10px] font-black uppercase tracking-widest hidden lg:block">
                                 New Scout
                             </span>
@@ -770,6 +999,33 @@ export function Dashboard() {
                 </header>
 
                 <div className="max-w-7xl mx-auto px-3 sm:px-6 md:px-8 pt-4 md:pt-6 pb-24 md:pb-10">
+                    {isOfflineMode && (
+                        <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3 backdrop-blur-md">
+                            <div className="flex items-center gap-2.5">
+                                <AlertTriangle
+                                    size={16}
+                                    className="text-amber-400 shrink-0"
+                                />
+                                <p className="leading-relaxed text-left">
+                                    <strong>
+                                        Codeforces API is currently experiencing
+                                        issues (Status 503/429).
+                                    </strong>{' '}
+                                    Showing simulated trace metrics and fallback
+                                    profile statistics for{' '}
+                                    <strong>{handle}</strong> to keep your
+                                    dashboard interactive.
+                                </p>
+                            </div>
+                            <Button
+                                size="sm"
+                                onClick={() => handle && loadData(handle)}
+                                className="text-[10px] font-black uppercase tracking-widest bg-amber-500/25 hover:bg-amber-500/40 text-white rounded-xl border border-amber-500/30 whitespace-nowrap py-1.5 px-3 h-auto shrink-0 transition-all"
+                            >
+                                Reconnect API
+                            </Button>
+                        </div>
+                    )}
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeTab}
@@ -1574,246 +1830,386 @@ export function Dashboard() {
 
                             {activeTab === 'ai' && (
                                 <div className="space-y-6 md:space-y-8">
-                                    {/* Row 1: Intelligence Roadmap + Chat Coach */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-                                        {/* Roadmap */}
-                                        <div className="lg:col-span-7">
-                                            <Card className="p-0 overflow-hidden flex flex-col h-full">
-                                                <div className="p-5 md:p-6 border-b border-white/5 bg-linear-to-r from-brand-primary/10 via-transparent to-transparent">
-                                                    <h3 className="text-lg font-display font-bold text-text-app">
-                                                        Intelligence Roadmap
-                                                    </h3>
-                                                    <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
-                                                        AI-generated growth
-                                                        strategy
-                                                    </p>
+                                    {/* AI Command Center Header */}
+                                    <div className="rounded-3xl border border-white/10 bg-linear-to-r from-brand-primary/10 via-brand-secondary/5 to-transparent p-6 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none" />
+                                        <div className="relative z-10 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
+                                            <div>
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <span className="w-2 h-2 rounded-full bg-brand-primary animate-ping" />
+                                                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-brand-primary font-black">
+                                                        Deepmind Engine Active
+                                                    </span>
                                                 </div>
-                                                <div className="p-5 md:p-6 flex-1">
-                                                    <AIRoadmap
-                                                        user={user}
+                                                <h2 className="text-2xl md:text-3xl font-display font-black text-text-app">
+                                                    AI Command Center
+                                                </h2>
+                                                <p className="text-xs text-muted-app mt-1 leading-relaxed max-w-xl">
+                                                    Unlock personalized growth
+                                                    strategies, conversational
+                                                    problem-solving coaching,
+                                                    and real-time behavioral
+                                                    diagnostics.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2.5">
+                                                {[
+                                                    {
+                                                        id: 'chat',
+                                                        label: 'Chat Coach',
+                                                        icon: MessageSquare,
+                                                    },
+                                                    {
+                                                        id: 'roadmap',
+                                                        label: 'Growth Roadmap',
+                                                        icon: Milestone,
+                                                    },
+                                                    {
+                                                        id: 'weakness',
+                                                        label: 'Weakness Diagnostic',
+                                                        icon: Brain,
+                                                    },
+                                                ].map((tool) => {
+                                                    const ToolIcon = tool.icon;
+                                                    const isSelected =
+                                                        activeAiTool ===
+                                                        tool.id;
+                                                    return (
+                                                        <button
+                                                            key={tool.id}
+                                                            onClick={() =>
+                                                                setActiveAiTool(
+                                                                    tool.id as any,
+                                                                )
+                                                            }
+                                                            className={cn(
+                                                                'flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300 border cursor-pointer',
+                                                                isSelected
+                                                                    ? 'bg-brand-primary text-black border-brand-primary shadow-lg shadow-brand-primary/20'
+                                                                    : 'bg-white/5 text-muted-app border-white/5 hover:border-white/10 hover:bg-white/10 hover:text-text-app',
+                                                            )}
+                                                        >
+                                                            <ToolIcon
+                                                                size={14}
+                                                            />
+                                                            {tool.label}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Sub-tool panels */}
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={activeAiTool}
+                                            initial={{ opacity: 0, y: 15 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -15 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            {activeAiTool === 'chat' && (
+                                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+                                                    {/* AI Chat Coach - Main Window */}
+                                                    <div className="lg:col-span-8">
+                                                        <Card className="p-5 md:p-6 flex flex-col h-150">
+                                                            <AIChatCoach
+                                                                user={user}
+                                                                submissions={
+                                                                    submissions
+                                                                }
+                                                                analytics={
+                                                                    analytics
+                                                                }
+                                                                ratingHistory={
+                                                                    ratingHistory
+                                                                }
+                                                            />
+                                                        </Card>
+                                                    </div>
+
+                                                    {/* Side Insights Panel */}
+                                                    <div className="lg:col-span-4 space-y-6">
+                                                        {/* Dynamic Focus Recommendation */}
+                                                        <Card className="p-5 md:p-6 bg-brand-primary/5 border-brand-primary/10">
+                                                            <h4 className="text-[10px] font-black text-brand-primary uppercase tracking-widest mb-3">
+                                                                Focus
+                                                                Recommendation
+                                                            </h4>
+                                                            {analytics ? (
+                                                                <>
+                                                                    <p className="text-xs font-bold text-text-app mb-1 leading-relaxed">
+                                                                        Based on
+                                                                        your
+                                                                        stats,
+                                                                        prioritize{' '}
+                                                                        <span className="text-brand-primary">
+                                                                            {
+                                                                                analytics.bestTag
+                                                                            }
+                                                                        </span>{' '}
+                                                                        and
+                                                                        target
+                                                                        problems
+                                                                        rated{' '}
+                                                                        <span className="text-brand-primary">
+                                                                            {(user?.rating ??
+                                                                                800) +
+                                                                                100}
+                                                                            –
+                                                                            {Math.min(
+                                                                                (user?.rating ??
+                                                                                    800) +
+                                                                                    300,
+                                                                                3500,
+                                                                            )}
+                                                                        </span>
+                                                                        .
+                                                                    </p>
+                                                                    <p className="text-[10px] text-muted-app/60 leading-relaxed">
+                                                                        Your{' '}
+                                                                        {
+                                                                            analytics.deltaSuccessRate
+                                                                        }
+                                                                        %
+                                                                        contest
+                                                                        win rate
+                                                                        and{' '}
+                                                                        {
+                                                                            analytics.accuracy
+                                                                        }
+                                                                        %
+                                                                        accuracy
+                                                                        suggest{' '}
+                                                                        {Number(
+                                                                            analytics.deltaSuccessRate,
+                                                                        ) >= 50
+                                                                            ? 'you\u2019re ready to push harder \u2014 attempt Div 2 C/D problems.'
+                                                                            : 'consistency training will drive your next rating breakthrough.'}
+                                                                    </p>
+                                                                </>
+                                                            ) : (
+                                                                <p className="text-[10px] text-muted-app/50">
+                                                                    Loading your
+                                                                    profile
+                                                                    data...
+                                                                </p>
+                                                            )}
+                                                        </Card>
+
+                                                        {/* Live Session Stats */}
+                                                        <Card className="p-5 md:p-6">
+                                                            <h4 className="text-[10px] font-black text-muted-app uppercase tracking-widest mb-4">
+                                                                Live Session
+                                                                Stats
+                                                            </h4>
+                                                            <div className="space-y-3.5">
+                                                                {[
+                                                                    {
+                                                                        label: 'Intensity',
+                                                                        value: liveSessionStats.intensity,
+                                                                        color:
+                                                                            liveSessionStats.intensity ===
+                                                                            'High'
+                                                                                ? 'text-emerald-400'
+                                                                                : liveSessionStats.intensity ===
+                                                                                    'Medium'
+                                                                                  ? 'text-yellow-400'
+                                                                                  : 'text-orange-400',
+                                                                    },
+                                                                    {
+                                                                        label: 'Streak',
+                                                                        value:
+                                                                            liveSessionStats.streak >
+                                                                            0
+                                                                                ? `${liveSessionStats.streak} day${liveSessionStats.streak !== 1 ? 's' : ''}`
+                                                                                : 'No streak',
+                                                                        color:
+                                                                            liveSessionStats.streak >
+                                                                            7
+                                                                                ? 'text-emerald-400'
+                                                                                : liveSessionStats.streak >
+                                                                                    2
+                                                                                  ? 'text-brand-primary'
+                                                                                  : 'text-muted-app/50',
+                                                                    },
+                                                                    {
+                                                                        label: 'Efficiency',
+                                                                        value: liveSessionStats.efficiency,
+                                                                        color:
+                                                                            Number(
+                                                                                analytics?.accuracy ??
+                                                                                    0,
+                                                                            ) >=
+                                                                            70
+                                                                                ? 'text-emerald-400'
+                                                                                : Number(
+                                                                                        analytics?.accuracy ??
+                                                                                            0,
+                                                                                    ) >=
+                                                                                    50
+                                                                                  ? 'text-yellow-400'
+                                                                                  : 'text-orange-400',
+                                                                    },
+                                                                ].map(
+                                                                    (item) => (
+                                                                        <div
+                                                                            key={
+                                                                                item.label
+                                                                            }
+                                                                            className="flex items-center justify-between"
+                                                                        >
+                                                                            <span className="text-[10px] font-bold text-muted-app/50 uppercase tracking-wide">
+                                                                                {
+                                                                                    item.label
+                                                                                }
+                                                                            </span>
+                                                                            <span
+                                                                                className={cn(
+                                                                                    'text-xs font-black uppercase',
+                                                                                    item.color,
+                                                                                )}
+                                                                            >
+                                                                                {
+                                                                                    item.value
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        </Card>
+
+                                                        {/* At a Glance Card */}
+                                                        <Card className="p-5 md:p-6">
+                                                            <h4 className="text-[10px] font-black text-muted-app uppercase tracking-widest mb-4">
+                                                                At a Glance
+                                                            </h4>
+                                                            <div className="space-y-3.5">
+                                                                {[
+                                                                    {
+                                                                        label: 'Contests',
+                                                                        value:
+                                                                            analytics?.contestCount ??
+                                                                            0,
+                                                                        color: 'text-brand-secondary',
+                                                                    },
+                                                                    {
+                                                                        label: 'Avg Rank',
+                                                                        value: analytics?.avgRank
+                                                                            ? `#${analytics.avgRank}`
+                                                                            : '—',
+                                                                        color: 'text-text-app',
+                                                                    },
+                                                                    {
+                                                                        label: 'Best Delta',
+                                                                        value: analytics?.maxDelta
+                                                                            ? `+${analytics.maxDelta}`
+                                                                            : '—',
+                                                                        color: 'text-emerald-400',
+                                                                    },
+                                                                ].map(
+                                                                    (item) => (
+                                                                        <div
+                                                                            key={
+                                                                                item.label
+                                                                            }
+                                                                            className="flex items-center justify-between"
+                                                                        >
+                                                                            <span className="text-[10px] font-bold text-muted-app/50 uppercase tracking-wide">
+                                                                                {
+                                                                                    item.label
+                                                                                }
+                                                                            </span>
+                                                                            <span
+                                                                                className={cn(
+                                                                                    'text-xs font-black',
+                                                                                    item.color,
+                                                                                )}
+                                                                            >
+                                                                                {
+                                                                                    item.value
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        </Card>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {activeAiTool === 'roadmap' && (
+                                                <Card className="p-0 overflow-hidden flex flex-col h-full">
+                                                    <div className="p-5 md:p-6 border-b border-white/5 bg-linear-to-r from-brand-primary/10 via-transparent to-transparent">
+                                                        <h3 className="text-lg font-display font-bold text-text-app">
+                                                            Intelligence Roadmap
+                                                        </h3>
+                                                        <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-1 opacity-50">
+                                                            AI-generated growth
+                                                            strategy
+                                                        </p>
+                                                    </div>
+                                                    <div className="p-5 md:p-6 flex-1">
+                                                        <AIRoadmap
+                                                            user={user}
+                                                            submissions={
+                                                                submissions
+                                                            }
+                                                            analytics={
+                                                                analytics
+                                                            }
+                                                        />
+                                                    </div>
+                                                </Card>
+                                            )}
+
+                                            {activeAiTool === 'weakness' && (
+                                                <Card className="p-5 md:p-8 relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-white/5 via-transparent to-transparent shadow-[0_12px_36px_rgba(0,0,0,0.14)] backdrop-blur-md">
+                                                    <div className="flex items-center gap-3 mb-6">
+                                                        <Brain
+                                                            className="text-brand-primary animate-pulse"
+                                                            size={24}
+                                                        />
+                                                        <div>
+                                                            <h3 className="text-lg font-display font-bold text-text-app">
+                                                                Cognitive
+                                                                Weakness
+                                                                Analysis
+                                                            </h3>
+                                                            <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em]">
+                                                                Automated
+                                                                weakness and
+                                                                skill
+                                                                diagnostics
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <AIWeaknessAnalyzer
                                                         submissions={
                                                             submissions
                                                         }
                                                         analytics={analytics}
-                                                    />
-                                                </div>
-                                            </Card>
-                                        </div>
-
-                                        {/* AI Chat Coach */}
-                                        <div className="lg:col-span-5">
-                                            <Card className="p-5 md:p-6 flex flex-col h-full min-h-130">
-                                                <AIChatCoach
-                                                    user={user}
-                                                    submissions={submissions}
-                                                    analytics={analytics}
-                                                    ratingHistory={
-                                                        ratingHistory
-                                                    }
-                                                />
-                                            </Card>
-                                        </div>
-                                    </div>
-
-                                    {/* Row 2: Focus Recommendation (dynamic) + Live Session Stats */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                                        {/* Dynamic Focus Recommendation */}
-                                        <Card className="p-5 md:p-6 bg-brand-primary/5 border-brand-primary/10 sm:col-span-2 lg:col-span-1">
-                                            <h4 className="text-[10px] font-black text-brand-primary uppercase tracking-widest mb-3">
-                                                Focus Recommendation
-                                            </h4>
-                                            {analytics ? (
-                                                <>
-                                                    <p className="text-xs font-bold text-text-app mb-1 leading-relaxed">
-                                                        Based on your stats,
-                                                        prioritize{' '}
-                                                        <span className="text-brand-primary">
-                                                            {analytics.bestTag}
-                                                        </span>{' '}
-                                                        and target problems
-                                                        rated{' '}
-                                                        <span className="text-brand-primary">
-                                                            {(user?.rating ??
-                                                                800) + 100}
-                                                            –
-                                                            {Math.min(
-                                                                (user?.rating ??
-                                                                    800) + 300,
-                                                                3500,
-                                                            )}
-                                                        </span>
-                                                        .
-                                                    </p>
-                                                    <p className="text-[10px] text-muted-app/60 leading-relaxed">
-                                                        Your{' '}
-                                                        {
-                                                            analytics.deltaSuccessRate
+                                                        currentRating={
+                                                            user?.rating ?? 800
                                                         }
-                                                        % contest win rate and{' '}
-                                                        {analytics.accuracy}%
-                                                        accuracy suggest{' '}
-                                                        {Number(
-                                                            analytics.deltaSuccessRate,
-                                                        ) >= 50
-                                                            ? 'you\u2019re ready to push harder \u2014 attempt Div 2 C/D problems.'
-                                                            : 'consistency training will drive your next rating breakthrough.'}
-                                                    </p>
-                                                </>
-                                            ) : (
-                                                <p className="text-[10px] text-muted-app/50">
-                                                    Loading your profile data...
-                                                </p>
+                                                    />
+                                                </Card>
                                             )}
-                                        </Card>
-
-                                        {/* Live Session Stats */}
-                                        <Card className="p-5 md:p-6">
-                                            <h4 className="text-[10px] font-black text-muted-app uppercase tracking-widest mb-4">
-                                                Live Session Stats
-                                            </h4>
-                                            <div className="space-y-3.5">
-                                                {[
-                                                    {
-                                                        label: 'Intensity',
-                                                        value: liveSessionStats.intensity,
-                                                        color:
-                                                            liveSessionStats.intensity ===
-                                                            'High'
-                                                                ? 'text-emerald-400'
-                                                                : liveSessionStats.intensity ===
-                                                                    'Medium'
-                                                                  ? 'text-yellow-400'
-                                                                  : 'text-orange-400',
-                                                    },
-                                                    {
-                                                        label: 'Streak',
-                                                        value:
-                                                            liveSessionStats.streak >
-                                                            0
-                                                                ? `${liveSessionStats.streak} day${liveSessionStats.streak !== 1 ? 's' : ''}`
-                                                                : 'No streak',
-                                                        color:
-                                                            liveSessionStats.streak >
-                                                            7
-                                                                ? 'text-emerald-400'
-                                                                : liveSessionStats.streak >
-                                                                    2
-                                                                  ? 'text-brand-primary'
-                                                                  : 'text-muted-app/50',
-                                                    },
-                                                    {
-                                                        label: 'Efficiency',
-                                                        value: liveSessionStats.efficiency,
-                                                        color:
-                                                            Number(
-                                                                analytics?.accuracy ??
-                                                                    0,
-                                                            ) >= 70
-                                                                ? 'text-emerald-400'
-                                                                : Number(
-                                                                        analytics?.accuracy ??
-                                                                            0,
-                                                                    ) >= 50
-                                                                  ? 'text-yellow-400'
-                                                                  : 'text-orange-400',
-                                                    },
-                                                ].map((item) => (
-                                                    <div
-                                                        key={item.label}
-                                                        className="flex items-center justify-between"
-                                                    >
-                                                        <span className="text-[10px] font-bold text-muted-app/50 uppercase tracking-wide">
-                                                            {item.label}
-                                                        </span>
-                                                        <span
-                                                            className={cn(
-                                                                'text-xs font-black uppercase',
-                                                                item.color,
-                                                            )}
-                                                        >
-                                                            {item.value}
-                                                        </span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </Card>
-
-                                        {/* Contest count + rating summary */}
-                                        <Card className="p-5 md:p-6">
-                                            <h4 className="text-[10px] font-black text-muted-app uppercase tracking-widest mb-4">
-                                                At a Glance
-                                            </h4>
-                                            <div className="space-y-3.5">
-                                                {[
-                                                    {
-                                                        label: 'Contests',
-                                                        value:
-                                                            analytics?.contestCount ??
-                                                            0,
-                                                        color: 'text-brand-secondary',
-                                                    },
-                                                    {
-                                                        label: 'Avg Rank',
-                                                        value: analytics?.avgRank
-                                                            ? `#${analytics.avgRank}`
-                                                            : '—',
-                                                        color: 'text-text-app',
-                                                    },
-                                                    {
-                                                        label: 'Best Delta',
-                                                        value: analytics?.maxDelta
-                                                            ? `+${analytics.maxDelta}`
-                                                            : '—',
-                                                        color: 'text-emerald-400',
-                                                    },
-                                                ].map((item) => (
-                                                    <div
-                                                        key={item.label}
-                                                        className="flex items-center justify-between"
-                                                    >
-                                                        <span className="text-[10px] font-bold text-muted-app/50 uppercase tracking-wide">
-                                                            {item.label}
-                                                        </span>
-                                                        <span
-                                                            className={cn(
-                                                                'text-xs font-black',
-                                                                item.color,
-                                                            )}
-                                                        >
-                                                            {item.value}
-                                                        </span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </Card>
-                                    </div>
-
-                                    {/* Row 3: Weakness Analyzer + Contest Debrief */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                                        <Card className="p-5 md:p-6">
-                                            <AIWeaknessAnalyzer
-                                                submissions={submissions}
-                                                analytics={analytics}
-                                                currentRating={
-                                                    user?.rating ?? 800
-                                                }
-                                            />
-                                        </Card>
-                                        <Card className="p-5 md:p-6">
-                                            <AIContestDebrief
-                                                ratingHistory={ratingHistory}
-                                                currentRating={
-                                                    user?.rating ?? 800
-                                                }
-                                                handle={user?.handle ?? ''}
-                                            />
-                                        </Card>
-                                    </div>
+                                        </motion.div>
+                                    </AnimatePresence>
                                 </div>
                             )}
 
                             {activeTab === 'prep' && (
                                 <div className="space-y-6 md:space-y-8">
+                                    <PracticeCoach
+                                        user={user}
+                                        ratingHistory={ratingHistory}
+                                        submissions={submissions}
+                                    />
                                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
                                         <div className="lg:col-span-8 space-y-6 md:space-y-8">
                                             {/* Activity Matrix with Context */}
@@ -1938,14 +2334,7 @@ export function Dashboard() {
                                             </div>
 
                                             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
-                                                <Card className="p-4 md:p-8 bg-card-app/30 border-white/5">
-                                                    <div className="flex items-center gap-3 mb-6 md:mb-8">
-                                                        <div className="w-1.5 h-6 bg-brand-secondary rounded-full" />
-                                                        <h3 className="text-sm font-black text-text-app uppercase tracking-widest">
-                                                            Target
-                                                            Recommendations
-                                                        </h3>
-                                                    </div>
+                                                <Card className="p-4 md:p-8 bg-card-app/30 border border-white/5 rounded-3xl">
                                                     <Recommendations
                                                         submissions={
                                                             submissions
@@ -1956,13 +2345,7 @@ export function Dashboard() {
                                                         }
                                                     />
                                                 </Card>
-                                                <Card className="p-4 md:p-8 bg-card-app/30 border-white/5">
-                                                    <div className="flex items-center gap-3 mb-6 md:mb-8">
-                                                        <div className="w-1.5 h-6 bg-orange-500 rounded-full" />
-                                                        <h3 className="text-sm font-black text-text-app uppercase tracking-widest">
-                                                            Unsolved Challenges
-                                                        </h3>
-                                                    </div>
+                                                <Card className="p-4 md:p-8 bg-card-app/30 border border-white/5 rounded-3xl">
                                                     <UnsolvedProblems
                                                         submissions={
                                                             submissions
@@ -2043,178 +2426,246 @@ export function Dashboard() {
                             )}
 
                             {activeTab === 'social' && (
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-                                    <div className="lg:col-span-8 space-y-6 md:space-y-8">
-                                        <Card className="p-4 md:p-8">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <div>
-                                                    <h3 className="text-xl md:text-2xl font-display font-bold text-text-app">
-                                                        Engagement Stream
-                                                    </h3>
-                                                    <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-2 opacity-40">
-                                                        Public blog entries and
-                                                        announcements
-                                                    </p>
-                                                </div>
-                                                <div className="p-3 bg-brand-primary/10 rounded-2xl text-brand-primary">
-                                                    <Users size={24} />
-                                                </div>
-                                            </div>
-
-                                            {blogs.length > 0 ? (
-                                                <div className="space-y-6">
-                                                    {blogs.map((blog) => (
-                                                        <div
-                                                            key={blog.id}
-                                                            className="p-4 md:p-6 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all cursor-pointer group"
-                                                            onClick={() =>
-                                                                window.open(
-                                                                    `https://codeforces.com/blog/entry/${blog.id}`,
-                                                                    '_blank',
-                                                                )
-                                                            }
-                                                        >
-                                                            <div className="flex items-center justify-between mb-3">
-                                                                <span className="text-[9px] font-mono font-bold text-brand-primary uppercase tracking-[0.2em]">
-                                                                    {format(
-                                                                        new Date(
-                                                                            blog.creationTimeSeconds *
-                                                                                1000,
-                                                                        ),
-                                                                        'MMM dd, yyyy',
-                                                                    )}
-                                                                </span>
-                                                                <div className="flex items-center gap-4 text-muted-app text-[10px] font-bold">
-                                                                    <div className="flex items-center gap-1">
-                                                                        <ArrowUp
-                                                                            size={
-                                                                                12
-                                                                            }
-                                                                            className="text-emerald-500"
-                                                                        />
-                                                                        {
-                                                                            blog.rating
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-2">
-                                                                {blog.title.replace(
-                                                                    /<\/?[^>]+(>|$)/g,
-                                                                    '',
-                                                                )}
-                                                            </h4>
-                                                            <div className="flex items-center gap-3">
-                                                                {blog.tags.map(
-                                                                    (
-                                                                        tag: string,
-                                                                    ) => (
-                                                                        <span
-                                                                            key={
-                                                                                tag
-                                                                            }
-                                                                            className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted-app/60 border border-white/5"
-                                                                        >
-                                                                            #
-                                                                            {
-                                                                                tag
-                                                                            }
-                                                                        </span>
-                                                                    ),
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            ) : (
-                                                <div className="flex flex-col items-center justify-center py-20 text-center">
-                                                    <Users
-                                                        size={48}
-                                                        className="text-muted-app opacity-20 mb-4"
-                                                    />
-                                                    <p className="text-sm font-medium text-muted-app">
-                                                        No public blog entries
-                                                        found for this user.
-                                                    </p>
-                                                </div>
+                                <div className="space-y-6 md:space-y-8">
+                                    {/* Inner sub-tabs selector */}
+                                    <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white/5 border border-white/10 w-fit">
+                                        <button
+                                            onClick={() =>
+                                                setSocialSubTab('cards')
+                                            }
+                                            className={cn(
+                                                'px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300',
+                                                socialSubTab === 'cards'
+                                                    ? 'bg-brand-primary text-black shadow-md shadow-brand-primary/20'
+                                                    : 'text-muted-app hover:text-text-app hover:bg-white/5',
                                             )}
-                                        </Card>
+                                        >
+                                            Share Achievements
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setSocialSubTab('stream')
+                                            }
+                                            className={cn(
+                                                'px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300',
+                                                socialSubTab === 'stream'
+                                                    ? 'bg-brand-primary text-black shadow-md shadow-brand-primary/20'
+                                                    : 'text-muted-app hover:text-text-app hover:bg-white/5',
+                                            )}
+                                        >
+                                            Community Stream & Stats
+                                        </button>
                                     </div>
 
-                                    <div className="lg:col-span-4 space-y-8">
-                                        <Card className="p-5 md:p-8">
-                                            <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-8">
-                                                Social Influence
-                                            </h3>
-                                            <div className="space-y-6">
-                                                <div className="p-5 md:p-6 rounded-2xl bg-brand-primary/5 border border-brand-primary/10">
-                                                    <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest mb-2 opacity-60">
-                                                        Total Contribution
-                                                    </p>
-                                                    <p className="text-3xl font-display font-black text-text-app">
-                                                        {user.contribution || 0}
-                                                    </p>
-                                                </div>
-                                                <div className="p-5 md:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                                                    <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-2 opacity-60">
+                                    {socialSubTab === 'cards' ? (
+                                        <SocialCards
+                                            user={user}
+                                            ratingHistory={ratingHistory}
+                                            submissions={submissions}
+                                        />
+                                    ) : (
+                                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+                                            <div className="lg:col-span-8 space-y-6 md:space-y-8">
+                                                <Card className="p-4 md:p-8">
+                                                    <div className="flex items-center justify-between mb-8">
+                                                        <div>
+                                                            <h3 className="text-xl md:text-2xl font-display font-bold text-text-app">
+                                                                Engagement
+                                                                Stream
+                                                            </h3>
+                                                            <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-2 opacity-40">
+                                                                Public blog
+                                                                entries and
+                                                                announcements
+                                                            </p>
+                                                        </div>
+                                                        <div className="p-3 bg-brand-primary/10 rounded-2xl text-brand-primary">
+                                                            <Users size={24} />
+                                                        </div>
+                                                    </div>
+
+                                                    {blogs.length > 0 ? (
+                                                        <div className="space-y-6">
+                                                            {blogs.map(
+                                                                (blog) => (
+                                                                    <div
+                                                                        key={
+                                                                            blog.id
+                                                                        }
+                                                                        className="p-4 md:p-6 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all cursor-pointer group"
+                                                                        onClick={() =>
+                                                                            window.open(
+                                                                                `https://codeforces.com/blog/entry/${blog.id}`,
+                                                                                '_blank',
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <div className="flex items-center justify-between mb-3">
+                                                                            <span className="text-[9px] font-mono font-bold text-brand-primary uppercase tracking-[0.2em]">
+                                                                                {format(
+                                                                                    new Date(
+                                                                                        blog.creationTimeSeconds *
+                                                                                            1000,
+                                                                                    ),
+                                                                                    'MMM dd, yyyy',
+                                                                                )}
+                                                                            </span>
+                                                                            <div className="flex items-center gap-4 text-muted-app text-[10px] font-bold">
+                                                                                <div className="flex items-center gap-1">
+                                                                                    <ArrowUp
+                                                                                        size={
+                                                                                            12
+                                                                                        }
+                                                                                        className="text-emerald-500"
+                                                                                    />
+                                                                                    {
+                                                                                        blog.rating
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-2">
+                                                                            {blog.title.replace(
+                                                                                /<\/?[^>]+(>|$)/g,
+                                                                                '',
+                                                                            )}
+                                                                        </h4>
+                                                                        <div className="flex items-center gap-3">
+                                                                            {blog.tags.map(
+                                                                                (
+                                                                                    tag: string,
+                                                                                ) => (
+                                                                                    <span
+                                                                                        key={
+                                                                                            tag
+                                                                                        }
+                                                                                        className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted-app/60 border border-white/5"
+                                                                                    >
+                                                                                        #
+                                                                                        {
+                                                                                            tag
+                                                                                        }
+                                                                                    </span>
+                                                                                ),
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                ),
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex flex-col items-center justify-center py-20 text-center">
+                                                            <Users
+                                                                size={48}
+                                                                className="text-muted-app opacity-20 mb-4"
+                                                            />
+                                                            <p className="text-sm font-medium text-muted-app">
+                                                                No public blog
+                                                                entries found
+                                                                for this user.
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </Card>
+                                            </div>
+
+                                            <div className="lg:col-span-4 space-y-8">
+                                                <Card className="p-5 md:p-8">
+                                                    <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-8">
                                                         Social Influence
-                                                    </p>
-                                                    <p className="text-3xl font-display font-black text-text-app">
-                                                        {(user as any)
-                                                            .friendOfCount || 0}
-                                                    </p>
-                                                    <p className="text-[9px] text-muted-app mt-1 uppercase font-bold tracking-tighter">
-                                                        Followers on Codeforces
-                                                    </p>
-                                                </div>
-                                                <div className="p-5 md:p-6 rounded-2xl bg-orange-500/5 border border-orange-500/10">
-                                                    <p className="text-[9px] font-black text-orange-500 uppercase tracking-widest mb-2 opacity-60">
-                                                        Blog Count
-                                                    </p>
-                                                    <p className="text-3xl font-display font-black text-text-app">
-                                                        {blogs.length}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </Card>
+                                                    </h3>
+                                                    <div className="space-y-6">
+                                                        <div className="p-5 md:p-6 rounded-2xl bg-brand-primary/5 border border-brand-primary/10">
+                                                            <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest mb-2 opacity-60">
+                                                                Total
+                                                                Contribution
+                                                            </p>
+                                                            <p className="text-3xl font-display font-black text-text-app">
+                                                                {user.contribution ||
+                                                                    0}
+                                                            </p>
+                                                        </div>
+                                                        <div className="p-5 md:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
+                                                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-2 opacity-60">
+                                                                Social Influence
+                                                            </p>
+                                                            <p className="text-3xl font-display font-black text-text-app">
+                                                                {(user as any)
+                                                                    .friendOfCount ||
+                                                                    0}
+                                                            </p>
+                                                            <p className="text-[9px] text-muted-app mt-1 uppercase font-bold tracking-tighter">
+                                                                Followers on
+                                                                Codeforces
+                                                            </p>
+                                                        </div>
+                                                        <div className="p-5 md:p-6 rounded-2xl bg-orange-500/5 border border-orange-500/10">
+                                                            <p className="text-[9px] font-black text-orange-500 uppercase tracking-widest mb-2 opacity-60">
+                                                                Blog Count
+                                                            </p>
+                                                            <p className="text-3xl font-display font-black text-text-app">
+                                                                {blogs.length}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </Card>
 
-                                        <Card className="p-5 md:p-8">
-                                            <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-8">
-                                                Community Status
-                                            </h3>
-                                            <div className="space-y-4">
-                                                <div className="flex items-center justify-between py-2 border-b border-white/5">
-                                                    <span className="text-[10px] font-bold text-muted-app uppercase">
-                                                        Last Online
-                                                    </span>
-                                                    <span className="text-[10px] font-mono text-text-app font-bold">
-                                                        {format(
-                                                            new Date(
-                                                                user.lastOnlineTimeSeconds *
-                                                                    1000,
-                                                            ),
-                                                            'MMM dd, HH:mm',
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center justify-between py-2 border-b border-white/5">
-                                                    <span className="text-[10px] font-bold text-muted-app uppercase">
-                                                        Member Since
-                                                    </span>
-                                                    <span className="text-[10px] font-mono text-text-app font-bold">
-                                                        {format(
-                                                            new Date(
-                                                                user.registrationTimeSeconds *
-                                                                    1000,
-                                                            ),
-                                                            'MMM dd, yyyy',
-                                                        )}
-                                                    </span>
-                                                </div>
+                                                <Card className="p-5 md:p-8">
+                                                    <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-8">
+                                                        Community Status
+                                                    </h3>
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center justify-between py-2 border-b border-white/5">
+                                                            <span className="text-[10px] font-bold text-muted-app uppercase">
+                                                                Last Online
+                                                            </span>
+                                                            <span className="text-[10px] font-mono text-text-app font-bold">
+                                                                {format(
+                                                                    new Date(
+                                                                        user.lastOnlineTimeSeconds *
+                                                                            1000,
+                                                                    ),
+                                                                    'MMM dd, HH:mm',
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center justify-between py-2 border-b border-white/5">
+                                                            <span className="text-[10px] font-bold text-muted-app uppercase">
+                                                                Member Since
+                                                            </span>
+                                                            <span className="text-[10px] font-mono text-text-app font-bold">
+                                                                {format(
+                                                                    new Date(
+                                                                        user.registrationTimeSeconds *
+                                                                            1000,
+                                                                    ),
+                                                                    'MMM dd, yyyy',
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </Card>
                                             </div>
-                                        </Card>
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
+                            )}
+
+                            {activeTab === 'predictor' && (
+                                <RatingPredictor
+                                    currentUser={user}
+                                    ratingHistory={ratingHistory}
+                                />
+                            )}
+
+                            {activeTab === 'contest-analyzer' && (
+                                <ContestAnalyzer
+                                    ratingHistory={ratingHistory}
+                                    submissions={submissions}
+                                    problemset={problemset}
+                                    userRating={user?.rating ?? 800}
+                                    userHandle={user?.handle ?? ''}
+                                />
                             )}
                         </motion.div>
                     </AnimatePresence>
@@ -2225,7 +2676,7 @@ export function Dashboard() {
             <AnimatePresence>
                 {isProfileModalOpen && (
                     <div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-xl"
+                        className="fixed inset-0 z-200 flex items-center justify-center p-4 sm:p-6 backdrop-blur-xl"
                         style={{ background: 'var(--overlay-bg)' }}
                         onClick={() => setIsProfileModalOpen(false)}
                     >
@@ -2233,7 +2684,7 @@ export function Dashboard() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="w-full max-w-2xl rounded-[40px] overflow-hidden shadow-3xl flex flex-col max-h-[90vh]"
+                            className="w-full max-w-2xl rounded-3xl sm:rounded-[40px] overflow-hidden shadow-3xl flex flex-col max-h-[92vh] sm:max-h-[90vh]"
                             style={{
                                 background: 'var(--bg-app)',
                                 border: '1px solid var(--glass-border)',
@@ -2241,7 +2692,7 @@ export function Dashboard() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Modal Header/Hero */}
-                            <div className="relative h-48 shrink-0">
+                            <div className="relative h-36 sm:h-48 shrink-0">
                                 <div
                                     className={cn(
                                         'absolute inset-0 opacity-20',
@@ -2252,7 +2703,7 @@ export function Dashboard() {
 
                                 <button
                                     onClick={() => setIsProfileModalOpen(false)}
-                                    className="absolute top-6 right-6 p-2 rounded-full transition-colors z-10 backdrop-blur-md"
+                                    className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full transition-colors z-10 backdrop-blur-md"
                                     style={{ background: 'var(--glass-bg)' }}
                                 >
                                     <XCircle
@@ -2261,24 +2712,25 @@ export function Dashboard() {
                                     />
                                 </button>
 
-                                <div className="absolute -bottom-10 left-10 flex items-end gap-6">
-                                    <div className="relative group">
+                                <div className="absolute -bottom-12 left-4 right-4 sm:-bottom-10 sm:left-10 flex flex-col sm:flex-row items-center sm:items-end gap-3 sm:gap-6 text-center sm:text-left">
+                                    <div className="relative group shrink-0">
                                         <div
                                             className={cn(
-                                                'absolute -inset-1 rounded-4xl blur-lg opacity-40',
+                                                'absolute -inset-1 rounded-3xl sm:rounded-4xl blur-lg opacity-40',
                                                 getRankBg(user.rank || ''),
                                             )}
                                         />
                                         <img
                                             src={user.titlePhoto || user.avatar}
-                                            className="relative w-32 h-32 rounded-4xl border-4 border-bg-app object-cover shadow-2xl"
+                                            className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-3xl sm:rounded-4xl border-4 border-bg-app object-cover shadow-2xl"
+                                            referrerPolicy="no-referrer"
                                         />
                                     </div>
-                                    <div className="mb-4">
-                                        <h2 className="text-3xl font-display font-black text-text-app tracking-tighter leading-none mb-2">
+                                    <div className="mb-0 sm:mb-4 min-w-0">
+                                        <h2 className="text-xl sm:text-3xl font-display font-black text-text-app tracking-tighter leading-none mb-1.5 sm:mb-2 truncate">
                                             {user.handle}
                                         </h2>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center justify-center sm:justify-start gap-2">
                                             <span
                                                 className={cn(
                                                     'text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-white/10',
@@ -2298,8 +2750,8 @@ export function Dashboard() {
                             </div>
 
                             {/* Modal Content */}
-                            <div className="p-10 pt-16 flex-1 overflow-y-auto custom-scrollbar">
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-10">
+                            <div className="p-5 pt-16 sm:p-10 sm:pt-16 flex-1 overflow-y-auto custom-scrollbar">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-10">
                                     <DetailItem
                                         label="Full Intelligence Name"
                                         value={
@@ -2362,13 +2814,13 @@ export function Dashboard() {
                                     />
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="space-y-4 sm:space-y-6">
                                     <h4 className="text-[10px] font-black text-muted-app uppercase tracking-[0.2em] opacity-40">
                                         Intelligence Overview
                                     </h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div
-                                            className="p-6 rounded-3xl"
+                                            className="p-5 sm:p-6 rounded-[20px] sm:rounded-3xl"
                                             style={{
                                                 background: 'var(--bg-card)',
                                                 border: '1px solid var(--glass-border)',
@@ -2377,12 +2829,12 @@ export function Dashboard() {
                                             <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest mb-2">
                                                 Primary Domain
                                             </p>
-                                            <p className="text-lg font-display font-bold text-text-app">
+                                            <p className="text-base sm:text-lg font-display font-bold text-text-app">
                                                 {analytics?.bestTag}
                                             </p>
                                         </div>
                                         <div
-                                            className="p-6 rounded-3xl"
+                                            className="p-5 sm:p-6 rounded-[20px] sm:rounded-3xl"
                                             style={{
                                                 background: 'var(--bg-card)',
                                                 border: '1px solid var(--glass-border)',
@@ -2391,21 +2843,21 @@ export function Dashboard() {
                                             <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-2">
                                                 Success Velocity
                                             </p>
-                                            <p className="text-lg font-display font-bold text-text-app">
+                                            <p className="text-base sm:text-lg font-display font-bold text-text-app">
                                                 {analytics?.totalSolved} Solved
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="mt-10 pt-10 border-t border-white/5 flex gap-4">
+                                <div className="mt-8 sm:mt-10 pt-6 sm:pt-10 border-t border-white/5 flex gap-4">
                                     <a
                                         href={`https://codeforces.com/profile/${user.handle}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex-1"
                                     >
-                                        <Button className="w-full h-14 rounded-2xl gap-3 font-black uppercase tracking-widest text-[11px] bg-brand-primary">
+                                        <Button className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl gap-3 font-black uppercase tracking-widest text-[10px] sm:text-[11px] bg-brand-primary">
                                             <ExternalLink size={18} /> Deep
                                             Trace Profile
                                         </Button>
@@ -2421,7 +2873,7 @@ export function Dashboard() {
             <AnimatePresence>
                 {selectedSubmission && (
                     <div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-md"
+                        className="fixed inset-0 z-200 flex items-center justify-center p-6 backdrop-blur-md"
                         style={{ background: 'var(--overlay-bg)' }}
                         onClick={() => setSelectedSubmission(null)}
                     >
