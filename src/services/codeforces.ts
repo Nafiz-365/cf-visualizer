@@ -33,7 +33,14 @@ export class CodeforcesService {
                 await new Promise((resolve) => setTimeout(resolve, delay));
                 return this.fetch(url, retries - 1);
             }
-            console.error(`Error fetching ${url}:`, error.message);
+            if (error.response?.status && error.response.status < 500) {
+                console.warn(
+                    `Error fetching ${url} (Status ${error.response.status}):`,
+                    error.message,
+                );
+            } else {
+                console.error(`Error fetching ${url}:`, error.message);
+            }
             throw error;
         }
     }
