@@ -126,8 +126,8 @@ export function StatCard({
                                 {trend === 'up'
                                     ? '▲'
                                     : trend === 'down'
-                                    ? '▼'
-                                    : '—'}
+                                      ? '▼'
+                                      : '—'}
                             </span>
                         )}
                     </div>
