@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
     BrowserRouter as Router,
     Routes,
@@ -6,10 +6,6 @@ import {
     Link,
     useLocation,
 } from 'react-router-dom';
-import { LandingPage } from './components/LandingPage';
-import { Dashboard } from './components/Dashboard';
-import { Compare } from './components/Compare';
-import { Leaderboards } from './components/Leaderboards';
 import {
     LayoutGrid,
     Users,
@@ -24,6 +20,19 @@ import {
 import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
+
+const LandingPage = lazy(() =>
+    import('./components/LandingPage').then(({ LandingPage }) => ({ default: LandingPage })),
+);
+const Dashboard = lazy(() =>
+    import('./components/Dashboard').then(({ Dashboard }) => ({ default: Dashboard })),
+);
+const Compare = lazy(() =>
+    import('./components/Compare').then(({ Compare }) => ({ default: Compare })),
+);
+const Leaderboards = lazy(() =>
+    import('./components/Leaderboards').then(({ Leaderboards }) => ({ default: Leaderboards })),
+);
 
 function Navbar() {
     const location = useLocation();
@@ -141,19 +150,27 @@ function App() {
                     />
 
                     <div className="relative z-10">
-                        <Routes>
-                            <Route path="/" element={<LandingPage />} />
-                            <Route
-                                path="/dashboard/:handle"
-                                element={<Dashboard />}
-                            />
-                            <Route path="/compare" element={<Compare />} />
-                            <Route
-                                path="/leaderboards"
-                                element={<Leaderboards />}
-                            />
-                        </Routes>
+                        <Suspense
+                            fallback={
+                                <div className="min-h-screen flex items-center justify-center text-sm text-(--text-muted)">
+                                    Loading dashboard?
+                                </div>
+                            }
+                        >
+                            <Routes>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route
+                                    path="/dashboard/:handle"
+                                    element={<Dashboard />}
+                                />
+                                <Route path="/compare" element={<Compare />} />
+                                <Route
+                                    path="/leaderboards"
+                                    element={<Leaderboards />}
+                                />
 
+                            </Routes>
+                        </Suspense>
                         <Navbar />
 
                         {/* Global floating footer badge */}

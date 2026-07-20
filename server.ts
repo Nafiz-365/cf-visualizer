@@ -3,10 +3,15 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import {
+    extractAIText,
+    getAIModel,
+    getGeminiApiKeyError,
+} from './src/lib/geminiConfig';
 
 dotenv.config();
 
-const openRouterKey = process.env.OPENROUTER_API_KEY;
+const geminiKey = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
 
 // Helper for robust JSON parsing
 function safeParseJSON(text: string) {
@@ -28,9 +33,14 @@ function safeParseJSON(text: string) {
 
 async function startServer() {
     const app = express();
-    const PORT = 3000;
+    const configuredPort = Number(process.env.PORT);
+    const PORT =
+        Number.isInteger(configuredPort) && configuredPort > 0
+            ? configuredPort
+            : 3000;
 
-    app.use(express.json());
+    app.use(express.json({ limit: '1mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
     // API Route for Codeforces Proxy
     const cfCache = new Map<
@@ -129,24 +139,35 @@ async function startServer() {
         }
     });
 
-    // API Route for Gemini AI
+    // API route for AI coaching
     const aiCache = new Map<string, { data: any; timestamp: number }>();
     const CACHE_TTL = 1000 * 60 * 60; // 1 hour cache
 
     app.post('/api/ai/generate', async (req, res) => {
-        if (!openRouterKey) {
+        const keyError = getGeminiApiKeyError(geminiKey);
+        if (keyError) {
             return res.status(500).json({
-                error: 'OPENROUTER_API_KEY is not configured on the server.',
+                error: keyError,
             });
         }
 
-        const { prompt, model = 'gemini-2.0-flash', raw = false } = req.body;
+        const body = req.body ?? {};
+        const prompt = typeof body.prompt === 'string' ? body.prompt : '';
+        const raw = body.raw === true;
 
-        // Use a reliable model from OpenRouter
-        const orModel = 'google/gemini-2.5-flash';
+        if (typeof prompt !== 'string' || !prompt.trim()) {
+            return res
+                .status(400)
+                .json({ error: 'A non-empty prompt is required.' });
+        }
+        if (prompt.length > 30_000) {
+            return res.status(413).json({ error: 'Prompt is too long.' });
+        }
+
+        const model = getAIModel(geminiKey);
 
         // For raw (chat) mode, skip cache to keep conversation fresh
-        const cacheKey = `${orModel}:${raw}:${prompt}`;
+        const cacheKey = `${model}:${raw}:${prompt}`;
         if (!raw) {
             const cached = aiCache.get(cacheKey);
             if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
@@ -155,37 +176,42 @@ async function startServer() {
         }
 
         try {
-            const requestBody: any = {
-                model: orModel,
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: 1000,
-            };
+            let text = '';
 
-            // Although some free models might ignore response_format, we instruct it here.
-            // (And relying on safeParseJSON to extract JSON if it outputs markdown)
-            if (!raw) {
-                // Ensure the model returns JSON
-                requestBody.response_format = { type: 'json_object' };
-            }
-
-            const response = await axios.post(
-                'https://openrouter.ai/api/v1/chat/completions',
-                requestBody,
-                {
-                    headers: {
-                        Authorization: `Bearer ${openRouterKey}`,
-                        'HTTP-Referer': 'http://localhost:3000',
-                        'X-Title': 'CF Visualizer',
-                        'Content-Type': 'application/json',
+            if (geminiKey?.startsWith('sk-or-')) {
+                const response = await axios.post(
+                    'https://openrouter.ai/api/v1/chat/completions',
+                    {
+                        model,
+                        messages: [{ role: 'user', content: prompt }],
+                        temperature: 0.8,
+                        max_tokens: 1800,
                     },
-                },
-            );
-
-            const text = response.data?.choices?.[0]?.message?.content;
-
-            if (!text) {
-                throw new Error('Empty response from AI');
+                    {
+                        headers: {
+                            Authorization: `Bearer ${geminiKey}`,
+                            'Content-Type': 'application/json',
+                            'HTTP-Referer': 'https://cf-visualizer.netlify.app',
+                            'X-Title': 'CF Visualizer',
+                        },
+                        timeout: 120000,
+                    },
+                );
+                text = extractAIText(
+                    response.data?.choices?.[0]?.message?.content ?? '',
+                );
+            } else {
+                const { GoogleGenAI } = await import('@google/genai');
+                const ai = new GoogleGenAI({ apiKey: geminiKey });
+                const response = await ai.models.generateContent({
+                    model,
+                    contents: prompt,
+                    config: { maxOutputTokens: 1800 },
+                });
+                text = response.text ?? '';
             }
+
+            if (!text) throw new Error('Empty response from AI');
 
             if (raw) {
                 return res.json({ text: text.trim() });
@@ -219,7 +245,7 @@ async function startServer() {
             }
 
             console.error(
-                'OpenRouter API unusual error:',
+                'Gemini API unusual error:',
                 error.response?.data || error.message,
             );
             res.status(500).json({
