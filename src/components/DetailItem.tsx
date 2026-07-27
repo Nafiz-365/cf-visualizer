@@ -1,7 +1,13 @@
 import React from 'react';
 import { cn } from '../lib/utils';
 
-export function DetailItem({ label, value, isVerdict, isMono, outerClassName }: any) {
+export function DetailItem({
+    label,
+    value,
+    isVerdict,
+    isMono,
+    outerClassName,
+}: any) {
     return (
         <div className={cn('space-y-1.5 p-4 rounded-3xl', outerClassName)}>
             <p className="text-[10px] text-muted-app uppercase font-black tracking-[0.2em]">
