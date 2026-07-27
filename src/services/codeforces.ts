@@ -6,7 +6,7 @@ const BASE_URL = '/api/codeforces';
 export class CodeforcesService {
     private static cache = new Map<string, { data: any; expiry: number }>();
     private static CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-    
+
     // Request Queue to prevent 429 errors
     private static queue: (() => Promise<void>)[] = [];
     private static isProcessing = false;
@@ -18,7 +18,7 @@ export class CodeforcesService {
             const task = this.queue.shift();
             if (task) {
                 await task();
-                await new Promise(resolve => setTimeout(resolve, 300)); // 300ms delay between API calls
+                await new Promise((resolve) => setTimeout(resolve, 300)); // 300ms delay between API calls
             }
         }
         this.isProcessing = false;
