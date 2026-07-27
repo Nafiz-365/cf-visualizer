@@ -18,8 +18,32 @@ export class GeminiService {
         return null;
     }
 
+    private static cleanExpiredCache(): void {
+        try {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('gemini_cache_')) {
+                    const cached = localStorage.getItem(key);
+                    if (cached) {
+                        try {
+                            const { expiry } = JSON.parse(cached);
+                            if (expiry < Date.now()) {
+                                keysToRemove.push(key);
+                            }
+                        } catch(e) {}
+                    }
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+        } catch (e) {
+            console.error('Cache cleanup error:', e);
+        }
+    }
+
     private static setCache(key: string, data: any): void {
         try {
+            this.cleanExpiredCache();
             const expiry = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
             localStorage.setItem(
                 `gemini_cache_${key}`,

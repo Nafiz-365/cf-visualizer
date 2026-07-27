@@ -6,13 +6,39 @@ const BASE_URL = '/api/codeforces';
 export class CodeforcesService {
     private static cache = new Map<string, { data: any; expiry: number }>();
     private static CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+    
+    // Request Queue to prevent 429 errors
+    private static queue: (() => Promise<void>)[] = [];
+    private static isProcessing = false;
 
-    private static async fetch<T>(url: string, retries = 2): Promise<T> {
-        const cached = this.cache.get(url);
-        if (cached && cached.expiry > Date.now()) {
-            return cached.data;
+    private static async processQueue() {
+        if (this.isProcessing || this.queue.length === 0) return;
+        this.isProcessing = true;
+        while (this.queue.length > 0) {
+            const task = this.queue.shift();
+            if (task) {
+                await task();
+                await new Promise(resolve => setTimeout(resolve, 300)); // 300ms delay between API calls
+            }
         }
+        this.isProcessing = false;
+    }
 
+    private static enqueue<T>(taskFn: () => Promise<T>): Promise<T> {
+        return new Promise((resolve, reject) => {
+            this.queue.push(async () => {
+                try {
+                    const result = await taskFn();
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+            this.processQueue();
+        });
+    }
+
+    private static async fetchRaw<T>(url: string, retries = 2): Promise<T> {
         try {
             const response = await axios.get(url, { timeout: 12000 });
             if (response.data.status !== 'OK') {
@@ -20,7 +46,6 @@ export class CodeforcesService {
                     response.data.comment || 'Codeforces API Error',
                 );
             }
-
             const data = response.data.result;
             this.cache.set(url, {
                 data,
@@ -29,9 +54,10 @@ export class CodeforcesService {
             return data;
         } catch (error: any) {
             if (error.response?.status === 429 && retries > 0) {
-                const delay = (3 - retries) * 1500; // 1.5s, 3s delay
+                // Retry with backoff directly inside fetchRaw (no re-enqueue, avoids deadlock)
+                const delay = (3 - retries) * 1500;
                 await new Promise((resolve) => setTimeout(resolve, delay));
-                return this.fetch(url, retries - 1);
+                return this.fetchRaw<T>(url, retries - 1);
             }
             if (error.response?.status && error.response.status < 500) {
                 console.warn(
@@ -43,6 +69,15 @@ export class CodeforcesService {
             }
             throw error;
         }
+    }
+
+    private static async fetch<T>(url: string): Promise<T> {
+        const cached = this.cache.get(url);
+        if (cached && cached.expiry > Date.now()) {
+            return cached.data;
+        }
+        // Use enqueue so all API calls are serialized
+        return this.enqueue(() => this.fetchRaw<T>(url));
     }
 
     static async getUserInfo(handle: string): Promise<User> {
