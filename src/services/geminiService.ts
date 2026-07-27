@@ -31,11 +31,11 @@ export class GeminiService {
                             if (expiry < Date.now()) {
                                 keysToRemove.push(key);
                             }
-                        } catch(e) {}
+                        } catch (e) {}
                     }
                 }
             }
-            keysToRemove.forEach(key => localStorage.removeItem(key));
+            keysToRemove.forEach((key) => localStorage.removeItem(key));
         } catch (e) {
             console.error('Cache cleanup error:', e);
         }
