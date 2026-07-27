@@ -14,7 +14,9 @@ export const generateFallbackUser = (handle: string): User => ({
     titlePhoto: 'https://userpic.codeforces.org/no-avatar.jpg',
 });
 
-export const generateFallbackRatingHistory = (handle: string): RatingChange[] => [
+export const generateFallbackRatingHistory = (
+    handle: string,
+): RatingChange[] => [
     {
         contestId: 1800,
         contestName: 'Codeforces Round 850 (Div. 2)',
