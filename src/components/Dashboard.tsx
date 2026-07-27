@@ -75,7 +75,11 @@ import {
 
 import { User, RatingChange, Submission, Problem, Contest } from '../types';
 import { getRankColor, getRankBg } from '../lib/utils';
-import { generateFallbackUser, generateFallbackRatingHistory, generateFallbackSubmissions } from '../lib/fallbackData';
+import {
+    generateFallbackUser,
+    generateFallbackRatingHistory,
+    generateFallbackSubmissions,
+} from '../lib/fallbackData';
 import { InsightCard } from './InsightCard';
 import { DetailItem } from './DetailItem';
 
@@ -2831,4 +2835,3 @@ export function Dashboard() {
         </div>
     );
 }
-
