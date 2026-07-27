@@ -22,16 +22,24 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 const LandingPage = lazy(() =>
-    import('./components/LandingPage').then(({ LandingPage }) => ({ default: LandingPage })),
+    import('./components/LandingPage').then(({ LandingPage }) => ({
+        default: LandingPage,
+    })),
 );
 const Dashboard = lazy(() =>
-    import('./components/Dashboard').then(({ Dashboard }) => ({ default: Dashboard })),
+    import('./components/Dashboard').then(({ Dashboard }) => ({
+        default: Dashboard,
+    })),
 );
 const Compare = lazy(() =>
-    import('./components/Compare').then(({ Compare }) => ({ default: Compare })),
+    import('./components/Compare').then(({ Compare }) => ({
+        default: Compare,
+    })),
 );
 const Leaderboards = lazy(() =>
-    import('./components/Leaderboards').then(({ Leaderboards }) => ({ default: Leaderboards })),
+    import('./components/Leaderboards').then(({ Leaderboards }) => ({
+        default: Leaderboards,
+    })),
 );
 
 function Navbar() {
@@ -168,7 +176,6 @@ function App() {
                                     path="/leaderboards"
                                     element={<Leaderboards />}
                                 />
-
                             </Routes>
                         </Suspense>
                         <Navbar />
