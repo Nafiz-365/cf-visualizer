@@ -173,7 +173,7 @@ function generateFallbackResponse(
     return `I am your AI assistant, and I can help with competitive programming, coding concepts, or just about anything else you want to talk through. Your Codeforces profile shows ${analytics?.totalSolved ?? 0} solved problems at rating ${rating}, so I can tailor the advice to your level too. ${profile.strengthSignal} ${profile.nextStep}`;
 }
 
-export function AIChatCoach({
+function AIChatCoachImpl({
     user,
     submissions,
     analytics,
@@ -301,101 +301,107 @@ export function AIChatCoach({
     };
 
     return (
-        <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4 shrink-0">
-                <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-brand-secondary/20 border border-brand-secondary/20 flex items-center justify-center">
-                        <Bot size={13} className="text-brand-secondary" />
+        <div className="flex flex-col h-full gap-0">
+
+            {/* ── Header ─────────────────────────────────────────── */}
+            <div className="flex items-center justify-between mb-4 shrink-0 pb-3 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                    {/* Glowing AI orb */}
+                    <div className="relative w-9 h-9 shrink-0">
+                        <div className="absolute inset-0 rounded-full bg-brand-secondary/20 blur-md animate-pulse" />
+                        <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-brand-secondary/30 to-brand-primary/20 border border-brand-secondary/25 flex items-center justify-center shadow-[0_0_18px_rgba(157,110,245,0.25)]">
+                            <Sparkles size={14} className="text-brand-secondary" />
+                        </div>
                     </div>
                     <div>
-                        <p className="text-[10px] text-brand-secondary font-black uppercase tracking-widest leading-none">
-                            AI Coach Chat
+                        <p className="text-[11px] text-text-app font-bold leading-none tracking-wide">
+                            AI Coach
                         </p>
-                        <div className="flex items-center gap-1 mt-0.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            <span className="text-[9px] text-muted-app/60">
+                        <div className="flex items-center gap-1.5 mt-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" />
+                            <span className="text-[9px] text-emerald-400/70 font-bold uppercase tracking-widest">
                                 Online
                             </span>
                         </div>
                     </div>
                 </div>
-                <Button
-                    variant="ghost"
-                    size="sm"
+                <button
                     onClick={clearChat}
-                    className="text-[9px] h-7 gap-1.5 opacity-30 hover:opacity-100 transition-opacity"
+                    className="p-2 rounded-xl text-muted-app/40 hover:text-muted-app hover:bg-white/5 transition-all duration-200 group"
+                    aria-label="Clear chat"
                 >
-                    <RefreshCw size={10} />
-                    Clear
-                </Button>
+                    <RefreshCw size={13} className="group-hover:rotate-180 transition-transform duration-500" />
+                </button>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto space-y-3 pr-1 mb-3">
+            {/* ── Message List ────────────────────────────────────── */}
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1 mb-3 custom-scrollbar">
                 <AnimatePresence initial={false}>
                     {messages.map((msg) => (
                         <motion.div
                             key={msg.id}
-                            initial={{ opacity: 0, y: 6 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.18 }}
+                            initial={{ opacity: 0, y: 10, scale: 0.97 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.2, ease: 'easeOut' }}
                             className={cn(
-                                'flex gap-2',
-                                msg.role === 'user'
-                                    ? 'justify-end'
-                                    : 'justify-start',
+                                'flex gap-2.5 items-end',
+                                msg.role === 'user' ? 'justify-end' : 'justify-start',
                             )}
                         >
+                            {/* AI Avatar */}
                             {msg.role === 'assistant' && (
-                                <div className="w-6 h-6 rounded-full bg-brand-secondary/15 border border-brand-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
-                                    <Bot
-                                        size={10}
-                                        className="text-brand-secondary"
-                                    />
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand-secondary/40 to-brand-primary/20 border border-brand-secondary/20 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(157,110,245,0.2)]">
+                                    <Bot size={10} className="text-brand-secondary" />
                                 </div>
                             )}
+
+                            {/* Bubble */}
                             <div
                                 className={cn(
-                                    'max-w-[80%] rounded-2xl px-3 py-2 text-[11px] leading-relaxed',
+                                    'max-w-[82%] rounded-2xl px-3.5 py-2.5 text-[11.5px] leading-relaxed',
                                     msg.role === 'user'
-                                        ? 'bg-brand-secondary/20 text-text-app rounded-tr-sm font-medium'
-                                        : 'bg-white/5 text-muted-app border border-white/5 rounded-tl-sm',
+                                        ? 'bg-gradient-to-br from-brand-secondary/30 to-brand-primary/20 text-text-app rounded-br-sm border border-brand-secondary/20 shadow-[0_4px_24px_rgba(157,110,245,0.12)] font-medium'
+                                        : 'bg-white/[0.04] text-muted-app border border-white/8 rounded-bl-sm shadow-[0_2px_12px_rgba(0,0,0,0.2)] backdrop-blur-sm',
                                 )}
                             >
                                 {msg.content}
+                                <p className={cn(
+                                    'text-[8.5px] mt-1.5 opacity-30 font-mono',
+                                    msg.role === 'user' ? 'text-right' : 'text-left'
+                                )}>
+                                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </p>
                             </div>
+
+                            {/* User Avatar */}
                             {msg.role === 'user' && (
-                                <div className="w-6 h-6 rounded-full bg-white/8 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                                    <UserIcon
-                                        size={10}
-                                        className="text-muted-app/60"
-                                    />
+                                <div className="w-6 h-6 rounded-full bg-white/8 border border-white/10 flex items-center justify-center shrink-0 text-[8px] font-bold text-muted-app/70 uppercase">
+                                    {user.handle?.[0] ?? <UserIcon size={10} />}
                                 </div>
                             )}
                         </motion.div>
                     ))}
 
+                    {/* Wave typing indicator */}
                     {isLoading && (
                         <motion.div
                             key="typing"
-                            initial={{ opacity: 0, y: 6 }}
+                            initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="flex gap-2 justify-start"
+                            exit={{ opacity: 0 }}
+                            className="flex gap-2.5 items-end justify-start"
                         >
-                            <div className="w-6 h-6 rounded-full bg-brand-secondary/15 border border-brand-secondary/20 flex items-center justify-center shrink-0">
-                                <Bot
-                                    size={10}
-                                    className="text-brand-secondary"
-                                />
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand-secondary/40 to-brand-primary/20 border border-brand-secondary/20 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(157,110,245,0.2)]">
+                                <Bot size={10} className="text-brand-secondary" />
                             </div>
-                            <div className="bg-white/5 border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1">
+                            <div className="bg-white/[0.04] border border-white/8 rounded-2xl rounded-bl-sm px-4 py-3.5 flex items-center gap-1 backdrop-blur-sm">
                                 {[0, 1, 2].map((i) => (
                                     <span
                                         key={i}
-                                        className="w-1.5 h-1.5 rounded-full bg-muted-app/40 animate-bounce"
+                                        className="w-1.5 h-1.5 rounded-full bg-brand-secondary/60"
                                         style={{
-                                            animationDelay: `${i * 0.15}s`,
+                                            animation: 'wave 1.2s ease-in-out infinite',
+                                            animationDelay: `${i * 0.2}s`,
                                         }}
                                     />
                                 ))}
@@ -406,23 +412,19 @@ export function AIChatCoach({
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggested questions */}
+            {/* ── Suggested Questions (horizontal scroll chips) ─── */}
             {messages.length <= 2 && !isLoading && (
                 <div className="mb-3 shrink-0">
-                    <p className="text-[9px] text-muted-app/30 uppercase tracking-widest font-bold mb-1.5">
+                    <p className="text-[9px] text-muted-app/30 uppercase tracking-widest font-black mb-2">
                         Try asking
                     </p>
-                    <div className="flex flex-col gap-1">
-                        {SUGGESTED_QUESTIONS.slice(0, 3).map((q) => (
+                    <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-1.5">
+                        {SUGGESTED_QUESTIONS.map((q) => (
                             <button
                                 key={q}
                                 onClick={() => sendMessage(q)}
-                                className="text-left text-[10px] text-muted-app/60 border border-white/5 rounded-lg px-3 py-1.5 hover:border-brand-secondary/30 hover:text-brand-secondary hover:bg-brand-secondary/5 transition-all flex items-center gap-2 group"
+                                className="shrink-0 text-left text-[10px] text-muted-app/70 border border-white/8 rounded-full px-3 py-1.5 hover:border-brand-secondary/40 hover:text-brand-secondary hover:bg-brand-secondary/8 transition-all whitespace-nowrap"
                             >
-                                <ChevronRight
-                                    size={9}
-                                    className="opacity-40 group-hover:opacity-100 shrink-0"
-                                />
                                 {q}
                             </button>
                         ))}
@@ -430,30 +432,35 @@ export function AIChatCoach({
                 </div>
             )}
 
-            {/* Input */}
-            <div className="flex gap-2 shrink-0">
-                <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Ask your coach anything..."
-                    disabled={isLoading}
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-[11px] text-text-app placeholder:text-muted-app/30 focus:outline-none focus:border-brand-secondary/40 transition-colors disabled:opacity-40"
-                />
+            {/* ── Input Bar ───────────────────────────────────────── */}
+            <div className="flex gap-2 shrink-0 items-center">
+                <div className="flex-1 relative">
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Ask your coach anything…"
+                        disabled={isLoading}
+                        className="w-full bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-2.5 text-[12px] text-text-app placeholder:text-muted-app/25 focus:outline-none focus:border-brand-secondary/50 focus:shadow-[0_0_0_3px_rgba(157,110,245,0.08)] transition-all duration-200 disabled:opacity-40"
+                    />
+                </div>
                 <button
                     onClick={() => sendMessage()}
                     disabled={!input.trim() || isLoading}
-                    className="h-10 w-10 rounded-xl bg-brand-secondary/20 border border-brand-secondary/20 flex items-center justify-center text-brand-secondary hover:bg-brand-secondary/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                    className="h-10 w-10 rounded-2xl bg-gradient-to-br from-brand-secondary/40 to-brand-primary/30 border border-brand-secondary/25 flex items-center justify-center text-brand-secondary hover:from-brand-secondary/60 hover:to-brand-primary/40 hover:shadow-[0_0_20px_rgba(157,110,245,0.3)] transition-all duration-200 disabled:opacity-25 disabled:cursor-not-allowed shrink-0"
+                    aria-label="Send message"
                 >
                     {isLoading ? (
                         <Loader2 size={14} className="animate-spin" />
                     ) : (
-                        <Send size={14} />
+                        <Send size={13} />
                     )}
                 </button>
             </div>
         </div>
     );
 }
+
+export const AIChatCoach = React.memo(AIChatCoachImpl);

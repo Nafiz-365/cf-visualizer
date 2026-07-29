@@ -10,7 +10,7 @@ interface RecommendationsProps {
     currentRating: number;
 }
 
-export function Recommendations({
+function RecommendationsImpl({
     submissions,
     problemset,
     currentRating,
@@ -113,3 +113,5 @@ export function Recommendations({
         </div>
     );
 }
+
+export const Recommendations = React.memo(RecommendationsImpl);

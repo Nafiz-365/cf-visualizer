@@ -26,7 +26,7 @@ interface RatingChartProps {
     data: RatingChange[];
 }
 
-export function RatingChart({ data }: RatingChartProps) {
+function RatingChartImpl({ data }: RatingChartProps) {
     const chartData = data.map((d) => ({
         date: format(new Date(d.ratingUpdateTimeSeconds * 1000), 'MMM yyyy'),
         rating: d.newRating,
@@ -236,3 +236,5 @@ export function RatingChart({ data }: RatingChartProps) {
 function cn(...classes: any[]) {
     return classes.filter(Boolean).join(' ');
 }
+
+export const RatingChart = React.memo(RatingChartImpl);

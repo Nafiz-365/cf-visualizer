@@ -15,7 +15,7 @@ interface ProblemDistributionProps {
     submissions: Submission[];
 }
 
-export function ProblemDistribution({ submissions }: ProblemDistributionProps) {
+function ProblemDistributionImpl({ submissions }: ProblemDistributionProps) {
     const solved = submissions.filter((s) => s.verdict === 'OK');
 
     const distribution = solved.reduce(
@@ -201,3 +201,5 @@ export function ProblemDistribution({ submissions }: ProblemDistributionProps) {
         </div>
     );
 }
+
+export const ProblemDistribution = React.memo(ProblemDistributionImpl);

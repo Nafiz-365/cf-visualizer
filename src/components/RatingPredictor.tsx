@@ -21,7 +21,7 @@ interface RatingPredictorProps {
     ratingHistory: RatingChange[];
 }
 
-export function RatingPredictor({
+function RatingPredictorImpl({
     currentUser,
     ratingHistory,
 }: RatingPredictorProps) {
@@ -672,3 +672,5 @@ export function RatingPredictor({
         </div>
     );
 }
+
+export const RatingPredictor = React.memo(RatingPredictorImpl);

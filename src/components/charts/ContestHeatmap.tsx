@@ -14,7 +14,7 @@ interface ContestHeatmapProps {
     history: RatingChange[];
 }
 
-export function ContestHeatmap({ history }: ContestHeatmapProps) {
+function ContestHeatmapImpl({ history }: ContestHeatmapProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [hovered, setHovered] = useState<{
         date: Date;
@@ -222,3 +222,5 @@ export function ContestHeatmap({ history }: ContestHeatmapProps) {
         </div>
     );
 }
+
+export const ContestHeatmap = React.memo(ContestHeatmapImpl);

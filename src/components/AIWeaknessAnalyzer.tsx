@@ -70,7 +70,7 @@ function generateFallbackAdvice(
     return `${tag} is a minor weakness. Solving 2–3 targeted problems rated ${high}–${high + 200} will solidify your understanding.`;
 }
 
-export function AIWeaknessAnalyzer({
+function AIWeaknessAnalyzerImpl({
     submissions,
     analytics,
     currentRating,
@@ -274,3 +274,5 @@ For each topic, provide ONE specific, actionable sentence of advice (max 20 word
         </div>
     );
 }
+
+export const AIWeaknessAnalyzer = React.memo(AIWeaknessAnalyzerImpl);

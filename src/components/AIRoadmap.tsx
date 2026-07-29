@@ -26,7 +26,7 @@ interface AIRoadmapProps {
     analytics: any;
 }
 
-export function AIRoadmap({ user, submissions, analytics }: AIRoadmapProps) {
+function AIRoadmapImpl({ user, submissions, analytics }: AIRoadmapProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [roadmap, setRoadmap] = useState<RoadmapStep[] | null>(null);
@@ -208,3 +208,5 @@ export function AIRoadmap({ user, submissions, analytics }: AIRoadmapProps) {
         </div>
     );
 }
+
+export const AIRoadmap = React.memo(AIRoadmapImpl);

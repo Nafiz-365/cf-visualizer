@@ -1,4 +1,5 @@
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Submission } from '../../types';
 import {
     format,
@@ -16,66 +17,78 @@ interface HeatmapProps {
     anchorDate?: string;
 }
 
-export function ActivityHeatmap({
+interface TooltipState {
+    date: Date;
+    count: number;
+    /** viewport-relative coordinates for fixed positioning */
+    vx: number;
+    vy: number;
+}
+
+const CELL_SIZE = 'w-3.5 h-3.5'; // 14px — consistent column + cell
+const CELL_GAP  = 'gap-1';       // 4px
+
+/** Maps submission count → Tailwind classes with premium hover states. */
+function getCellClass(count: number): string {
+    const base = 'rounded-[3px] cursor-pointer transition-all duration-300 ease-out';
+    const hover = 'hover:scale-125 hover:z-50 hover:ring-2 hover:ring-white/40 hover:-translate-y-0.5';
+
+    if (count === 0)
+        return cn(base, hover, 'bg-white/8 border border-white/10 hover:border-white/20 hover:bg-white/15');
+    
+    if (count < 3)
+        return cn(base, hover, 'bg-brand-primary/30 border border-brand-primary/20 shadow-sm hover:shadow-[0_0_12px_rgba(79,142,247,0.4)]');
+    
+    if (count < 6)
+        return cn(base, hover, 'bg-brand-primary/55 border border-brand-primary/30 shadow-md hover:shadow-[0_0_16px_rgba(79,142,247,0.6)] hover:brightness-110');
+    
+    if (count < 10)
+        return cn(base, hover, 'bg-brand-primary/80 border border-brand-primary/40 shadow-lg hover:shadow-[0_0_20px_rgba(79,142,247,0.8)] hover:brightness-125');
+    
+    // Peak activity
+    return cn(base, hover, 'bg-brand-primary border border-brand-primary/60 shadow-xl shadow-brand-primary/35 brightness-110 hover:shadow-[0_0_25px_rgba(79,142,247,1)] hover:brightness-150');
+}
+
+const DAY_LABELS: Record<number, string> = { 1: 'M', 3: 'W', 5: 'F' }; // 0=Sun
+
+function ActivityHeatmapImpl({
     submissions,
     rangeDays = 365,
     anchorDate,
 }: HeatmapProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [hovered, setHovered] = useState<{
-        date: Date;
-        count: number;
-        x: number;
-        y: number;
-    } | null>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
+    // ── Build weeks + month labels ──────────────────────────────────
     const { weeks, monthLabels } = useMemo(() => {
         const counts: Record<string, number> = {};
-        submissions.forEach((s) => {
-            const date = format(
-                new Date(s.creationTimeSeconds * 1000),
-                'yyyy-MM-dd',
-            );
-            counts[date] = (counts[date] || 0) + 1;
-        });
-
-        const end = anchorDate
-            ? new Date(`${anchorDate}T00:00:00`)
-            : startOfToday();
-        const start = subDays(end, Math.max(rangeDays - 1, 30));
-        const startOfGraph = startOfWeek(start);
-
-        const days = eachDayOfInterval({
-            start: startOfGraph,
-            end: end,
-        });
-
-        const weeksArray: { date: Date; count: number }[][] = [];
-        let currentWeek: { date: Date; count: number }[] = [];
-
-        days.forEach((day) => {
-            const dateStr = format(day, 'yyyy-MM-dd');
-            currentWeek.push({
-                date: day,
-                count: counts[dateStr] || 0,
-            });
-
-            if (currentWeek.length === 7) {
-                weeksArray.push(currentWeek);
-                currentWeek = [];
-            }
-        });
-
-        if (currentWeek.length > 0) {
-            weeksArray.push(currentWeek);
+        for (const s of submissions) {
+            const d = format(new Date(s.creationTimeSeconds * 1000), 'yyyy-MM-dd');
+            counts[d] = (counts[d] ?? 0) + 1;
         }
 
-        // Generate Month Labels
+        const end   = anchorDate ? new Date(`${anchorDate}T00:00:00`) : startOfToday();
+        const start = subDays(end, Math.max(rangeDays - 1, 30));
+        
+        // Enforce weekStartsOn: 0 (Sunday) to prevent locale shifts
+        const graphStart = startOfWeek(start, { weekStartsOn: 0 });
+
+        const days = eachDayOfInterval({ start: graphStart, end });
+
+        const weeksArray: { date: Date; count: number }[][] = [];
+        let cur: { date: Date; count: number }[] = [];
+
+        for (const day of days) {
+            cur.push({ date: day, count: counts[format(day, 'yyyy-MM-dd')] ?? 0 });
+            if (cur.length === 7) { weeksArray.push(cur); cur = []; }
+        }
+        if (cur.length > 0) weeksArray.push(cur);
+
         const labels: { label: string; index: number }[] = [];
         weeksArray.forEach((week, i) => {
-            const firstDay = week[0].date;
-            if (i === 0 || !isSameMonth(firstDay, weeksArray[i - 1][0].date)) {
-                labels.push({ label: format(firstDay, 'MMM'), index: i });
+            const first = week[0].date;
+            if (i === 0 || !isSameMonth(first, weeksArray[i - 1][0].date)) {
+                labels.push({ label: format(first, 'MMM'), index: i });
             }
         });
 
@@ -84,167 +97,188 @@ export function ActivityHeatmap({
 
     const hasActivity = submissions.length > 0;
 
-    const getColor = (count: number) => {
-        if (count === 0) return 'bg-white/8 border border-white/10';
-        if (count < 3)
-            return 'bg-brand-primary/30 border border-brand-primary/20 shadow-sm shadow-brand-primary/10';
-        if (count < 6)
-            return 'bg-brand-primary/55 border border-brand-primary/30 shadow-md shadow-brand-primary/15';
-        if (count < 10)
-            return 'bg-brand-primary/80 border border-brand-primary/40 shadow-lg shadow-brand-primary/20';
-        return 'bg-brand-primary border border-brand-primary/60 shadow-xl shadow-brand-primary/35 brightness-110';
-    };
+    // ── Auto-scroll to the rightmost (most recent) week on mount ────
+    useEffect(() => {
+        if (scrollRef.current) {
+            // Adding a tiny timeout ensures the DOM has painted the exact width before scrolling
+            setTimeout(() => {
+                if (scrollRef.current) {
+                    scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+                }
+            }, 50);
+        }
+    }, [weeks]);
 
-    const handleMouseEnter = (
-        day: { date: Date; count: number },
-        e: React.MouseEvent<HTMLDivElement>,
-    ) => {
-        if (!containerRef.current) return;
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const targetRect = e.currentTarget.getBoundingClientRect();
+    // ── Tooltip positioning (viewport-fixed to escape overflow clip) ─
+    const handleMouseEnter = useCallback(
+        (day: { date: Date; count: number }, e: React.MouseEvent<HTMLDivElement>) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setTooltip({
+                date:  day.date,
+                count: day.count,
+                vx:    rect.left + rect.width / 2,
+                vy:    rect.top,
+            });
+        },
+        [],
+    );
 
-        // Position of cell center relative to container
-        const x = targetRect.left - containerRect.left + targetRect.width / 2;
-        // Position of cell top relative to container
-        const y = targetRect.top - containerRect.top;
+    const handleMouseLeave = useCallback(() => setTooltip(null), []);
 
-        setHovered({
-            date: day.date,
-            count: day.count,
-            x,
-            y,
+    // ── Memoize Grid Rendering (Performance Optimization) ───────────
+    // Prevents re-rendering 365 cells every time the tooltip state changes on hover
+    const gridContent = useMemo(() => {
+        return weeks.map((week, weekIdx) => {
+            const monthLabel = monthLabels.find(l => l.index === weekIdx);
+            return (
+                <div
+                    key={weekIdx}
+                    className={cn('flex flex-col shrink-0', CELL_GAP)}
+                >
+                    {/* Month label header */}
+                    <div className="h-[18px] relative pointer-events-none select-none">
+                        {monthLabel && (
+                            <span className="absolute left-0 top-0 text-[9px] font-mono font-black text-muted-app uppercase opacity-50 whitespace-nowrap">
+                                {monthLabel.label}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* 7 day cells */}
+                    {week.map((day, dayIdx) => (
+                        <div
+                            key={dayIdx}
+                            onMouseEnter={e => handleMouseEnter(day, e)}
+                            onMouseLeave={handleMouseLeave}
+                            className={cn(
+                                CELL_SIZE,
+                                getCellClass(day.count),
+                            )}
+                            aria-label={`${format(day.date, 'MMM d, yyyy')}: ${day.count} submissions`}
+                            role="gridcell"
+                        />
+                    ))}
+                </div>
+            );
         });
-    };
-
-    const getTooltipStyle = () => {
-        if (!hovered || !containerRef.current) return {};
-        const containerWidth =
-            containerRef.current.getBoundingClientRect().width;
-        const tooltipWidth = 90; // compact tooltip estimation
-
-        // Compute left coordinate so the tooltip is centered on the hovered cell
-        let leftPos = hovered.x - tooltipWidth / 2;
-
-        // Prevent spilling out of the left layout boundary (minimum 8px indent)
-        if (leftPos < 8) {
-            leftPos = 8;
-        }
-        // Prevent spilling out of the right layout boundary (minimum 8px indent)
-        else if (leftPos + tooltipWidth > containerWidth - 8) {
-            leftPos = containerWidth - tooltipWidth - 8;
-        }
-
-        return {
-            left: `${leftPos}px`,
-            top: `${hovered.y - 8}px`, // compact offset
-            transform: 'translate(0, -100%)', // align perfectly
-        };
-    };
+    }, [weeks, monthLabels, handleMouseEnter, handleMouseLeave]);
 
     return (
-        <div
-            ref={containerRef}
-            className="w-full relative select-none min-h-55 flex flex-col justify-between"
-        >
-            {/* Velocity Header */}
-            <div className="flex items-center justify-between pb-2">
+        <div className="w-full relative select-none flex flex-col gap-3">
+
+            {/* ── Header ─────────────────────────────────────────── */}
+            <div className="flex items-center justify-between">
                 <div>
                     <p className="text-[10px] text-muted-app font-black uppercase tracking-[0.2em]">
                         Velocity Map
                     </p>
-                    <p className="text-[9px] text-muted-app opacity-40 mt-1 uppercase font-bold">
-                        {rangeDays === 30
-                            ? 'Recent pulse'
-                            : rangeDays === 90
-                              ? 'Rolling quarter'
-                              : rangeDays === 180
-                                ? 'Half-year rhythm'
-                                : 'Annual activity distribution'}
+                    <p className="text-[9px] text-muted-app opacity-40 mt-0.5 uppercase font-bold">
+                        {rangeDays === 30  ? 'Recent pulse'
+                       : rangeDays === 90  ? 'Rolling quarter'
+                       : rangeDays === 180 ? 'Half-year rhythm'
+                       :                    'Annual activity distribution'}
                     </p>
                 </div>
-                <div className="flex items-center gap-3 bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">
-                        Rare
-                    </span>
-                    <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-xs bg-white/5" />
-                        <div className="w-2.5 h-2.5 rounded-xs bg-brand-primary/20" />
-                        <div className="w-2.5 h-2.5 rounded-xs bg-brand-primary/55" />
-                        <div className="w-2.5 h-2.5 rounded-xs bg-brand-primary/80" />
-                        <div className="w-2.5 h-2.5 rounded-xs bg-brand-primary brightness-110" />
+
+                {/* Legend */}
+                <div className="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded-xl border border-white/10 shadow-inner">
+                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">Rare</span>
+                    <div className="flex gap-1.5 items-center">
+                        {[
+                            'bg-white/8',
+                            'bg-brand-primary/25',
+                            'bg-brand-primary/50',
+                            'bg-brand-primary/80',
+                            'bg-brand-primary brightness-110 shadow-[0_0_8px_rgba(79,142,247,0.6)]',
+                        ].map((cls, i) => (
+                            <div key={i} className={cn('w-2.5 h-2.5 rounded-[2px]', cls)} />
+                        ))}
                     </div>
-                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">
-                        Peak
-                    </span>
+                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">Peak</span>
                 </div>
             </div>
 
-            {/* Stable Scrollable Container */}
-            <div className="relative w-full min-h-37.5 overflow-visible mt-2">
-                {/* Inner container with horizontal scroll (with thin custom-scrollbar) */}
-                <div className="flex gap-1.5 overflow-x-auto pb-2 pt-1 px-1 w-full min-h-37.5 custom-scrollbar">
-                    {weeks.map((week, weekIdx) => {
-                        const monthLabel = monthLabels.find(
-                            (lbl) => lbl.index === weekIdx,
-                        );
-                        return (
-                            <div
-                                key={weekIdx}
-                                className="flex flex-col gap-1 shrink-0 relative w-3.5"
-                            >
-                                {/* Month Label Header */}
-                                <div className="h-4 text-[8px] font-mono text-muted-app uppercase font-black opacity-50 relative pointer-events-none select-none">
-                                    {monthLabel && (
-                                        <span className="absolute left-0 top-0 whitespace-nowrap">
-                                            {monthLabel.label}
-                                        </span>
-                                    )}
-                                </div>
+            {/* ── Grid ───────────────────────────────────────────── */}
+            <div className="flex gap-1 relative z-10">
 
-                                {/* The 7 Day Cells */}
-                                {week.map((day, dayIdx) => (
-                                    <div
-                                        key={dayIdx}
-                                        onMouseEnter={(e) =>
-                                            handleMouseEnter(day, e)
-                                        }
-                                        onMouseLeave={() => setHovered(null)}
-                                        className={cn(
-                                            'w-3 h-3 rounded-sm cursor-pointer relative transition-all duration-75 hover:brightness-125 hover:ring-1 hover:ring-brand-primary/80 hover:z-10',
-                                            getColor(day.count),
-                                        )}
-                                    />
-                                ))}
-                            </div>
-                        );
-                    })}
+                {/* Day-of-week labels (Sun–Sat) */}
+                <div className={cn('flex flex-col pt-[22px] shrink-0', CELL_GAP)}>
+                    {Array.from({ length: 7 }, (_, i) => (
+                        <div
+                            key={i}
+                            className={cn(
+                                CELL_SIZE,
+                                'flex items-center justify-end pr-1',
+                                'text-[8px] font-mono font-bold text-muted-app opacity-40 leading-none',
+                            )}
+                        >
+                            {DAY_LABELS[i] ?? ''}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Scrollable week columns */}
+                <div
+                    ref={scrollRef}
+                    className={cn(
+                        'flex overflow-x-auto pb-3 pt-0 px-1 custom-scrollbar scroll-smooth',
+                        CELL_GAP,
+                    )}
+                >
+                    {gridContent}
                 </div>
             </div>
 
+            {/* Empty state */}
             {!hasActivity && (
-                <div className="absolute inset-x-0 bottom-2 flex justify-center">
-                    <div className="rounded-full border border-dashed border-white/10 bg-white/5 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/70">
+                <div className="absolute inset-x-0 bottom-6 flex justify-center pointer-events-none">
+                    <div className="rounded-full border border-dashed border-white/10 bg-card-app/80 backdrop-blur-sm px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-app/70 shadow-lg">
                         No submissions in this window
                     </div>
                 </div>
             )}
 
-            {/* Floating Dynamic Tooltip: outside of clipping wrapper to prevent cutting off */}
-            {hovered && (
-                <div
-                    style={getTooltipStyle()}
-                    className="absolute z-50 pointer-events-none"
-                >
-                    <div className="bg-card-app/95 backdrop-blur-xl p-1.5 px-2 rounded-lg border border-white/10 shadow-xl whitespace-nowrap animate-in fade-in zoom-in-95 duration-100">
-                        <p className="text-[7px] font-black text-text-app">
-                            {format(hovered.date, 'MMM d, yyyy')}
-                        </p>
-                        <p className="text-[8px] font-bold text-brand-primary uppercase mt-0.5">
-                            {hovered.count} Solutions
-                        </p>
-                    </div>
-                </div>
+            {/* ── Tooltip — fixed to viewport, escapes overflow clip ── */}
+            {tooltip && (
+                <TooltipPortal tooltip={tooltip} />
             )}
         </div>
     );
 }
+
+// ── Tooltip rendered at fixed viewport position ─────────────────────
+function TooltipPortal({ tooltip }: { tooltip: TooltipState }) {
+    const TOOLTIP_W = 120;
+    const TOOLTIP_H = 48;
+
+    // Clamp horizontally so it never overflows the viewport edges
+    const left = Math.max(
+        12,
+        Math.min(tooltip.vx - TOOLTIP_W / 2, window.innerWidth - TOOLTIP_W - 12),
+    );
+    const top = tooltip.vy - TOOLTIP_H - 12;
+
+    if (typeof document === 'undefined') return null;
+
+    return createPortal(
+        <div
+            style={{ position: 'fixed', left, top, zIndex: 99999, pointerEvents: 'none' }}
+            className="animate-in fade-in zoom-in-95 duration-200 ease-out"
+        >
+            <div className="bg-card-app/95 backdrop-blur-xl px-3 py-2 rounded-xl border border-brand-primary/20 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_16px_rgba(79,142,247,0.15)] whitespace-nowrap">
+                <p className="text-[9px] font-black text-text-app opacity-80">
+                    {format(tooltip.date, 'MMM d, yyyy')}
+                </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-primary shadow-[0_0_4px_#4f8ef7]" />
+                    <p className="text-[10px] font-bold text-brand-primary uppercase tracking-wide">
+                        {tooltip.count} {tooltip.count === 1 ? 'Solution' : 'Solutions'}
+                    </p>
+                </div>
+            </div>
+        </div>,
+        document.body
+    );
+}
+
+export const ActivityHeatmap = React.memo(ActivityHeatmapImpl);

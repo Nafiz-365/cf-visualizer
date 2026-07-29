@@ -108,7 +108,7 @@ export function Leaderboards() {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="mb-6 bg-brand-primary/10 p-4 rounded-3xl text-brand-primary border border-brand-primary/20"
+                    className="mb-6 bg-brand-primary/10 p-4 rounded-3xl text-brand-primary border border-brand-primary/30 shadow-[0_0_30px_rgba(79,142,247,0.3)] animate-pulse"
                 >
                     <Trophy size={24} className="md:w-8 md:h-8" />
                 </motion.div>
@@ -126,10 +126,10 @@ export function Leaderboards() {
                     <Card className="p-0 overflow-hidden h-full">
                         <div className="p-5 md:p-8 border-b border-white/5 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
                             <div>
-                                <h3 className="text-base md:text-xl font-display font-bold text-text-app tracking-tight mb-1">
-                                    Top Rated Users
+                                <h3 className="text-base md:text-xl font-display font-black text-text-app tracking-tight mb-1">
+                                    TOP RATED ENTITIES
                                 </h3>
-                                <p className="text-[10px] uppercase font-mono font-bold tracking-widest text-muted-app">
+                                <p className="text-[10px] uppercase font-mono font-bold tracking-widest text-brand-primary/80">
                                     Global Standings (Updated Daily)
                                 </p>
                             </div>
@@ -149,19 +149,25 @@ export function Leaderboards() {
                         </div>
 
                         <div className="overflow-y-auto max-h-76 sm:max-h-92 md:max-h-108 custom-scrollbar overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead className="sticky top-0 z-10 bg-bg-app shadow-sm shadow-white/5">
-                                    <tr className="border-b border-white/5">
-                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-[8px] sm:text-[9px] md:text-[10px] font-black text-muted-app uppercase tracking-widest">
+                            <table className="w-full text-left table-fixed">
+                                <colgroup>
+                                    <col className="w-16 md:w-20" />
+                                    <col className="w-auto" />
+                                    <col className="w-20 md:w-28" />
+                                    <col className="w-24 md:w-36" />
+                                </colgroup>
+                                <thead className="sticky top-0 z-10 bg-bg-app/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b border-brand-primary/20">
+                                    <tr>
+                                        <th className="px-2 sm:px-3 md:px-6 py-3 md:py-4 text-[9px] md:text-[11px] font-black text-brand-primary uppercase tracking-widest font-mono text-left">
                                             Rank
                                         </th>
-                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-[8px] sm:text-[9px] md:text-[10px] font-black text-muted-app uppercase tracking-widest">
+                                        <th className="px-2 sm:px-3 md:px-6 py-3 md:py-4 text-[9px] md:text-[11px] font-black text-brand-primary uppercase tracking-widest font-mono text-left">
                                             Handle
                                         </th>
-                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-[8px] sm:text-[9px] md:text-[10px] font-black text-muted-app uppercase tracking-widest">
+                                        <th className="px-2 sm:px-3 md:px-6 py-3 md:py-4 text-[9px] md:text-[11px] font-black text-brand-primary uppercase tracking-widest font-mono text-left">
                                             Rating
                                         </th>
-                                        <th className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-[8px] sm:text-[9px] md:text-[10px] font-black text-muted-app uppercase tracking-widest text-right">
+                                        <th className="px-2 sm:px-3 md:px-6 py-3 md:py-4 text-[9px] md:text-[11px] font-black text-brand-primary uppercase tracking-widest font-mono text-left">
                                             Location
                                         </th>
                                     </tr>
@@ -174,11 +180,10 @@ export function Leaderboards() {
                                                       key={i}
                                                       className="animate-pulse"
                                                   >
-                                                      {' '}
                                                       <td
                                                           colSpan={4}
                                                           className="px-4 md:px-8 py-3 md:py-4 h-16 bg-white/1"
-                                                      />{' '}
+                                                      />
                                                   </tr>
                                               ),
                                           )
@@ -187,7 +192,7 @@ export function Leaderboards() {
                                               .map((user, i) => (
                                                   <tr
                                                       key={user.handle}
-                                                      className="group hover:bg-white/3 transition-colors cursor-pointer"
+                                                      className="group hover:bg-card-app/50 transition-all cursor-pointer hover:shadow-[inset_0_0_20px_rgba(79,142,247,0.1)] border-b border-white/5 last:border-0"
                                                       onClick={() =>
                                                           navigate(
                                                               `/dashboard/${user.handle}`,
@@ -209,8 +214,8 @@ export function Leaderboards() {
                                                               #{i + 1}
                                                           </span>
                                                       </td>
-                                                      <td className="px-2 sm:px-3 md:px-6 py-2 md:py-3">
-                                                          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+                                                      <td className="px-2 sm:px-3 md:px-6 py-2 md:py-3 overflow-hidden">
+                                                          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 min-w-0">
                                                               <div
                                                                   className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center font-black text-[9px] md:text-[10px] text-white shrink-0"
                                                                   style={{
@@ -224,13 +229,13 @@ export function Leaderboards() {
                                                                       .charAt(0)
                                                                       .toUpperCase()}
                                                               </div>
-                                                              <div className="min-w-0">
-                                                                  <p className="text-[11px] sm:text-xs md:text-sm font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal max-w-20 sm:max-w-36 md:max-w-none">
+                                                              <div className="min-w-0 overflow-hidden">
+                                                                  <p className="text-[11px] sm:text-xs md:text-sm font-bold text-text-app group-hover:text-brand-primary transition-colors truncate">
                                                                       {
                                                                           user.handle
                                                                       }
                                                                   </p>
-                                                                  <p className="text-[8px] md:text-[10px] font-mono text-muted-app uppercase tracking-widest wrap-break-word whitespace-normal">
+                                                                  <p className="text-[8px] md:text-[10px] font-mono text-muted-app uppercase tracking-widest truncate">
                                                                       {(
                                                                           user.rank ||
                                                                           'Newbie'
@@ -245,13 +250,13 @@ export function Leaderboards() {
                                                       <td className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-[11px] sm:text-xs md:text-sm font-mono font-bold text-text-app">
                                                           {user.rating}
                                                       </td>
-                                                      <td className="px-2 sm:px-3 md:px-6 py-2 md:py-3 text-right">
-                                                          <div className="flex items-center justify-end gap-1 md:gap-2 text-muted-app text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-widest">
+                                                      <td className="px-2 sm:px-3 md:px-6 py-2 md:py-3 overflow-hidden">
+                                                          <div className="flex items-center gap-1 md:gap-2 text-brand-primary/70 text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-widest font-mono">
                                                               <MapPin
                                                                   size={10}
-                                                                  className="opacity-40"
+                                                                  className="opacity-70 shrink-0"
                                                               />
-                                                              <span className="wrap-break-word whitespace-normal max-w-14 sm:max-w-20 md:max-w-none">
+                                                              <span className="truncate">
                                                                   {user.country ||
                                                                       'Global'}
                                                               </span>

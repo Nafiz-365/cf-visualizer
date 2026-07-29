@@ -119,7 +119,7 @@ function generateFallbackDebrief(
     };
 }
 
-export function AIContestDebrief({
+function AIContestDebriefImpl({
     ratingHistory,
     currentRating,
     handle,
@@ -424,3 +424,5 @@ Return ONLY a JSON object with these fields:
         </div>
     );
 }
+
+export const AIContestDebrief = React.memo(AIContestDebriefImpl);

@@ -9,7 +9,7 @@ interface ContestHistoryProps {
     ratingHistory: RatingChange[];
 }
 
-export function ContestHistory({ ratingHistory }: ContestHistoryProps) {
+function ContestHistoryImpl({ ratingHistory }: ContestHistoryProps) {
     const sorted = [...ratingHistory].sort(
         (a, b) => b.ratingUpdateTimeSeconds - a.ratingUpdateTimeSeconds,
     );
@@ -115,3 +115,5 @@ export function ContestHistory({ ratingHistory }: ContestHistoryProps) {
         </div>
     );
 }
+
+export const ContestHistory = React.memo(ContestHistoryImpl);

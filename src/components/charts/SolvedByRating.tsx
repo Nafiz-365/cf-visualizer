@@ -14,7 +14,7 @@ interface SolvedByRatingProps {
     submissions: Submission[];
 }
 
-export function SolvedByRating({ submissions }: SolvedByRatingProps) {
+function SolvedByRatingImpl({ submissions }: SolvedByRatingProps) {
     const data = useMemo(() => {
         const ratings: Record<number, number> = {};
         const solvedIds = new Set();
@@ -131,3 +131,5 @@ export function SolvedByRating({ submissions }: SolvedByRatingProps) {
         </div>
     );
 }
+
+export const SolvedByRating = React.memo(SolvedByRatingImpl);

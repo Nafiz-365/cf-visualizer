@@ -30,7 +30,7 @@ interface PracticeCoachProps {
     submissions: Submission[];
 }
 
-export function PracticeCoach({
+function PracticeCoachImpl({
     user,
     ratingHistory,
     submissions,
@@ -206,10 +206,11 @@ export function PracticeCoach({
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Rating Forecast / Progression Chart */}
-            <Card className="lg:col-span-8 p-6 space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-white/5">
+            <Card className="lg:col-span-8 p-6 space-y-6 bg-bg-app border-white/5 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none" />
+                <div className="flex items-center justify-between pb-4 border-b border-white/10 relative z-10">
                     <div className="flex items-center gap-2">
-                        <TrendingUp size={16} className="text-brand-primary" />
+                        <TrendingUp size={16} className="text-brand-primary animate-pulse" />
                         <h3 className="text-xs uppercase font-black tracking-widest text-text-app">
                             90-Day Rating Projection
                         </h3>
@@ -342,13 +343,14 @@ export function PracticeCoach({
                 {/* Stagnation Panel */}
                 <Card
                     className={cn(
-                        'p-5 border transition-all duration-300',
+                        'p-5 border transition-all duration-300 relative overflow-hidden',
                         stagnationAnalysis.isStagnated
-                            ? 'bg-red-500/5 border-red-500/20'
-                            : 'bg-emerald-500/5 border-emerald-500/10',
+                            ? 'bg-red-500/5 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.15)]'
+                            : 'bg-emerald-500/5 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]',
                     )}
                 >
-                    <div className="flex items-start gap-3">
+                    <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none" />
+                    <div className="flex items-start gap-3 relative z-10">
                         <AlertTriangle
                             size={18}
                             className={cn(
@@ -383,8 +385,8 @@ export function PracticeCoach({
                 </Card>
 
                 {/* Study Plan */}
-                <Card className="p-5 space-y-5 bg-linear-to-br from-white/3 to-transparent">
-                    <div className="flex items-center justify-between pb-3 border-b border-white/5">
+                <Card className="p-5 space-y-5 bg-card-app border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+                    <div className="flex items-center justify-between pb-3 border-b border-white/10">
                         <div className="flex items-center gap-2">
                             <ListTodo
                                 size={14}
@@ -419,8 +421,8 @@ export function PracticeCoach({
                                         className={cn(
                                             'p-3 rounded-xl border transition-all cursor-pointer select-none',
                                             isDone
-                                                ? 'bg-brand-primary/5 border-brand-primary/20 text-muted-app/60'
-                                                : 'bg-white/2 border-white/5 text-text-app hover:bg-white/4',
+                                                ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary/60'
+                                                : 'bg-white/2 border-white/10 text-text-app hover:bg-white/5 hover:border-brand-primary/30 hover:shadow-[0_0_15px_rgba(79,142,247,0.15)]',
                                         )}
                                     >
                                         <div className="flex items-start gap-3">
@@ -461,3 +463,5 @@ export function PracticeCoach({
         </div>
     );
 }
+
+export const PracticeCoach = React.memo(PracticeCoachImpl);

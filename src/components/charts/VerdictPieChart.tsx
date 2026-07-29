@@ -24,7 +24,7 @@ const COLORS = {
     OTHER: '#334155', // slate-700
 };
 
-export function VerdictPieChart({ submissions }: VerdictPieChartProps) {
+function VerdictPieChartImpl({ submissions }: VerdictPieChartProps) {
     const data = useMemo(() => {
         const counts: Record<string, number> = {};
         submissions.forEach((sub) => {
@@ -168,3 +168,5 @@ export function VerdictPieChart({ submissions }: VerdictPieChartProps) {
         </div>
     );
 }
+
+export const VerdictPieChart = React.memo(VerdictPieChartImpl);

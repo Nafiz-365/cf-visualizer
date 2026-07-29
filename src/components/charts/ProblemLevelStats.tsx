@@ -14,7 +14,7 @@ interface ProblemLevelStatsProps {
     submissions: Submission[];
 }
 
-export function ProblemLevelStats({ submissions }: ProblemLevelStatsProps) {
+function ProblemLevelStatsImpl({ submissions }: ProblemLevelStatsProps) {
     const levelData = useMemo(() => {
         const counts: Record<string, number> = {};
         const solved = submissions.filter((s) => s.verdict === 'OK');
@@ -114,3 +114,5 @@ export function ProblemLevelStats({ submissions }: ProblemLevelStatsProps) {
         </div>
     );
 }
+
+export const ProblemLevelStats = React.memo(ProblemLevelStatsImpl);

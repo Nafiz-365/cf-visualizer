@@ -14,7 +14,7 @@ interface TagMasteryProps {
     submissions: Submission[];
 }
 
-export function TagMastery({ submissions }: TagMasteryProps) {
+function TagMasteryImpl({ submissions }: TagMasteryProps) {
     const solvedByTag = React.useMemo(() => {
         const tagsMap: Record<string, number> = {};
         const solvedIds = new Set();
@@ -129,3 +129,5 @@ export function TagMastery({ submissions }: TagMasteryProps) {
         </div>
     );
 }
+
+export const TagMastery = React.memo(TagMasteryImpl);

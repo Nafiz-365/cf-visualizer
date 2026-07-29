@@ -25,7 +25,7 @@ const COLORS = [
     '#a7f3d0',
 ];
 
-export function LanguageStats({ submissions }: LanguageStatsProps) {
+function LanguageStatsImpl({ submissions }: LanguageStatsProps) {
     const data = useMemo(() => {
         const counts: Record<string, number> = {};
         submissions.forEach((s) => {
@@ -112,3 +112,5 @@ export function LanguageStats({ submissions }: LanguageStatsProps) {
         </div>
     );
 }
+
+export const LanguageStats = React.memo(LanguageStatsImpl);

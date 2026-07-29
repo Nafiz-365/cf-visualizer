@@ -38,7 +38,7 @@ interface ContestAnalyzerProps {
     userHandle: string;
 }
 
-export function ContestAnalyzer({
+function ContestAnalyzerImpl({
     ratingHistory,
     submissions,
     problemset,
@@ -620,3 +620,5 @@ export function ContestAnalyzer({
         </div>
     );
 }
+
+export const ContestAnalyzer = React.memo(ContestAnalyzerImpl);

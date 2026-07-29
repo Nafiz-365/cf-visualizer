@@ -39,7 +39,7 @@ type CardType =
     | 'system_dump'
     | 'head_to_head';
 
-export function SocialCards({
+function SocialCardsImpl({
     user,
     ratingHistory,
     submissions,
@@ -1269,3 +1269,5 @@ export function SocialCards({
         </div>
     );
 }
+
+export const SocialCards = React.memo(SocialCardsImpl);

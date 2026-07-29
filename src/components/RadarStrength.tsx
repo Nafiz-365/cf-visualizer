@@ -14,7 +14,7 @@ interface RadarStrengthProps {
     submissions: Submission[];
 }
 
-export function RadarStrength({ submissions }: RadarStrengthProps) {
+function RadarStrengthImpl({ submissions }: RadarStrengthProps) {
     const tagStats = submissions
         .filter((s) => s.verdict === 'OK')
         .reduce(
@@ -124,3 +124,5 @@ export function RadarStrength({ submissions }: RadarStrengthProps) {
         </div>
     );
 }
+
+export const RadarStrength = React.memo(RadarStrengthImpl);

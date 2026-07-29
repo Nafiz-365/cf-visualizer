@@ -23,7 +23,7 @@ const COLORS = [
     '#ec4899', // Pink-500
 ];
 
-export function SubmissionsStats({ submissions }: SubmissionsStatsProps) {
+function SubmissionsStatsImpl({ submissions }: SubmissionsStatsProps) {
     const verdictData = useMemo(() => {
         const counts: Record<string, number> = {};
         submissions.forEach((s) => {
@@ -209,3 +209,5 @@ export function SubmissionsStats({ submissions }: SubmissionsStatsProps) {
         </div>
     );
 }
+
+export const SubmissionsStats = React.memo(SubmissionsStatsImpl);

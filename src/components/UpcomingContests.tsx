@@ -3,6 +3,7 @@ import { Contest } from '../types';
 import { CodeforcesService } from '../services/codeforces';
 import { Calendar, Clock, ExternalLink } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
+import { cn } from '../lib/utils';
 
 export function UpcomingContests() {
     const [contests, setContests] = useState<Contest[]>([]);
@@ -48,9 +49,9 @@ export function UpcomingContests() {
     return (
         <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
-                <Calendar size={16} className="text-brand-primary" />
-                <h3 className="text-[10px] font-mono font-bold text-muted-app uppercase tracking-[0.2em]">
-                    Upcoming Contests
+                <Calendar size={16} className="text-cyan-400 animate-pulse" />
+                <h3 className="text-[10px] font-mono font-black text-cyan-400 uppercase tracking-[0.2em] shadow-cyan-400/20 drop-shadow-md">
+                    Mission Calendar
                 </h3>
             </div>
 
@@ -61,31 +62,32 @@ export function UpcomingContests() {
                         href={`https://codeforces.com/contests/${contest.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block group"
+                        className="block group relative"
                     >
-                        <div className="glass p-4 rounded-[1.2rem] border border-white/10 bg-linear-to-br from-white/8 via-transparent to-transparent transition-all duration-500 group-hover:-translate-y-0.5 group-hover:border-brand-primary/30 group-hover:shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        <div className="glass p-4 rounded-[1.2rem] border border-white/5 bg-white/2 hover:bg-cyan-500/5 transition-all duration-500 group-hover:-translate-y-0.5 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] relative overflow-hidden z-10">
                             <div className="flex items-start justify-between mb-2">
                                 <span
                                     className={cn(
-                                        'text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest',
+                                        'text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border',
                                         contest.phase === 'CODING'
-                                            ? 'bg-red-500/10 text-red-500 animate-pulse'
-                                            : 'bg-brand-primary/10 text-brand-primary',
+                                            ? 'bg-red-500/10 text-red-500 border-red-500/30 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.2)]'
+                                            : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
                                     )}
                                 >
                                     {contest.phase === 'CODING'
-                                        ? 'Running Now'
-                                        : 'Scheduled'}
+                                        ? 'LIVE NOW'
+                                        : 'SCHEDULED'}
                                 </span>
                                 <ExternalLink
-                                    size={10}
-                                    className="text-muted-app opacity-0 group-hover:opacity-100 transition-opacity"
+                                    size={12}
+                                    className="text-cyan-400/50 opacity-0 group-hover:opacity-100 transition-all group-hover:scale-110 group-hover:text-cyan-400"
                                 />
                             </div>
-                            <h4 className="text-xs font-bold text-text-app mb-2 leading-tight group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal">
+                            <h4 className="text-xs font-bold text-text-app mb-2 leading-tight group-hover:text-cyan-400 transition-colors wrap-break-word whitespace-normal font-display tracking-wide">
                                 {contest.name}
                             </h4>
-                            <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted-app font-medium">
+                            <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted-app font-mono font-medium">
                                 <div className="flex items-center gap-1">
                                     <Clock size={10} />
                                     {contest.startTimeSeconds &&
@@ -108,10 +110,10 @@ export function UpcomingContests() {
                                         ? 'Live now — jump in'
                                         : 'Good prep window'}
                                 </span>
-                                <span className="font-semibold text-brand-primary">
+                                <span className="font-semibold text-cyan-400">
                                     {contest.phase === 'CODING'
-                                        ? 'Ready'
-                                        : 'Schedule'}
+                                        ? 'INFILTRATE'
+                                        : 'PREPARE'}
                                 </span>
                             </div>
                         </div>
@@ -122,6 +124,3 @@ export function UpcomingContests() {
     );
 }
 
-function cn(...classes: any[]) {
-    return classes.filter(Boolean).join(' ');
-}
