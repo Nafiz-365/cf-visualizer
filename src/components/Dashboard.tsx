@@ -32,6 +32,8 @@ import {
     Menu,
     X,
     AlertTriangle,
+    Activity,
+    Rss,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { CodeforcesService } from '../services/codeforces';
@@ -2282,94 +2284,78 @@ export function Dashboard() {
                                             submissions={submissions}
                                         />
                                     ) : (
+                                        (() => {
+                                            const totalBlogUpvotes = blogs.reduce((sum, blog) => sum + blog.rating, 0);
+                                            const friends = (user as any).friendOfCount || 0;
+                                            
+                                            let karmaBadge = { label: 'OBSERVER', color: 'text-slate-400', bg: 'bg-slate-400/10', border: 'border-slate-400/20' };
+                                            if ((user.contribution || 0) >= 100) karmaBadge = { label: 'COMMUNITY PILLAR', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20' };
+                                            else if ((user.contribution || 0) > 0) karmaBadge = { label: 'ACTIVE NODE', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20' };
+                                            else if ((user.contribution || 0) < 0) karmaBadge = { label: 'ROGUE ELEMENT', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' };
+                                            
+                                            let fameBadge = { label: 'STANDARD NODE', color: 'text-slate-400', bg: 'bg-slate-400/10', border: 'border-slate-400/20' };
+                                            if (friends >= 1000) fameBadge = { label: 'LEGENDARY ENTITY', color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' };
+                                            else if (friends >= 500) fameBadge = { label: 'FAMOUS NODE', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-400/20' };
+                                            else if (friends >= 100) fameBadge = { label: 'LOCAL HERO', color: 'text-cyan-400', bg: 'bg-cyan-400/10', border: 'border-cyan-400/20' };
+
+                                            return (
                                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
                                             <div className="lg:col-span-8 space-y-6 md:space-y-8">
                                                 <Card className="p-4 md:p-8">
                                                     <div className="flex items-center justify-between mb-8">
                                                         <div>
                                                             <h3 className="text-xl md:text-2xl font-display font-bold text-text-app">
-                                                                Engagement
-                                                                Stream
+                                                                COMMUNICATION INTERCEPTS
                                                             </h3>
-                                                            <p className="text-[10px] font-mono text-muted-app uppercase tracking-[0.2em] mt-2 opacity-40">
-                                                                Public blog
-                                                                entries and
-                                                                announcements
+                                                            <p className="text-[10px] font-mono text-cyan-500 uppercase tracking-[0.2em] mt-2 opacity-60">
+                                                                Public blog entries and announcements
                                                             </p>
                                                         </div>
-                                                        <div className="p-3 bg-brand-primary/10 rounded-2xl text-brand-primary">
-                                                            <Users size={24} />
+                                                        <div className="p-3 bg-cyan-500/10 rounded-2xl text-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                                                            <Activity size={24} />
                                                         </div>
                                                     </div>
 
                                                     {blogs.length > 0 ? (
-                                                        <div className="space-y-6">
-                                                            {blogs.map(
-                                                                (blog) => (
-                                                                    <div
-                                                                        key={
-                                                                            blog.id
-                                                                        }
-                                                                        className="p-4 md:p-6 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all cursor-pointer group"
-                                                                        onClick={() =>
-                                                                            window.open(
-                                                                                `https://codeforces.com/blog/entry/${blog.id}`,
-                                                                                '_blank',
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <div className="flex items-center justify-between mb-3">
-                                                                            <span className="text-[9px] font-mono font-bold text-brand-primary uppercase tracking-[0.2em]">
-                                                                                {format(
-                                                                                    new Date(
-                                                                                        blog.creationTimeSeconds *
-                                                                                            1000,
-                                                                                    ),
-                                                                                    'MMM dd, yyyy',
-                                                                                )}
+                                                        <div className="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+                                                            {blogs.map((blog) => (
+                                                                <div
+                                                                    key={blog.id}
+                                                                    className="p-4 md:p-5 rounded-xl bg-card-app border border-border-app hover:border-brand-primary/60 hover:shadow-[0_0_15px_rgba(0,238,255,0.2)] transition-all cursor-pointer group relative overflow-hidden"
+                                                                    onClick={() => window.open(`https://codeforces.com/blog/entry/${blog.id}`, '_blank')}
+                                                                >
+                                                                    {/* Radar Sweep Effect */}
+                                                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                                                                    
+                                                                    <div className="flex items-center justify-between mb-2 relative z-10">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                                                                            <span className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-widest">
+                                                                                LOG // {format(new Date(blog.creationTimeSeconds * 1000), 'yyyy.MM.dd')}
                                                                             </span>
-                                                                            <div className="flex items-center gap-4 text-muted-app text-[10px] font-bold">
-                                                                                <div className="flex items-center gap-1">
-                                                                                    <ArrowUp
-                                                                                        size={
-                                                                                            12
-                                                                                        }
-                                                                                        className="text-emerald-500"
-                                                                                    />
-                                                                                    {
-                                                                                        blog.rating
-                                                                                    }
-                                                                                </div>
-                                                                            </div>
                                                                         </div>
-                                                                        <h4 className="text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-2">
-                                                                            {blog.title.replace(
-                                                                                /<\/?[^>]+(>|$)/g,
-                                                                                '',
-                                                                            )}
-                                                                        </h4>
-                                                                        <div className="flex items-center gap-3">
-                                                                            {blog.tags.map(
-                                                                                (
-                                                                                    tag: string,
-                                                                                ) => (
-                                                                                    <span
-                                                                                        key={
-                                                                                            tag
-                                                                                        }
-                                                                                        className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted-app/60 border border-white/5"
-                                                                                    >
-                                                                                        #
-                                                                                        {
-                                                                                            tag
-                                                                                        }
-                                                                                    </span>
-                                                                                ),
-                                                                            )}
+                                                                        <div className="flex items-center gap-2 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 text-emerald-400 text-[10px] font-bold font-mono">
+                                                                            <ArrowUp size={10} />
+                                                                            {blog.rating}
                                                                         </div>
                                                                     </div>
-                                                                ),
-                                                            )}
+                                                                    
+                                                                    <h4 className="text-sm md:text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-3 relative z-10 font-mono">
+                                                                        &gt; {blog.title.replace(/<\/?[^>]+(>|$)/g, '')}
+                                                                    </h4>
+                                                                    
+                                                                    <div className="flex flex-wrap items-center gap-2 relative z-10">
+                                                                        {blog.tags.map((tag: string) => (
+                                                                            <span
+                                                                                key={tag}
+                                                                                className="text-[8px] md:text-[9px] font-mono px-1.5 py-0.5 rounded bg-brand-primary/10 text-brand-primary/80 border border-brand-primary/20 uppercase tracking-wider"
+                                                                            >
+                                                                                #{tag}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
                                                         </div>
                                                     ) : (
                                                         <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -2388,42 +2374,64 @@ export function Dashboard() {
                                             </div>
 
                                             <div className="lg:col-span-4 space-y-8">
-                                                <Card className="p-5 md:p-8">
+                                                <Card className="p-5 md:p-8 relative overflow-hidden">
+                                                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-full blur-3xl" />
                                                     <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-8">
-                                                        Social Influence
+                                                        Social Influence HUD
                                                     </h3>
-                                                    <div className="space-y-6">
-                                                        <div className="p-5 md:p-6 rounded-2xl bg-brand-primary/5 border border-brand-primary/10">
-                                                            <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest mb-2 opacity-60">
-                                                                Total
-                                                                Contribution
-                                                            </p>
-                                                            <p className="text-3xl font-display font-black text-text-app">
-                                                                {user.contribution ||
-                                                                    0}
-                                                            </p>
+                                                    <div className="space-y-4 relative z-10">
+                                                        <div className="p-4 rounded-xl bg-card-app border border-border-app backdrop-blur-md relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+                                                            <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary" />
+                                                            <div className="flex justify-between items-start pl-3">
+                                                                <div>
+                                                                    <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">Total Contribution</p>
+                                                                    <div className="flex items-baseline gap-2">
+                                                                        <p className="text-2xl md:text-3xl font-display font-black text-text-app">{user.contribution || 0}</p>
+                                                                        <span className={`text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest ${karmaBadge.color} ${karmaBadge.bg} ${karmaBadge.border}`}>
+                                                                            {karmaBadge.label}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="p-2 bg-brand-primary/10 rounded-lg text-brand-primary">
+                                                                    <Activity size={16} />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div className="p-5 md:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                                                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-2 opacity-60">
-                                                                Social Influence
-                                                            </p>
-                                                            <p className="text-3xl font-display font-black text-text-app">
-                                                                {(user as any)
-                                                                    .friendOfCount ||
-                                                                    0}
-                                                            </p>
-                                                            <p className="text-[9px] text-muted-app mt-1 uppercase font-bold tracking-tighter">
-                                                                Followers on
-                                                                Codeforces
-                                                            </p>
+                                                        
+                                                        <div className="p-4 rounded-xl bg-card-app border border-border-app backdrop-blur-md relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+                                                            <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
+                                                            <div className="flex justify-between items-start pl-3">
+                                                                <div>
+                                                                    <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">Network Followers</p>
+                                                                    <div className="flex items-baseline gap-2">
+                                                                        <p className="text-2xl md:text-3xl font-display font-black text-text-app">{friends}</p>
+                                                                        <span className={`text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest ${fameBadge.color} ${fameBadge.bg} ${fameBadge.border}`}>
+                                                                            {fameBadge.label}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-500">
+                                                                    <Users size={16} />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div className="p-5 md:p-6 rounded-2xl bg-orange-500/5 border border-orange-500/10">
-                                                            <p className="text-[9px] font-black text-orange-500 uppercase tracking-widest mb-2 opacity-60">
-                                                                Blog Count
-                                                            </p>
-                                                            <p className="text-3xl font-display font-black text-text-app">
-                                                                {blogs.length}
-                                                            </p>
+
+                                                        <div className="p-4 rounded-xl bg-card-app border border-border-app backdrop-blur-md relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+                                                            <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
+                                                            <div className="flex justify-between items-start pl-3">
+                                                                <div>
+                                                                    <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">Data Transmissions</p>
+                                                                    <div className="flex items-baseline gap-2">
+                                                                        <p className="text-2xl md:text-3xl font-display font-black text-text-app">{blogs.length}</p>
+                                                                        <span className="text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest text-orange-400 bg-orange-400/10 border-orange-400/20">
+                                                                            {totalBlogUpvotes} UPVOTES
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500">
+                                                                    <Rss size={16} />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </Card>
@@ -2465,6 +2473,8 @@ export function Dashboard() {
                                                 </Card>
                                             </div>
                                         </div>
+                                            );
+                                        })()
                                     )}
                                 </div>
                             )}
