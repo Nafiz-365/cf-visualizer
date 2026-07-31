@@ -207,10 +207,13 @@ function PracticeCoachImpl({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Rating Forecast / Progression Chart */}
             <Card className="lg:col-span-8 p-6 space-y-6 bg-bg-app border-white/5 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 to-transparent pointer-events-none" />
                 <div className="flex items-center justify-between pb-4 border-b border-white/10 relative z-10">
                     <div className="flex items-center gap-2">
-                        <TrendingUp size={16} className="text-brand-primary animate-pulse" />
+                        <TrendingUp
+                            size={16}
+                            className="text-brand-primary animate-pulse"
+                        />
                         <h3 className="text-xs uppercase font-black tracking-widest text-text-app">
                             90-Day Rating Projection
                         </h3>
