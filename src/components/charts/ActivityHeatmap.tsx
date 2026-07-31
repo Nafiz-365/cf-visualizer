@@ -1,4 +1,10 @@
-import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import React, {
+    useMemo,
+    useState,
+    useRef,
+    useCallback,
+    useEffect,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { Submission } from '../../types';
 import {
@@ -26,27 +32,49 @@ interface TooltipState {
 }
 
 const CELL_SIZE = 'w-3.5 h-3.5'; // 14px — consistent column + cell
-const CELL_GAP  = 'gap-1';       // 4px
+const CELL_GAP = 'gap-1'; // 4px
 
 /** Maps submission count → Tailwind classes with premium hover states. */
 function getCellClass(count: number): string {
-    const base = 'rounded-[3px] cursor-pointer transition-all duration-300 ease-out';
-    const hover = 'hover:scale-125 hover:z-50 hover:ring-2 hover:ring-white/40 hover:-translate-y-0.5';
+    const base =
+        'rounded-[3px] cursor-pointer transition-all duration-300 ease-out';
+    const hover =
+        'hover:scale-125 hover:z-50 hover:ring-2 hover:ring-white/40 hover:-translate-y-0.5';
 
     if (count === 0)
-        return cn(base, hover, 'bg-white/8 border border-white/10 hover:border-white/20 hover:bg-white/15');
-    
+        return cn(
+            base,
+            hover,
+            'bg-white/8 border border-white/10 hover:border-white/20 hover:bg-white/15',
+        );
+
     if (count < 3)
-        return cn(base, hover, 'bg-brand-primary/30 border border-brand-primary/20 shadow-sm hover:shadow-[0_0_12px_rgba(79,142,247,0.4)]');
-    
+        return cn(
+            base,
+            hover,
+            'bg-brand-primary/30 border border-brand-primary/20 shadow-sm hover:shadow-[0_0_12px_rgba(79,142,247,0.4)]',
+        );
+
     if (count < 6)
-        return cn(base, hover, 'bg-brand-primary/55 border border-brand-primary/30 shadow-md hover:shadow-[0_0_16px_rgba(79,142,247,0.6)] hover:brightness-110');
-    
+        return cn(
+            base,
+            hover,
+            'bg-brand-primary/55 border border-brand-primary/30 shadow-md hover:shadow-[0_0_16px_rgba(79,142,247,0.6)] hover:brightness-110',
+        );
+
     if (count < 10)
-        return cn(base, hover, 'bg-brand-primary/80 border border-brand-primary/40 shadow-lg hover:shadow-[0_0_20px_rgba(79,142,247,0.8)] hover:brightness-125');
-    
+        return cn(
+            base,
+            hover,
+            'bg-brand-primary/80 border border-brand-primary/40 shadow-lg hover:shadow-[0_0_20px_rgba(79,142,247,0.8)] hover:brightness-125',
+        );
+
     // Peak activity
-    return cn(base, hover, 'bg-brand-primary border border-brand-primary/60 shadow-xl shadow-brand-primary/35 brightness-110 hover:shadow-[0_0_25px_rgba(79,142,247,1)] hover:brightness-150');
+    return cn(
+        base,
+        hover,
+        'bg-brand-primary border border-brand-primary/60 shadow-xl shadow-brand-primary/35 brightness-110 hover:shadow-[0_0_25px_rgba(79,142,247,1)] hover:brightness-150',
+    );
 }
 
 const DAY_LABELS: Record<number, string> = { 1: 'M', 3: 'W', 5: 'F' }; // 0=Sun
@@ -63,13 +91,18 @@ function ActivityHeatmapImpl({
     const { weeks, monthLabels } = useMemo(() => {
         const counts: Record<string, number> = {};
         for (const s of submissions) {
-            const d = format(new Date(s.creationTimeSeconds * 1000), 'yyyy-MM-dd');
+            const d = format(
+                new Date(s.creationTimeSeconds * 1000),
+                'yyyy-MM-dd',
+            );
             counts[d] = (counts[d] ?? 0) + 1;
         }
 
-        const end   = anchorDate ? new Date(`${anchorDate}T00:00:00`) : startOfToday();
+        const end = anchorDate
+            ? new Date(`${anchorDate}T00:00:00`)
+            : startOfToday();
         const start = subDays(end, Math.max(rangeDays - 1, 30));
-        
+
         // Enforce weekStartsOn: 0 (Sunday) to prevent locale shifts
         const graphStart = startOfWeek(start, { weekStartsOn: 0 });
 
@@ -79,8 +112,14 @@ function ActivityHeatmapImpl({
         let cur: { date: Date; count: number }[] = [];
 
         for (const day of days) {
-            cur.push({ date: day, count: counts[format(day, 'yyyy-MM-dd')] ?? 0 });
-            if (cur.length === 7) { weeksArray.push(cur); cur = []; }
+            cur.push({
+                date: day,
+                count: counts[format(day, 'yyyy-MM-dd')] ?? 0,
+            });
+            if (cur.length === 7) {
+                weeksArray.push(cur);
+                cur = [];
+            }
         }
         if (cur.length > 0) weeksArray.push(cur);
 
@@ -103,7 +142,8 @@ function ActivityHeatmapImpl({
             // Adding a tiny timeout ensures the DOM has painted the exact width before scrolling
             setTimeout(() => {
                 if (scrollRef.current) {
-                    scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+                    scrollRef.current.scrollLeft =
+                        scrollRef.current.scrollWidth;
                 }
             }, 50);
         }
@@ -111,13 +151,16 @@ function ActivityHeatmapImpl({
 
     // ── Tooltip positioning (viewport-fixed to escape overflow clip) ─
     const handleMouseEnter = useCallback(
-        (day: { date: Date; count: number }, e: React.MouseEvent<HTMLDivElement>) => {
+        (
+            day: { date: Date; count: number },
+            e: React.MouseEvent<HTMLDivElement>,
+        ) => {
             const rect = e.currentTarget.getBoundingClientRect();
             setTooltip({
-                date:  day.date,
+                date: day.date,
                 count: day.count,
-                vx:    rect.left + rect.width / 2,
-                vy:    rect.top,
+                vx: rect.left + rect.width / 2,
+                vy: rect.top,
             });
         },
         [],
@@ -129,14 +172,14 @@ function ActivityHeatmapImpl({
     // Prevents re-rendering 365 cells every time the tooltip state changes on hover
     const gridContent = useMemo(() => {
         return weeks.map((week, weekIdx) => {
-            const monthLabel = monthLabels.find(l => l.index === weekIdx);
+            const monthLabel = monthLabels.find((l) => l.index === weekIdx);
             return (
                 <div
                     key={weekIdx}
                     className={cn('flex flex-col shrink-0', CELL_GAP)}
                 >
                     {/* Month label header */}
-                    <div className="h-[18px] relative pointer-events-none select-none">
+                    <div className="h-4.5 relative pointer-events-none select-none">
                         {monthLabel && (
                             <span className="absolute left-0 top-0 text-[9px] font-mono font-black text-muted-app uppercase opacity-50 whitespace-nowrap">
                                 {monthLabel.label}
@@ -148,12 +191,9 @@ function ActivityHeatmapImpl({
                     {week.map((day, dayIdx) => (
                         <div
                             key={dayIdx}
-                            onMouseEnter={e => handleMouseEnter(day, e)}
+                            onMouseEnter={(e) => handleMouseEnter(day, e)}
                             onMouseLeave={handleMouseLeave}
-                            className={cn(
-                                CELL_SIZE,
-                                getCellClass(day.count),
-                            )}
+                            className={cn(CELL_SIZE, getCellClass(day.count))}
                             aria-label={`${format(day.date, 'MMM d, yyyy')}: ${day.count} submissions`}
                             role="gridcell"
                         />
@@ -165,7 +205,6 @@ function ActivityHeatmapImpl({
 
     return (
         <div className="w-full relative select-none flex flex-col gap-3">
-
             {/* ── Header ─────────────────────────────────────────── */}
             <div className="flex items-center justify-between">
                 <div>
@@ -173,16 +212,21 @@ function ActivityHeatmapImpl({
                         Velocity Map
                     </p>
                     <p className="text-[9px] text-muted-app opacity-40 mt-0.5 uppercase font-bold">
-                        {rangeDays === 30  ? 'Recent pulse'
-                       : rangeDays === 90  ? 'Rolling quarter'
-                       : rangeDays === 180 ? 'Half-year rhythm'
-                       :                    'Annual activity distribution'}
+                        {rangeDays === 30
+                            ? 'Recent pulse'
+                            : rangeDays === 90
+                              ? 'Rolling quarter'
+                              : rangeDays === 180
+                                ? 'Half-year rhythm'
+                                : 'Annual activity distribution'}
                     </p>
                 </div>
 
                 {/* Legend */}
                 <div className="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded-xl border border-white/10 shadow-inner">
-                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">Rare</span>
+                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">
+                        Rare
+                    </span>
                     <div className="flex gap-1.5 items-center">
                         {[
                             'bg-white/8',
@@ -191,18 +235,22 @@ function ActivityHeatmapImpl({
                             'bg-brand-primary/80',
                             'bg-brand-primary brightness-110 shadow-[0_0_8px_rgba(79,142,247,0.6)]',
                         ].map((cls, i) => (
-                            <div key={i} className={cn('w-2.5 h-2.5 rounded-[2px]', cls)} />
+                            <div
+                                key={i}
+                                className={cn('w-2.5 h-2.5 rounded-xs', cls)}
+                            />
                         ))}
                     </div>
-                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">Peak</span>
+                    <span className="text-[8px] font-black text-muted-app uppercase opacity-40">
+                        Peak
+                    </span>
                 </div>
             </div>
 
             {/* ── Grid ───────────────────────────────────────────── */}
             <div className="flex gap-1 relative z-10">
-
                 {/* Day-of-week labels (Sun–Sat) */}
-                <div className={cn('flex flex-col pt-[22px] shrink-0', CELL_GAP)}>
+                <div className={cn('flex flex-col pt-5.5 shrink-0', CELL_GAP)}>
                     {Array.from({ length: 7 }, (_, i) => (
                         <div
                             key={i}
@@ -239,9 +287,7 @@ function ActivityHeatmapImpl({
             )}
 
             {/* ── Tooltip — fixed to viewport, escapes overflow clip ── */}
-            {tooltip && (
-                <TooltipPortal tooltip={tooltip} />
-            )}
+            {tooltip && <TooltipPortal tooltip={tooltip} />}
         </div>
     );
 }
@@ -254,7 +300,10 @@ function TooltipPortal({ tooltip }: { tooltip: TooltipState }) {
     // Clamp horizontally so it never overflows the viewport edges
     const left = Math.max(
         12,
-        Math.min(tooltip.vx - TOOLTIP_W / 2, window.innerWidth - TOOLTIP_W - 12),
+        Math.min(
+            tooltip.vx - TOOLTIP_W / 2,
+            window.innerWidth - TOOLTIP_W - 12,
+        ),
     );
     const top = tooltip.vy - TOOLTIP_H - 12;
 
@@ -262,7 +311,13 @@ function TooltipPortal({ tooltip }: { tooltip: TooltipState }) {
 
     return createPortal(
         <div
-            style={{ position: 'fixed', left, top, zIndex: 99999, pointerEvents: 'none' }}
+            style={{
+                position: 'fixed',
+                left,
+                top,
+                zIndex: 99999,
+                pointerEvents: 'none',
+            }}
             className="animate-in fade-in zoom-in-95 duration-200 ease-out"
         >
             <div className="bg-card-app/95 backdrop-blur-xl px-3 py-2 rounded-xl border border-brand-primary/20 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_16px_rgba(79,142,247,0.15)] whitespace-nowrap">
@@ -272,12 +327,13 @@ function TooltipPortal({ tooltip }: { tooltip: TooltipState }) {
                 <div className="flex items-center gap-1.5 mt-1">
                     <div className="w-1.5 h-1.5 rounded-full bg-brand-primary shadow-[0_0_4px_#4f8ef7]" />
                     <p className="text-[10px] font-bold text-brand-primary uppercase tracking-wide">
-                        {tooltip.count} {tooltip.count === 1 ? 'Solution' : 'Solutions'}
+                        {tooltip.count}{' '}
+                        {tooltip.count === 1 ? 'Solution' : 'Solutions'}
                     </p>
                 </div>
             </div>
         </div>,
-        document.body
+        document.body,
     );
 }
 
