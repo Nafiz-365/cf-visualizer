@@ -343,9 +343,9 @@ export function Dashboard() {
             : 0;
         const avgRank = ratingHistory.length
             ? Math.round(
-                ratingHistory.reduce((acc, r) => acc + r.rank, 0) /
-                ratingHistory.length,
-            )
+                  ratingHistory.reduce((acc, r) => acc + r.rank, 0) /
+                      ratingHistory.length,
+              )
             : 0;
 
         return {
@@ -477,8 +477,8 @@ export function Dashboard() {
                     ? -1
                     : 1
                 : valA > valB
-                    ? -1
-                    : 1;
+                  ? -1
+                  : 1;
         });
 
         return filtered;
@@ -779,7 +779,7 @@ export function Dashboard() {
                                     <p className="text-xs sm:text-sm font-bold text-text-app leading-tight truncate group-hover:text-brand-primary transition-colors">
                                         {user.handle}
                                     </p>
-                                    <p className="text-[9px] font-mono uppercase tracking-[0.1em] text-muted-app">
+                                    <p className="text-[9px] font-mono uppercase tracking-widest text-muted-app">
                                         {user.rank || 'Unranked'}
                                     </p>
                                 </div>
@@ -988,7 +988,7 @@ export function Dashboard() {
                                                     <p className="mt-1 text-sm font-bold text-text-app">
                                                         {Number(
                                                             analytics?.maxDelta ??
-                                                            0,
+                                                                0,
                                                         ) > 0
                                                             ? 'Rising'
                                                             : 'Steady'}
@@ -1142,10 +1142,10 @@ export function Dashboard() {
                                             label="Max Delta"
                                             value={
                                                 analytics?.maxDelta != null &&
-                                                    analytics.maxDelta > 0
+                                                analytics.maxDelta > 0
                                                     ? `+${analytics.maxDelta}`
                                                     : (analytics?.maxDelta ??
-                                                        '-')
+                                                      '-')
                                             }
                                             subValue="Highest Gain"
                                             icon={TrendingUp}
@@ -1269,7 +1269,7 @@ export function Dashboard() {
                                                     </p>
                                                     <p className="text-lg md:text-xl font-display font-bold text-text-app">
                                                         {analytics?.deltaSuccessRate !=
-                                                            null
+                                                        null
                                                             ? `${analytics.deltaSuccessRate}%`
                                                             : '0%'}
                                                     </p>
@@ -1538,13 +1538,13 @@ export function Dashboard() {
                                                                     className={cn(
                                                                         'transition-transform opacity-0 group-hover/header:opacity-100',
                                                                         sortKey ===
-                                                                        h.id &&
-                                                                        'opacity-100',
+                                                                            h.id &&
+                                                                            'opacity-100',
                                                                         sortKey ===
-                                                                        h.id &&
-                                                                        sortDirection ===
-                                                                        'asc' &&
-                                                                        'rotate-180',
+                                                                            h.id &&
+                                                                            sortDirection ===
+                                                                                'asc' &&
+                                                                            'rotate-180',
                                                                     )}
                                                                 />
                                                             </div>
@@ -1618,7 +1618,7 @@ export function Dashboard() {
                                                                         )}
                                                                     >
                                                                         {sub.verdict ===
-                                                                            'OK'
+                                                                        'OK'
                                                                             ? 'Accepted'
                                                                             : 'Failed'}
                                                                     </span>
@@ -1639,7 +1639,7 @@ export function Dashboard() {
                                                                 {format(
                                                                     new Date(
                                                                         sub.creationTimeSeconds *
-                                                                        1000,
+                                                                            1000,
                                                                     ),
                                                                     'MMM dd, HH:mm',
                                                                 )}
@@ -1785,7 +1785,7 @@ export function Dashboard() {
                                                                             {Math.min(
                                                                                 (user?.rating ??
                                                                                     800) +
-                                                                                300,
+                                                                                    300,
                                                                                 3500,
                                                                             )}
                                                                         </span>
@@ -1835,28 +1835,28 @@ export function Dashboard() {
                                                                         value: liveSessionStats.intensity,
                                                                         color:
                                                                             liveSessionStats.intensity ===
-                                                                                'High'
+                                                                            'High'
                                                                                 ? 'text-emerald-400'
                                                                                 : liveSessionStats.intensity ===
                                                                                     'Medium'
-                                                                                    ? 'text-yellow-400'
-                                                                                    : 'text-orange-400',
+                                                                                  ? 'text-yellow-400'
+                                                                                  : 'text-orange-400',
                                                                     },
                                                                     {
                                                                         label: 'Streak',
                                                                         value:
                                                                             liveSessionStats.streak >
-                                                                                0
+                                                                            0
                                                                                 ? `${liveSessionStats.streak} day${liveSessionStats.streak !== 1 ? 's' : ''}`
                                                                                 : 'No streak',
                                                                         color:
                                                                             liveSessionStats.streak >
-                                                                                7
+                                                                            7
                                                                                 ? 'text-emerald-400'
                                                                                 : liveSessionStats.streak >
                                                                                     2
-                                                                                    ? 'text-brand-primary'
-                                                                                    : 'text-muted-app/50',
+                                                                                  ? 'text-brand-primary'
+                                                                                  : 'text-muted-app/50',
                                                                     },
                                                                     {
                                                                         label: 'Efficiency',
@@ -1864,17 +1864,17 @@ export function Dashboard() {
                                                                         color:
                                                                             Number(
                                                                                 analytics?.accuracy ??
-                                                                                0,
+                                                                                    0,
                                                                             ) >=
-                                                                                70
+                                                                            70
                                                                                 ? 'text-emerald-400'
                                                                                 : Number(
-                                                                                    analytics?.accuracy ??
-                                                                                    0,
-                                                                                ) >=
+                                                                                        analytics?.accuracy ??
+                                                                                            0,
+                                                                                    ) >=
                                                                                     50
-                                                                                    ? 'text-yellow-400'
-                                                                                    : 'text-orange-400',
+                                                                                  ? 'text-yellow-400'
+                                                                                  : 'text-orange-400',
                                                                     },
                                                                 ].map(
                                                                     (item) => (
@@ -2076,10 +2076,10 @@ export function Dashboard() {
                                                                 setHeatmapRange(
                                                                     e.target
                                                                         .value as
-                                                                    | '30'
-                                                                    | '90'
-                                                                    | '180'
-                                                                    | '365',
+                                                                        | '30'
+                                                                        | '90'
+                                                                        | '180'
+                                                                        | '365',
                                                                 )
                                                             }
                                                             className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-app outline-none"
@@ -2236,7 +2236,7 @@ export function Dashboard() {
                                                                     ((user?.rating ??
                                                                         0) /
                                                                         1600) *
-                                                                    100,
+                                                                        100,
                                                                 )}
                                                                 %
                                                             </span>
@@ -2289,18 +2289,75 @@ export function Dashboard() {
                                         />
                                     ) : (
                                         (() => {
-                                            const totalBlogUpvotes = blogs.reduce((sum, blog) => sum + blog.rating, 0);
-                                            const friends = (user as any).friendOfCount || 0;
+                                            const totalBlogUpvotes =
+                                                blogs.reduce(
+                                                    (sum, blog) =>
+                                                        sum + blog.rating,
+                                                    0,
+                                                );
+                                            const friends =
+                                                (user as any).friendOfCount ||
+                                                0;
 
-                                            let karmaBadge = { label: 'OBSERVER', color: 'text-slate-400', bg: 'bg-slate-400/10', border: 'border-slate-400/20' };
-                                            if ((user.contribution || 0) >= 100) karmaBadge = { label: 'COMMUNITY PILLAR', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20' };
-                                            else if ((user.contribution || 0) > 0) karmaBadge = { label: 'ACTIVE NODE', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20' };
-                                            else if ((user.contribution || 0) < 0) karmaBadge = { label: 'ROGUE ELEMENT', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' };
+                                            let karmaBadge = {
+                                                label: 'OBSERVER',
+                                                color: 'text-slate-400',
+                                                bg: 'bg-slate-400/10',
+                                                border: 'border-slate-400/20',
+                                            };
+                                            if ((user.contribution || 0) >= 100)
+                                                karmaBadge = {
+                                                    label: 'COMMUNITY PILLAR',
+                                                    color: 'text-amber-400',
+                                                    bg: 'bg-amber-400/10',
+                                                    border: 'border-amber-400/20',
+                                                };
+                                            else if (
+                                                (user.contribution || 0) > 0
+                                            )
+                                                karmaBadge = {
+                                                    label: 'ACTIVE NODE',
+                                                    color: 'text-emerald-400',
+                                                    bg: 'bg-emerald-400/10',
+                                                    border: 'border-emerald-400/20',
+                                                };
+                                            else if (
+                                                (user.contribution || 0) < 0
+                                            )
+                                                karmaBadge = {
+                                                    label: 'ROGUE ELEMENT',
+                                                    color: 'text-red-400',
+                                                    bg: 'bg-red-400/10',
+                                                    border: 'border-red-400/20',
+                                                };
 
-                                            let fameBadge = { label: 'STANDARD NODE', color: 'text-slate-400', bg: 'bg-slate-400/10', border: 'border-slate-400/20' };
-                                            if (friends >= 1000) fameBadge = { label: 'LEGENDARY ENTITY', color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' };
-                                            else if (friends >= 500) fameBadge = { label: 'FAMOUS NODE', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-400/20' };
-                                            else if (friends >= 100) fameBadge = { label: 'LOCAL HERO', color: 'text-cyan-400', bg: 'bg-cyan-400/10', border: 'border-cyan-400/20' };
+                                            let fameBadge = {
+                                                label: 'STANDARD NODE',
+                                                color: 'text-slate-400',
+                                                bg: 'bg-slate-400/10',
+                                                border: 'border-slate-400/20',
+                                            };
+                                            if (friends >= 1000)
+                                                fameBadge = {
+                                                    label: 'LEGENDARY ENTITY',
+                                                    color: 'text-purple-400',
+                                                    bg: 'bg-purple-400/10',
+                                                    border: 'border-purple-400/20',
+                                                };
+                                            else if (friends >= 500)
+                                                fameBadge = {
+                                                    label: 'FAMOUS NODE',
+                                                    color: 'text-pink-400',
+                                                    bg: 'bg-pink-400/10',
+                                                    border: 'border-pink-400/20',
+                                                };
+                                            else if (friends >= 100)
+                                                fameBadge = {
+                                                    label: 'LOCAL HERO',
+                                                    color: 'text-cyan-400',
+                                                    bg: 'bg-cyan-400/10',
+                                                    border: 'border-cyan-400/20',
+                                                };
 
                                             return (
                                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
@@ -2309,68 +2366,122 @@ export function Dashboard() {
                                                             <div className="flex items-center justify-between mb-8">
                                                                 <div>
                                                                     <h3 className="text-xl md:text-2xl font-display font-bold text-text-app">
-                                                                        COMMUNICATION INTERCEPTS
+                                                                        COMMUNICATION
+                                                                        INTERCEPTS
                                                                     </h3>
                                                                     <p className="text-[10px] font-mono text-cyan-500 uppercase tracking-[0.2em] mt-2 opacity-60">
-                                                                        Public blog entries and announcements
+                                                                        Public
+                                                                        blog
+                                                                        entries
+                                                                        and
+                                                                        announcements
                                                                     </p>
                                                                 </div>
                                                                 <div className="p-3 bg-cyan-500/10 rounded-2xl text-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-                                                                    <Activity size={24} />
+                                                                    <Activity
+                                                                        size={
+                                                                            24
+                                                                        }
+                                                                    />
                                                                 </div>
                                                             </div>
 
-                                                            {blogs.length > 0 ? (
-                                                                <div className="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
-                                                                    {blogs.map((blog) => (
-                                                                        <div
-                                                                            key={blog.id}
-                                                                            className="p-4 md:p-5 rounded-xl bg-card-app border border-border-app hover:border-brand-primary/60 hover:shadow-[0_0_15px_rgba(0,238,255,0.2)] transition-all cursor-pointer group relative overflow-hidden"
-                                                                            onClick={() => window.open(`https://codeforces.com/blog/entry/${blog.id}`, '_blank')}
-                                                                        >
-                                                                            {/* Radar Sweep Effect */}
-                                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                                                            {blogs.length >
+                                                            0 ? (
+                                                                <div className="space-y-4 max-h-125 overflow-y-auto custom-scrollbar pr-2">
+                                                                    {blogs.map(
+                                                                        (
+                                                                            blog,
+                                                                        ) => (
+                                                                            <div
+                                                                                key={
+                                                                                    blog.id
+                                                                                }
+                                                                                className="p-4 md:p-5 rounded-xl bg-card-app border border-border-app hover:border-brand-primary/60 hover:shadow-[0_0_15px_rgba(0,238,255,0.2)] transition-all cursor-pointer group relative overflow-hidden"
+                                                                                onClick={() =>
+                                                                                    window.open(
+                                                                                        `https://codeforces.com/blog/entry/${blog.id}`,
+                                                                                        '_blank',
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                {/* Radar Sweep Effect */}
+                                                                                <div className="absolute inset-0 bg-linear-to-r from-transparent via-brand-primary/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
 
-                                                                            <div className="flex items-center justify-between mb-2 relative z-10">
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
-                                                                                    <span className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-widest">
-                                                                                        LOG // {format(new Date(blog.creationTimeSeconds * 1000), 'yyyy.MM.dd')}
-                                                                                    </span>
+                                                                                <div className="flex items-center justify-between mb-2 relative z-10">
+                                                                                    <div className="flex items-center gap-2">
+                                                                                        <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                                                                                        <span className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-widest">
+                                                                                            LOG
+                                                                                            //{' '}
+                                                                                            {format(
+                                                                                                new Date(
+                                                                                                    blog.creationTimeSeconds *
+                                                                                                        1000,
+                                                                                                ),
+                                                                                                'yyyy.MM.dd',
+                                                                                            )}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div className="flex items-center gap-2 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 text-emerald-400 text-[10px] font-bold font-mono">
+                                                                                        <ArrowUp
+                                                                                            size={
+                                                                                                10
+                                                                                            }
+                                                                                        />
+                                                                                        {
+                                                                                            blog.rating
+                                                                                        }
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="flex items-center gap-2 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 text-emerald-400 text-[10px] font-bold font-mono">
-                                                                                    <ArrowUp size={10} />
-                                                                                    {blog.rating}
+
+                                                                                <h4 className="text-sm md:text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-3 relative z-10 font-mono">
+                                                                                    &gt;{' '}
+                                                                                    {blog.title.replace(
+                                                                                        /<\/?[^>]+(>|$)/g,
+                                                                                        '',
+                                                                                    )}
+                                                                                </h4>
+
+                                                                                <div className="flex flex-wrap items-center gap-2 relative z-10">
+                                                                                    {blog.tags.map(
+                                                                                        (
+                                                                                            tag: string,
+                                                                                        ) => (
+                                                                                            <span
+                                                                                                key={
+                                                                                                    tag
+                                                                                                }
+                                                                                                className="text-[8px] md:text-[9px] font-mono px-1.5 py-0.5 rounded bg-brand-primary/10 text-brand-primary/80 border border-brand-primary/20 uppercase tracking-wider"
+                                                                                            >
+                                                                                                #
+                                                                                                {
+                                                                                                    tag
+                                                                                                }
+                                                                                            </span>
+                                                                                        ),
+                                                                                    )}
                                                                                 </div>
                                                                             </div>
-
-                                                                            <h4 className="text-sm md:text-base font-bold text-text-app group-hover:text-brand-primary transition-colors wrap-break-word whitespace-normal mb-3 relative z-10 font-mono">
-                                                                                &gt; {blog.title.replace(/<\/?[^>]+(>|$)/g, '')}
-                                                                            </h4>
-
-                                                                            <div className="flex flex-wrap items-center gap-2 relative z-10">
-                                                                                {blog.tags.map((tag: string) => (
-                                                                                    <span
-                                                                                        key={tag}
-                                                                                        className="text-[8px] md:text-[9px] font-mono px-1.5 py-0.5 rounded bg-brand-primary/10 text-brand-primary/80 border border-brand-primary/20 uppercase tracking-wider"
-                                                                                    >
-                                                                                        #{tag}
-                                                                                    </span>
-                                                                                ))}
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
+                                                                        ),
+                                                                    )}
                                                                 </div>
                                                             ) : (
                                                                 <div className="flex flex-col items-center justify-center py-20 text-center">
                                                                     <Users
-                                                                        size={48}
+                                                                        size={
+                                                                            48
+                                                                        }
                                                                         className="text-muted-app opacity-20 mb-4"
                                                                     />
                                                                     <p className="text-sm font-medium text-muted-app">
-                                                                        No public blog
-                                                                        entries found
-                                                                        for this user.
+                                                                        No
+                                                                        public
+                                                                        blog
+                                                                        entries
+                                                                        found
+                                                                        for this
+                                                                        user.
                                                                     </p>
                                                                 </div>
                                                             )}
@@ -2381,23 +2492,38 @@ export function Dashboard() {
                                                         <Card className="p-5 md:p-8 relative overflow-hidden">
                                                             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-full blur-3xl" />
                                                             <h3 className="text-sm font-black text-text-app uppercase tracking-widest mb-8">
-                                                                Social Influence HUD
+                                                                Social Influence
+                                                                HUD
                                                             </h3>
                                                             <div className="space-y-4 relative z-10">
                                                                 <div className="p-4 rounded-xl bg-card-app border border-border-app backdrop-blur-md relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
                                                                     <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary" />
                                                                     <div className="flex justify-between items-start pl-3">
                                                                         <div>
-                                                                            <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">Total Contribution</p>
+                                                                            <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">
+                                                                                Total
+                                                                                Contribution
+                                                                            </p>
                                                                             <div className="flex items-baseline gap-2">
-                                                                                <p className="text-2xl md:text-3xl font-display font-black text-text-app">{user.contribution || 0}</p>
-                                                                                <span className={`text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest ${karmaBadge.color} ${karmaBadge.bg} ${karmaBadge.border}`}>
-                                                                                    {karmaBadge.label}
+                                                                                <p className="text-2xl md:text-3xl font-display font-black text-text-app">
+                                                                                    {user.contribution ||
+                                                                                        0}
+                                                                                </p>
+                                                                                <span
+                                                                                    className={`text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest ${karmaBadge.color} ${karmaBadge.bg} ${karmaBadge.border}`}
+                                                                                >
+                                                                                    {
+                                                                                        karmaBadge.label
+                                                                                    }
                                                                                 </span>
                                                                             </div>
                                                                         </div>
                                                                         <div className="p-2 bg-brand-primary/10 rounded-lg text-brand-primary">
-                                                                            <Activity size={16} />
+                                                                            <Activity
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -2406,16 +2532,31 @@ export function Dashboard() {
                                                                     <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
                                                                     <div className="flex justify-between items-start pl-3">
                                                                         <div>
-                                                                            <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">Network Followers</p>
+                                                                            <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">
+                                                                                Network
+                                                                                Followers
+                                                                            </p>
                                                                             <div className="flex items-baseline gap-2">
-                                                                                <p className="text-2xl md:text-3xl font-display font-black text-text-app">{friends}</p>
-                                                                                <span className={`text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest ${fameBadge.color} ${fameBadge.bg} ${fameBadge.border}`}>
-                                                                                    {fameBadge.label}
+                                                                                <p className="text-2xl md:text-3xl font-display font-black text-text-app">
+                                                                                    {
+                                                                                        friends
+                                                                                    }
+                                                                                </p>
+                                                                                <span
+                                                                                    className={`text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest ${fameBadge.color} ${fameBadge.bg} ${fameBadge.border}`}
+                                                                                >
+                                                                                    {
+                                                                                        fameBadge.label
+                                                                                    }
                                                                                 </span>
                                                                             </div>
                                                                         </div>
                                                                         <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-500">
-                                                                            <Users size={16} />
+                                                                            <Users
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -2424,16 +2565,30 @@ export function Dashboard() {
                                                                     <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
                                                                     <div className="flex justify-between items-start pl-3">
                                                                         <div>
-                                                                            <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">Data Transmissions</p>
+                                                                            <p className="text-[9px] font-mono font-bold text-muted-app uppercase tracking-widest mb-1">
+                                                                                Data
+                                                                                Transmissions
+                                                                            </p>
                                                                             <div className="flex items-baseline gap-2">
-                                                                                <p className="text-2xl md:text-3xl font-display font-black text-text-app">{blogs.length}</p>
+                                                                                <p className="text-2xl md:text-3xl font-display font-black text-text-app">
+                                                                                    {
+                                                                                        blogs.length
+                                                                                    }
+                                                                                </p>
                                                                                 <span className="text-[8px] px-1.5 py-0.5 rounded-sm border font-mono uppercase tracking-widest text-orange-400 bg-orange-400/10 border-orange-400/20">
-                                                                                    {totalBlogUpvotes} UPVOTES
+                                                                                    {
+                                                                                        totalBlogUpvotes
+                                                                                    }{' '}
+                                                                                    UPVOTES
                                                                                 </span>
                                                                             </div>
                                                                         </div>
                                                                         <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500">
-                                                                            <Rss size={16} />
+                                                                            <Rss
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -2447,13 +2602,14 @@ export function Dashboard() {
                                                             <div className="space-y-4">
                                                                 <div className="flex items-center justify-between py-2 border-b border-white/5">
                                                                     <span className="text-[10px] font-bold text-muted-app uppercase">
-                                                                        Last Online
+                                                                        Last
+                                                                        Online
                                                                     </span>
                                                                     <span className="text-[10px] font-mono text-text-app font-bold">
                                                                         {format(
                                                                             new Date(
                                                                                 user.lastOnlineTimeSeconds *
-                                                                                1000,
+                                                                                    1000,
                                                                             ),
                                                                             'MMM dd, HH:mm',
                                                                         )}
@@ -2461,13 +2617,14 @@ export function Dashboard() {
                                                                 </div>
                                                                 <div className="flex items-center justify-between py-2 border-b border-white/5">
                                                                     <span className="text-[10px] font-bold text-muted-app uppercase">
-                                                                        Member Since
+                                                                        Member
+                                                                        Since
                                                                     </span>
                                                                     <span className="text-[10px] font-mono text-text-app font-bold">
                                                                         {format(
                                                                             new Date(
                                                                                 user.registrationTimeSeconds *
-                                                                                1000,
+                                                                                    1000,
                                                                             ),
                                                                             'MMM dd, yyyy',
                                                                         )}
@@ -2638,7 +2795,7 @@ export function Dashboard() {
                                         value={format(
                                             new Date(
                                                 user.registrationTimeSeconds *
-                                                1000,
+                                                    1000,
                                             ),
                                             'MMM dd, yyyy',
                                         )}
@@ -2793,7 +2950,7 @@ export function Dashboard() {
                                         value={format(
                                             new Date(
                                                 selectedSubmission.creationTimeSeconds *
-                                                1000,
+                                                    1000,
                                             ),
                                             'MMM dd, HH:mm:ss',
                                         )}
