@@ -43,7 +43,10 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
         <div className="space-y-4">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <AlertCircle size={16} className="text-red-500 animate-pulse" />
+                    <AlertCircle
+                        size={16}
+                        className="text-red-500 animate-pulse"
+                    />
                     <h3 className="text-[10px] font-mono font-black text-red-500 uppercase tracking-[0.2em] shadow-red-500/20 drop-shadow-md">
                         Unsolved Mission Logs
                     </h3>
@@ -62,7 +65,7 @@ export function UnsolvedProblems({ submissions }: UnsolvedProblemsProps) {
                         rel="noopener noreferrer"
                         className="block group relative"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/5 to-red-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        <div className="absolute inset-0 bg-linear-to-r from-red-500/0 via-red-500/5 to-red-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-3 rounded-2xl bg-white/2 hover:bg-red-500/5 border border-white/5 hover:border-red-500/30 transition-all duration-500 group-hover:shadow-[0_0_15px_rgba(239,68,68,0.15)] relative overflow-hidden z-10">
                             <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2 mb-0.5">
