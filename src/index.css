@@ -108,40 +108,72 @@
    touching individual component files.
    ================================================================ */
 
-.light .bg-white\/1  { background-color: rgba(15, 23, 42, 0.01) !important; }
-.light .bg-white\/2  { background-color: rgba(15, 23, 42, 0.02) !important; }
-.light .bg-white\/3  { background-color: rgba(15, 23, 42, 0.025) !important; }
-.light .bg-white\/4  { background-color: rgba(15, 23, 42, 0.03) !important; }
-.light .bg-white\/5  { background-color: rgba(15, 23, 42, 0.035) !important; }
-.light .bg-white\/8  { background-color: rgba(15, 23, 42, 0.045) !important; }
-.light .bg-white\/10 { background-color: rgba(15, 23, 42, 0.05) !important; }
-.light .bg-white\/20 { background-color: rgba(15, 23, 42, 0.07) !important; }
+.light .bg-white\/1 {
+    background-color: rgba(15, 23, 42, 0.01) !important;
+}
+.light .bg-white\/2 {
+    background-color: rgba(15, 23, 42, 0.02) !important;
+}
+.light .bg-white\/3 {
+    background-color: rgba(15, 23, 42, 0.025) !important;
+}
+.light .bg-white\/4 {
+    background-color: rgba(15, 23, 42, 0.03) !important;
+}
+.light .bg-white\/5 {
+    background-color: rgba(15, 23, 42, 0.035) !important;
+}
+.light .bg-white\/8 {
+    background-color: rgba(15, 23, 42, 0.045) !important;
+}
+.light .bg-white\/10 {
+    background-color: rgba(15, 23, 42, 0.05) !important;
+}
+.light .bg-white\/20 {
+    background-color: rgba(15, 23, 42, 0.07) !important;
+}
 
-.light .border-white\/5  { border-color: rgba(15, 23, 42, 0.06) !important; }
-.light .border-white\/8  { border-color: rgba(15, 23, 42, 0.07) !important; }
-.light .border-white\/10 { border-color: rgba(15, 23, 42, 0.09) !important; }
-.light .border-white\/20 { border-color: rgba(15, 23, 42, 0.12) !important; }
+.light .border-white\/5 {
+    border-color: rgba(15, 23, 42, 0.06) !important;
+}
+.light .border-white\/8 {
+    border-color: rgba(15, 23, 42, 0.07) !important;
+}
+.light .border-white\/10 {
+    border-color: rgba(15, 23, 42, 0.09) !important;
+}
+.light .border-white\/20 {
+    border-color: rgba(15, 23, 42, 0.12) !important;
+}
 
-.light .hover\:bg-white\/5:hover  { background-color: rgba(15, 23, 42, 0.04) !important; }
-.light .hover\:bg-white\/10:hover { background-color: rgba(15, 23, 42, 0.06) !important; }
-.light .hover\:bg-white\/20:hover { background-color: rgba(15, 23, 42, 0.08) !important; }
+.light .hover\:bg-white\/5:hover {
+    background-color: rgba(15, 23, 42, 0.04) !important;
+}
+.light .hover\:bg-white\/10:hover {
+    background-color: rgba(15, 23, 42, 0.06) !important;
+}
+.light .hover\:bg-white\/20:hover {
+    background-color: rgba(15, 23, 42, 0.08) !important;
+}
 
-.light .hover\:border-white\/10:hover { border-color: rgba(15, 23, 42, 0.1) !important; }
+.light .hover\:border-white\/10:hover {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+}
 
 /* Input fields — make them visible in light mode */
 .light input.bg-white\/5,
 .light select.bg-white\/5,
 .light textarea.bg-white\/5,
-.light input[class*="bg-white"],
-.light select[class*="bg-white"],
-.light textarea[class*="bg-white"] {
+.light input[class*='bg-white'],
+.light select[class*='bg-white'],
+.light textarea[class*='bg-white'] {
     background-color: var(--bg-card) !important;
     border-color: rgba(15, 23, 42, 0.15) !important;
     color: var(--text-main) !important;
 }
 
 /* Search input in Leaderboards */
-.light input[type="text"].bg-white\/5 {
+.light input[type='text'].bg-white\/5 {
     background-color: var(--bg-card) !important;
 }
 
@@ -157,7 +189,6 @@
    ================================================================ */
 
 @layer base {
-
     *,
     *::before,
     *::after {
@@ -263,27 +294,37 @@
 /* Grid overlay */
 .bg-grid {
     background-image:
-        linear-gradient(to right,
+        linear-gradient(
+            to right,
             rgba(79, 142, 247, 0.04) 1px,
-            transparent 1px),
-        linear-gradient(to bottom,
+            transparent 1px
+        ),
+        linear-gradient(
+            to bottom,
             rgba(79, 142, 247, 0.04) 1px,
-            transparent 1px);
+            transparent 1px
+        );
     background-size: 48px 48px;
 }
 
 /* Mesh radial overlay */
 .bg-mesh {
     background-image:
-        radial-gradient(at 0% 0%,
+        radial-gradient(
+            at 0% 0%,
             rgba(79, 142, 247, 0.12) 0px,
-            transparent 55%),
-        radial-gradient(at 100% 0%,
+            transparent 55%
+        ),
+        radial-gradient(
+            at 100% 0%,
             rgba(157, 110, 245, 0.1) 0px,
-            transparent 55%),
-        radial-gradient(at 50% 100%,
+            transparent 55%
+        ),
+        radial-gradient(
+            at 50% 100%,
             rgba(14, 207, 207, 0.08) 0px,
-            transparent 55%);
+            transparent 55%
+        );
 }
 
 /* ================================================================
@@ -317,18 +358,22 @@
 .light .glass,
 .light .glass-premium,
 .light .glass-glow {
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.96) 0%,
-            rgba(248, 250, 252, 0.96) 100%);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(248, 250, 252, 0.96) 100%
+    );
     border-color: rgba(15, 23, 42, 0.06);
     box-shadow: var(--shadow-card);
 }
 
 .light .glass-premium::before {
-    background: linear-gradient(90deg,
-            transparent,
-            rgba(79, 142, 247, 0.16),
-            transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(79, 142, 247, 0.16),
+        transparent
+    );
 }
 
 .light .glass-premium::after {
@@ -348,10 +393,12 @@
     right: 0;
     top: 0;
     height: 1px;
-    background: linear-gradient(90deg,
-            transparent,
-            var(--glass-highlight) 50%,
-            transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--glass-highlight) 50%,
+        transparent
+    );
     pointer-events: none;
 }
 
@@ -402,21 +449,25 @@
    ================================================================ */
 
 .gradient-text {
-    background-image: linear-gradient(135deg,
-            #60b0ff 0%,
-            #4f8ef7 35%,
-            #9d6ef5 70%,
-            #c084fc 100%);
+    background-image: linear-gradient(
+        135deg,
+        #60b0ff 0%,
+        #4f8ef7 35%,
+        #9d6ef5 70%,
+        #c084fc 100%
+    );
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
 }
 
 .gradient-text-warm {
-    background-image: linear-gradient(135deg,
-            #f7a840 0%,
-            #f75087 60%,
-            #9d6ef5 100%);
+    background-image: linear-gradient(
+        135deg,
+        #f7a840 0%,
+        #f75087 60%,
+        #9d6ef5 100%
+    );
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -465,10 +516,12 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg,
-            transparent 40%,
-            rgba(255, 255, 255, 0.12) 50%,
-            transparent 60%);
+    background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.12) 50%,
+        transparent 60%
+    );
     transform: translateX(-100%);
     transition: transform 550ms ease;
     pointer-events: none;
@@ -669,16 +722,22 @@
     padding: 0.25rem;
     border-radius: 999px;
     background:
-        radial-gradient(circle at 20% 20%,
+        radial-gradient(
+            circle at 20% 20%,
             rgba(255, 255, 255, 0.4),
-            transparent 28%),
-        radial-gradient(circle at 80% 0%,
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 80% 0%,
             rgba(120, 170, 255, 0.16),
-            transparent 24%),
-        linear-gradient(135deg,
+            transparent 24%
+        ),
+        linear-gradient(
+            135deg,
             rgba(255, 255, 255, 0.34),
             rgba(255, 255, 255, 0.08) 60%,
-            rgba(255, 255, 255, 0.16));
+            rgba(255, 255, 255, 0.16)
+        );
     backdrop-filter: blur(34px) saturate(210%) brightness(1.08);
     -webkit-backdrop-filter: blur(34px) saturate(210%) brightness(1.08);
     border: 1px solid rgba(255, 255, 255, 0.24);
@@ -694,14 +753,18 @@
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(115deg,
+        linear-gradient(
+            115deg,
             transparent 0%,
             rgba(255, 255, 255, 0.28) 30%,
             rgba(255, 255, 255, 0.08) 55%,
-            transparent 82%),
-        radial-gradient(circle at 10% 20%,
+            transparent 82%
+        ),
+        radial-gradient(
+            circle at 10% 20%,
             rgba(255, 255, 255, 0.35),
-            transparent 35%);
+            transparent 35%
+        );
     transform: translateX(-140%);
     transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
@@ -720,15 +783,17 @@
     pointer-events: none;
 }
 
-.nav-pill>a,
-.nav-pill>button {
+.nav-pill > a,
+.nav-pill > button {
     position: relative;
     overflow: hidden;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.22),
-            rgba(255, 255, 255, 0.06));
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.22),
+        rgba(255, 255, 255, 0.06)
+    );
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     box-shadow:
@@ -744,26 +809,30 @@
         filter 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.nav-pill>a::before,
-.nav-pill>button::before {
+.nav-pill > a::before,
+.nav-pill > button::before {
     content: '';
     position: absolute;
     inset: 1px;
     border-radius: inherit;
-    background: linear-gradient(120deg,
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0));
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
     opacity: 0.8;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
-.nav-pill>a:hover,
-.nav-pill>button:hover {
+.nav-pill > a:hover,
+.nav-pill > button:hover {
     transform: translateY(-2px) scale(1.01);
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.28),
-            rgba(255, 255, 255, 0.1));
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.28),
+        rgba(255, 255, 255, 0.1)
+    );
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.4),
         0 12px 24px rgba(15, 18, 35, 0.16),
@@ -771,8 +840,8 @@
     filter: brightness(1.04);
 }
 
-.nav-pill>a:active,
-.nav-pill>button:active {
+.nav-pill > a:active,
+.nav-pill > button:active {
     transform: translateY(1px) scale(0.985);
     box-shadow:
         inset 0 3px 10px rgba(0, 0, 0, 0.2),
@@ -780,31 +849,35 @@
     filter: brightness(0.98);
 }
 
-.nav-pill>a:not(.nav-link-active):hover,
-.nav-pill>button:hover {
+.nav-pill > a:not(.nav-link-active):hover,
+.nav-pill > button:hover {
     color: var(--text-main);
 }
 
-.nav-pill>a:not(.nav-link-active) {
+.nav-pill > a:not(.nav-link-active) {
     color: var(--text-muted);
 }
 
-.nav-pill>.w-px {
+.nav-pill > .w-px {
     position: relative;
     height: 1.2rem;
     width: 1px;
     margin: 0 0.2rem;
-    background: linear-gradient(180deg,
-            transparent,
-            rgba(255, 255, 255, 0.24),
-            transparent);
+    background: linear-gradient(
+        180deg,
+        transparent,
+        rgba(255, 255, 255, 0.24),
+        transparent
+    );
     box-shadow: 0 0 10px rgba(79, 142, 247, 0.12);
 }
 
 .nav-link-active {
-    background: linear-gradient(135deg,
-            rgba(79, 142, 247, 0.95) 0%,
-            rgba(93, 88, 245, 0.92) 100%);
+    background: linear-gradient(
+        135deg,
+        rgba(79, 142, 247, 0.95) 0%,
+        rgba(93, 88, 245, 0.92) 100%
+    );
     color: #fff;
     border-color: rgba(255, 255, 255, 0.24);
     box-shadow:
@@ -820,20 +893,21 @@
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: radial-gradient(circle at 20% 20%,
-            rgba(255, 255, 255, 0.42),
-            transparent 60%);
+    background: radial-gradient(
+        circle at 20% 20%,
+        rgba(255, 255, 255, 0.42),
+        transparent 60%
+    );
     opacity: 0.85;
     pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .nav-pill::before,
-    .nav-pill>a,
-    .nav-pill>button,
-    .nav-pill>a::before,
-    .nav-pill>button::before {
+    .nav-pill > a,
+    .nav-pill > button,
+    .nav-pill > a::before,
+    .nav-pill > button::before {
         transition: none;
     }
 }
@@ -846,28 +920,30 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.light .nav-pill>a,
-.light .nav-pill>button {
+.light .nav-pill > a,
+.light .nav-pill > button {
     background: #ffffff;
     border-color: rgba(15, 23, 42, 0.06);
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
 }
 
-.light .nav-pill>a:hover,
-.light .nav-pill>button:hover {
+.light .nav-pill > a:hover,
+.light .nav-pill > button:hover {
     background: #f8fbff;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
 }
 
-.light .nav-pill>a:not(.nav-link-active),
-.light .nav-pill>button {
+.light .nav-pill > a:not(.nav-link-active),
+.light .nav-pill > button {
     color: var(--text-muted);
 }
 
 .light .nav-link-active {
-    background: linear-gradient(135deg,
-            rgba(79, 142, 247, 0.96) 0%,
-            rgba(93, 88, 245, 0.94) 100%);
+    background: linear-gradient(
+        135deg,
+        rgba(79, 142, 247, 0.96) 0%,
+        rgba(93, 88, 245, 0.94) 100%
+    );
     box-shadow: 0 10px 24px rgba(79, 142, 247, 0.2);
 }
 
@@ -968,9 +1044,11 @@ select option {
 .progress-fill {
     height: 100%;
     border-radius: 99px;
-    background: linear-gradient(90deg,
-            var(--color-brand-primary),
-            var(--color-brand-secondary));
+    background: linear-gradient(
+        90deg,
+        var(--color-brand-primary),
+        var(--color-brand-secondary)
+    );
     box-shadow: 0 0 8px rgba(79, 142, 247, 0.4);
 }
 
@@ -1033,7 +1111,6 @@ select option {
 }
 
 @keyframes pulse-glow {
-
     0%,
     100% {
         box-shadow: 0 0 0 0 rgba(79, 142, 247, 0);
@@ -1067,10 +1144,12 @@ select option {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg,
-            transparent 35%,
-            rgba(255, 255, 255, 0.07) 50%,
-            transparent 65%);
+    background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.07) 50%,
+        transparent 65%
+    );
     animation: shimmer-slide 2.2s ease infinite;
 }
 
@@ -1105,25 +1184,35 @@ select option {
 
 .light .bg-grid {
     background-image:
-        linear-gradient(to right,
+        linear-gradient(
+            to right,
             rgba(79, 142, 247, 0.035) 1px,
-            transparent 1px),
-        linear-gradient(to bottom,
+            transparent 1px
+        ),
+        linear-gradient(
+            to bottom,
             rgba(79, 142, 247, 0.035) 1px,
-            transparent 1px);
+            transparent 1px
+        );
 }
 
 .light .bg-mesh {
     background-image:
-        radial-gradient(at 0% 0%,
+        radial-gradient(
+            at 0% 0%,
             rgba(79, 142, 247, 0.08) 0px,
-            transparent 55%),
-        radial-gradient(at 100% 0%,
+            transparent 55%
+        ),
+        radial-gradient(
+            at 100% 0%,
             rgba(157, 110, 245, 0.07) 0px,
-            transparent 55%),
-        radial-gradient(at 50% 100%,
+            transparent 55%
+        ),
+        radial-gradient(
+            at 50% 100%,
             rgba(14, 207, 207, 0.06) 0px,
-            transparent 55%);
+            transparent 55%
+        );
 }
 
 .light .mesh-background div {
@@ -1236,19 +1325,23 @@ select option {
 
 .skeleton {
     border-radius: 0.5rem;
-    background: linear-gradient(90deg,
-            rgba(255, 255, 255, 0.04) 25%,
-            rgba(255, 255, 255, 0.08) 50%,
-            rgba(255, 255, 255, 0.04) 75%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 25%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.04) 75%
+    );
     background-size: 800px 100%;
     animation: skeleton-wave 1.8s ease-in-out infinite;
 }
 
 .light .skeleton {
-    background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.05) 25%,
-            rgba(0, 0, 0, 0.1) 50%,
-            rgba(0, 0, 0, 0.05) 75%);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.05) 25%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.05) 75%
+    );
     background-size: 800px 100%;
 }
 
@@ -1266,10 +1359,12 @@ select option {
     inset: -3px;
     border-radius: inherit;
     padding: 2px;
-    background: conic-gradient(from 0deg,
-            var(--ring-color-a, #4f8ef7),
-            var(--ring-color-b, #9d6ef5) 45%,
-            var(--ring-color-a, #4f8ef7) 90%);
+    background: conic-gradient(
+        from 0deg,
+        var(--ring-color-a, #4f8ef7),
+        var(--ring-color-b, #9d6ef5) 45%,
+        var(--ring-color-a, #4f8ef7) 90%
+    );
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
@@ -1400,9 +1495,11 @@ select option {
    ================================================================ */
 
 .sidebar-link-active {
-    background: linear-gradient(135deg,
-            rgba(79, 142, 247, 0.18) 0%,
-            rgba(93, 88, 245, 0.12) 100%);
+    background: linear-gradient(
+        135deg,
+        rgba(79, 142, 247, 0.18) 0%,
+        rgba(93, 88, 245, 0.12) 100%
+    );
     color: #7ab5ff;
     border: 1px solid rgba(79, 142, 247, 0.2);
     box-shadow:
@@ -1416,30 +1513,38 @@ select option {
 
 .user-card-0 {
     border-top: 2px solid #4f8ef7;
-    background: linear-gradient(180deg,
-            rgba(79, 142, 247, 0.06) 0%,
-            transparent 40%);
+    background: linear-gradient(
+        180deg,
+        rgba(79, 142, 247, 0.06) 0%,
+        transparent 40%
+    );
 }
 
 .user-card-1 {
     border-top: 2px solid #9d6ef5;
-    background: linear-gradient(180deg,
-            rgba(157, 110, 245, 0.06) 0%,
-            transparent 40%);
+    background: linear-gradient(
+        180deg,
+        rgba(157, 110, 245, 0.06) 0%,
+        transparent 40%
+    );
 }
 
 .user-card-2 {
     border-top: 2px solid #0ecfcf;
-    background: linear-gradient(180deg,
-            rgba(14, 207, 207, 0.06) 0%,
-            transparent 40%);
+    background: linear-gradient(
+        180deg,
+        rgba(14, 207, 207, 0.06) 0%,
+        transparent 40%
+    );
 }
 
 .user-card-3 {
     border-top: 2px solid #f75087;
-    background: linear-gradient(180deg,
-            rgba(247, 80, 135, 0.06) 0%,
-            transparent 40%);
+    background: linear-gradient(
+        180deg,
+        rgba(247, 80, 135, 0.06) 0%,
+        transparent 40%
+    );
 }
 
 /* ================================================================
@@ -1447,8 +1552,16 @@ select option {
    ================================================================ */
 
 @keyframes wave {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30%            { transform: translateY(-5px); opacity: 1; }
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-5px);
+        opacity: 1;
+    }
 }
 
 /* ================================================================
@@ -1473,13 +1586,17 @@ select option {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
     /* Glowing neon gradient using brand primary and accent colors */
-    background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent));
+    background: linear-gradient(
+        90deg,
+        var(--color-brand-primary),
+        var(--color-brand-accent)
+    );
     border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     /* Brighter intensity on hover */
-    background: linear-gradient(90deg, #60a5fa, #22d3ee); 
+    background: linear-gradient(90deg, #60a5fa, #22d3ee);
 }
 
 .light .custom-scrollbar::-webkit-scrollbar-track {
@@ -1487,7 +1604,11 @@ select option {
 }
 
 .light .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent));
+    background: linear-gradient(
+        90deg,
+        var(--color-brand-primary),
+        var(--color-brand-accent)
+    );
 }
 
 .light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
