@@ -64,7 +64,7 @@ export function UpcomingContests() {
                         rel="noopener noreferrer"
                         className="block group relative"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        <div className="absolute inset-0 bg-linear-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                         <div className="glass p-4 rounded-[1.2rem] border border-white/5 bg-white/2 hover:bg-cyan-500/5 transition-all duration-500 group-hover:-translate-y-0.5 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] relative overflow-hidden z-10">
                             <div className="flex items-start justify-between mb-2">
                                 <span
@@ -123,4 +123,3 @@ export function UpcomingContests() {
         </div>
     );
 }
-
